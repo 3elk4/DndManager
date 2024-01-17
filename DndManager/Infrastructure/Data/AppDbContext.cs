@@ -2,10 +2,11 @@
 using Domain.Common;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Infrastructure.Data
 {
-    public class AppDbContext : DbContext, IAppDbContext//IdentityDbContext<User>
+    public class AppDbContext : DbContext, IDbContext //IdentityDbContext<User>
     {
         public DbSet<Pc> Pcs { get; set; }
         public DbSet<Test> Tests { get; set; }
@@ -32,10 +33,7 @@ namespace Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<BaseEntity>().HasKey(be => be.Id);
-            //modelBuilder.Entity<BaseEntity>().Property(be => be.Id).ValueGeneratedOnAdd().IsRequired();
-
-            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
         }
