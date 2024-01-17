@@ -1,0 +1,62 @@
+﻿@model SpellVM
+
+@{ 
+    var bonusstr = Model.Id;
+    var acc = "accordion" + bonusstr;
+    var heading = "heading" + bonusstr;
+    var collps = "collapseSpell" + bonusstr;
+}
+
+<div id="editorItem" class="row" style="width:inherit;">
+    <div class="card" style="margin:10px; width:inherit;" id="@{@acc}">
+        <div class="card-header" id="@{@heading}">
+            <div class="row">
+                <div class="col-8">
+                    <input asp-for="@Model.Name" class="form-control" />
+                </div>
+                <div class="col-2">
+                    <button type='button' class="btn btn-link" data-toggle="collapse" data-target="#@{@collps}" aria-expanded="false" aria-controls="@{@collps}">
+                        Open Details
+                    </button>
+                </div>
+                <div class="col-2">
+                    <a href="" data-value="/Spells/DeleteSpell/@Model.Id" class="deleteRow">Delete Row</a>
+                </div>
+                <div class="col">
+                    <input type="hidden" value="@Model.Id" name="SpellId" id="SpellId" />
+                </div>
+            </div>
+        </div>
+
+        <div id="@{@collps}" class="collapse" aria-labelledby="@{@heading}" data-parent="#@{@acc}">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
+                        <label>Casting Time</label>
+                        <input asp-for="@Model.CastingTime" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <label>Range</label>
+                        <input asp-for="@Model.CastingRange" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <label>Duration</label>
+                        <input asp-for="@Model.Duration" class="form-control" />
+                    </div>
+                    <div class="col">
+                        <label>Components</label>
+                        <input asp-for="@Model.Components" class="form-control" />
+                    </div>
+
+                </div>
+                <br />
+                <div class="row">
+                    <div class="col">
+                        <label>Description</label>
+                        <textarea style="width:inherit;" asp-for="@Model.Description"> </textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

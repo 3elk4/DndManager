@@ -1,0 +1,99 @@
+﻿@model List<ItemVM>
+
+<div>
+    <a href="/pcs/details/@ViewData["PcId"]"> Back to Character </a>
+</div>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" value="@ViewData["PcId"]" name="PcId" id="PcId"/>
+    <div id="editorRows" class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+        <div class="row">
+            <div class="col">
+                <label>Name</label>
+            </div>
+            <div class="col">
+                <label>Quantity</label>
+            </div>
+            <div class="col">
+                <label>Weight</label>
+            </div>
+            <div class="col">
+                <label>Notes</label>
+            </div>
+            <div class="col">
+                <label></label>
+            </div>
+        </div>
+        @foreach (var item in Model)
+        {
+            <partial name="_ItemEdit" model="item" />
+        }
+    </div>
+
+    <a id="addRow" asp-action="NewItem" asp-controller="Items" asp-route-id="@ViewData["PcId"]">Add New Item</a>
+    <br />
+    <input type="submit" id="submit" value="Save" />
+</form>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/dynamicItemsEdit.js"></script>
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+
+        function prepareData() {
+            var Id = $("input[name='PcId']").val();
+            var Items = [];
+
+            var namesLen = $("input[name='Name']").length;
+
+            for (let i = 0; i < namesLen; i++) {
+                Items.push({ "Name": null, "Quantity": 0, "Weight": 0, "Notes": null, "Id": null, "PcId": Id });
+            }
+
+            $("input[name='Name']").each(function (i) {
+                Items[i].Name = $(this).val();
+            });
+
+            $("input[name='Quantity']").each(function (i) {
+                Items[i].Quantity = parseInt($(this).val());
+            });
+
+            $("input[name='Weight']").each(function (i) {
+                Items[i].Weight = parseFloat($(this).val());
+            });
+
+            $("input[name='Notes']").each(function (i) {
+                Items[i].Notes = $(this).val();
+            });
+
+            $("input[name='ItemId']").each(function (i) {
+                if ($(this).val() !== "") {
+                    Items[i].Id = $(this).val();
+                }
+            });
+
+            return { "Id": Id, "Items": Items };
+        }
+
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            saveData('/items/edit', prepareData())
+        });
+    </script>
+}
+
+
+
+
+
+

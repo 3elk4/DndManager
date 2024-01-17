@@ -1,0 +1,24 @@
+﻿@model ProficiencyVM
+
+@{ 
+    var proficiencyTypes = new SelectList(new List<string>() { "language", "weapon", "armor", "tool", "other" }, Model.Type);
+}
+
+<div id="editorRow" class="row" style="margin-top:10px;margin-bottom:10px;">
+    <div class="col">
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <select asp-for="@Model.Type" asp-items="@proficiencyTypes" class="form-control">
+            <option value="">Select Type</option>
+        </select>
+        <span asp-validation-for="@Model.Type" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <a href="" data-value="/proficiencies/delete/@Model.Id" class="deleteRow">X</a>
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="ProficiencyId" id="ProficiencyId" />
+    </div>
+</div>  

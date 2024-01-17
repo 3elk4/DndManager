@@ -1,0 +1,710 @@
+﻿@model PcVM
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<script type="text/javascript" src="~/js/editpc.js"></script>
+
+@if (Model != null)
+{
+    <div class="container-fluid" id="detailsPc">
+        <div>
+            <a asp-action="Index">Back to Characters</a>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        @*@{
+                            string base64String = Model.Image == null ? "" : "data:image/jpg;base64," + Convert.ToBase64String(Model.Image., 0, Model.Image.Length);
+                        }
+                        <img class="card-img-top" src="@base64String">*@
+                        <p>
+                            <h5 class="text-center">
+                                @Model.Name
+                                <a onclick="editPcDetails(`/Pcs/Edit/@Model.Id`)">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
+                                        <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                                    </svg>
+                                </a>
+                            </h5>
+                            <div id="modalPcDetailsWrapper"></div>
+                        </p>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <p class="font-weight-bold">Race: </p> <p>@Model.RaceName</p>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <p class="font-weight-bold">Background: </p> <p>@Model.BackgroundName</p>
+                            </li>
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <p class="font-weight-bold" style="margin-right:20px;">Classes: </p>
+
+                                <ul class="list-group list-group-flush">
+                                    @if (Model.DndClasses != null)
+                                    {
+                                        foreach (var dndClass in Model.DndClasses)
+                                        {
+                                            if (dndClass.Name == null || dndClass.Name.Length == 0) continue;
+                                            var title = dndClass.SubclassName.Length != 0 ? $"{dndClass.Name} ({dndClass.SubclassName})" : dndClass.Name;
+
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                @title
+                                                <span class="badge bg-primary rounded-pill">@dndClass.Lvl</span>
+                                            </li>
+                                        }
+                                    }
+                                </ul>
+
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-8">
+                <div style="padding=10px;">
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/dndclasses/edit/@Model.Id"> DndClasses </a>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/items/edit/@Model.Id"> Items </a>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/feats/edit/@Model.Id"> Feats </a>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/proficiencies/edit/@Model.Id"> Proficiencies </a>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/spells/edit/@Model.Id"> Spells </a>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/combatactions/show/@Model.Id"> Actions </a>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary" style="padding=10px;">
+                        <a class="link-underline-dark" href="/bio/edit/@Model.Bio.Id"> Bio </a>
+                    </button>
+                </div>
+                <br />
+
+                @*<h5>
+                    details
+                    <a onclick="editinfodetails(`/pcs/editinfo/@model.info.id`)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentcolor" class="bi bi-pencil" viewbox="0 0 16 16" onclick="">
+                            <path d="m12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zm11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3l10.5 3.207 4 9.707v10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106a.5.5 0 0 1 5 12.5v12h-.5a.5.5 0 0 1-.5-.5v11h-.5a.5.5 0 0 1-.468-.325z" />
+                        </svg>
+                    </a>
+                </h5>
+                <div id="modalinfodetailswrapper"></div>
+
+                <div class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+                    <div class="row">
+                        <div class="col">
+                            <label asp-for="inspiration"></label>
+                        </div>
+                        <div class="col">
+                            <label>proficiency bonus</label>
+                        </div>
+                        <div class="col">
+                            <label>passive wisdom</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <input type="checkbox" asp-for="iinspiration" class="form-control" disabled />
+                        </div>
+                        <div class="col">
+                            <h2> @model.proficiency </h2>
+                        </div>
+                        <div class="col">
+                            <h2>@model.passivewisdom()</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+                    <div class="row">
+                        <div class="col">
+                            <label asp-for="ac"></label>
+                        </div>
+                        <div class="col">
+                            <label>initiative</label>
+                        </div>
+                        <div class="col">
+                            <label asp-for="speed"></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h2>@model.ac</h2>
+                        </div>
+                        <div class="col">
+                            <h2>@model.initiative()</h2>
+                        </div>
+                        <div class="col">
+                            <h2>@model.speed</h2>
+                        </div>
+                    </div>
+                </div>
+                <div class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+                    <div class="row">
+                        <div class="col">
+                            <label asp-for="hitdice"></label>
+                        </div>
+                        <div class="col">
+                            <label asp-for="hp"></label>
+                        </div>
+                        <div class="col">
+                            <label asp-for="currenthp"></label>
+                        </div>
+                        <div class="col">
+                            <label asp-for="temphp"></label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <h2>@model.hitdice</h2>
+                        </div>
+                        <div class="col">
+                            <h2>@model.hp</h2>
+                        </div>
+                        <div class="col">
+                            <h2>@model.currenthp</h2>
+                        </div>
+                        <div class="col">
+                            <h2>@model.temphp</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <br />
+
+                <h5>
+                    abilities and skills
+                    <a onclick="editskillsandabilitiesdetails(`/pcs/editskillsandabilities/@model.id`)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentcolor" class="bi bi-pencil" viewbox="0 0 16 16" onclick="">
+                            <path d="m12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zm11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3l10.5 3.207 4 9.707v10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106a.5.5 0 0 1 5 12.5v12h-.5a.5.5 0 0 1-.5-.5v11h-.5a.5.5 0 0 1-.468-.325z" />
+                        </svg>
+                    </a>
+                </h5>
+                <div id="modalskillsandabilitieswrapper"></div>
+
+                <div class="container border" style="margin-top:10px; margin-bottom:10px; padding: 10px;">
+                    <div class="row">
+                        <div class="col" style="margin-top:10px;">
+                            @{
+                                var strength = model.abilities.first(x => x.name == "strength");
+                                if (strength != null)
+                                {
+                                    <div class="row" style="margin-left:5px;">
+                                        <label asp-for="@strength.value" class="control-label">strength</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="checkbox" asp-for="@strength.savingthrow" class="form-control" disabled />
+                                        </div>
+                                        <div class="col">
+                                            <input asp-for="@strength.value" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;">@strength.mod()</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col" style="margin-top:10px;">
+                            @{
+                                var dexterity = model.abilities.first(x => x.name == "dexterity");
+                                if (dexterity != null)
+                                {
+                                    <div class="row" style="margin-left:5px;">
+                                        <label asp-for="@dexterity.value" class="control-label">dexterity</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="checkbox" asp-for="@dexterity.savingthrow" class="form-control" disabled />
+                                        </div>
+                                        <div class="col">
+                                            <input asp-for="@dexterity.value" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;">@dexterity.mod()</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col" style="margin-top:10px;">
+                            @{
+                                var constitution = model.abilities.first(x => x.name == "constitution");
+                                if (constitution != null)
+                                {
+                                    <div class="row" style="margin-left:5px;">
+                                        <label asp-for="@constitution.value" class="control-label">constitution</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="checkbox" asp-for="@constitution.savingthrow" class="form-control" disabled />
+                                        </div>
+                                        <div class="col">
+                                            <input asp-for="@constitution.value" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;">@constitution.mod()</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col" style="margin-top:10px;">
+                            @{
+                                var intelligence = model.abilities.first(x => x.name == "intelligence");
+                                if (intelligence != null)
+                                {
+                                    <div class="row" style="margin-left:5px;">
+                                        <label asp-for="@intelligence.value" class="control-label">intelligence</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="checkbox" asp-for="@intelligence.savingthrow" class="form-control" disabled />
+                                        </div>
+                                        <div class="col">
+                                            <input asp-for="@intelligence.value" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;">@intelligence.mod()</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+
+                        </div>
+                        <div class="col" style="margin-top:10px;">
+                            @{
+                                var wisdom = model.abilities.first(x => x.name == "wisdom");
+                                if (wisdom != null) { }
+                                {
+                                    <div class="row" style="margin-left:5px;">
+                                        <label asp-for="@wisdom.value" class="control-label">wisdom</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="checkbox" asp-for="@wisdom.savingthrow" class="form-control" disabled />
+                                        </div>
+                                        <div class="col">
+                                            <input asp-for="@wisdom.value" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;">@wisdom.mod()</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col" style="margin-top:10px;">
+                            @{
+                                var charisma = model.abilities.first(x => x.name == "charisma");
+                                if (charisma != null)
+                                {
+                                    <div class="row" style="margin-left:5px;">
+                                        <label asp-for="@charisma.value" class="control-label">charisma</label>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            <input type="checkbox" asp-for="@charisma.savingthrow" class="form-control" disabled />
+                                        </div>
+                                        <div class="col">
+                                            <input asp-for="@charisma.value" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @charisma.mod() </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="container border" style="margin-top:10px; margin-bottom:10px; padding: 10px;">
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var acrobatics = dexterity.skills.first(x => x.name == "acrobatics");
+                                if (acrobatics != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@acrobatics.name" class="control-label">acrobatics</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@acrobatics.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @acrobatics.mod(dexterity.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var animalhandling = wisdom.skills.first(x => x.name == "animal handling");
+                                if (animalhandling != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@animalhandling.name" class="control-label">animal handling</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@animalhandling.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @animalhandling.mod(wisdom.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var arcana = intelligence.skills.first(x => x.name == "arcana");
+                                if (arcana != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@arcana.name" class="control-label">arcana</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@arcana.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @arcana.mod(intelligence.mod(), model.info.proficiency). </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var athetics = strength.skills.first(x => x.name == "athletics");
+                                if (athetics != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@athetics.name" class="control-label">athletics</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@athetics.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @athetics.mod(strength.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var deception = charisma.skills.first(x => x.name == "deception");
+                                if (deception != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@deception.name" class="control-label">deception</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@deception.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @deception.mod(charisma.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var history = intelligence.skills.first(x => x.name == "history");
+                                if (history != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@history.name" class="control-label">history</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@history.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @history.mod(intelligence.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var insight = wisdom.skills.first(x => x.name == "insight");
+                                if (insight != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@insight.name" class="control-label">insight</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@insight.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @insight.mod(wisdom.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var intimidation = charisma.skills.first(x => x.name == "intimidation");
+                                if (intimidation != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@intimidation.name" class="control-label">intimidation</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@intimidation.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @intimidation.mod(charisma.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var investigation = intelligence.skills.first(x => x.name == "investigation");
+                                if (investigation != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@investigation.name" class="control-label">investigation</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@investigation.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @investigation.mod(intelligence.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var medicine = wisdom.skills.first(x => x.name == "medicine");
+                                if (medicine != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@medicine.name" class="control-label">medicine</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@medicine.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @medicine.mod(wisdom.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var nature = intelligence.skills.first(x => x.name == "nature");
+                                if (nature != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@nature.name" class="control-label">nature</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@nature.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @nature.mod(intelligence.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var perception = wisdom.skills.first(x => x.name == "perception");
+                                if (perception != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@perception.name" class="control-label">perception</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@perception.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @perception.mod(wisdom.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var performance = charisma.skills.first(x => x.name == "performance");
+                                if (performance != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@performance.name" class="control-label">performance</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@performance.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @performance.mod(charisma.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var persuation = charisma.skills.first(x => x.name == "persuation");
+                                if (persuation != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@performance.name" class="control-label">persuation</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@performance.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @performance.mod(charisma.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var religion = intelligence.skills.first(x => x.name == "religion");
+                                if (religion != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@religion.name" class="control-label">religion</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@religion.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @religion.mod(intelligence.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @{
+                                var sleightofhand = dexterity.skills.first(x => x.name == "sleight of hand");
+                                if (sleightofhand != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@sleightofhand.name" class="control-label">sleight of hand</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@sleightofhand.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @sleightofhand.mod(dexterity.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var stealth = dexterity.skills.first(x => x.name == "stealth");
+                                if (stealth != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@stealth.name" class="control-label">stealth</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@stealth.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @stealth.mod(dexterity.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                        <div class="col">
+                            @{
+                                var survival = wisdom.skills.first(x => x.name == "survival");
+                                if (survival != null)
+                                {
+                                    <div class="row">
+                                        <div class="col">
+                                            <label asp-for="@survival.name" class="control-label">survival</label>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@survival.proficient" class="form-control" disabled />
+                                        </div>
+                                        <div class="col-md-2">
+                                            <p style="margin-top:5px;"> @survival.mod(wisdom.mod(), model.info.proficiency) </p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>*@
+
+            </div>
+        </div>
+    </div>
+
+}
+
+@section scripts {
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+    </script>
+}
+

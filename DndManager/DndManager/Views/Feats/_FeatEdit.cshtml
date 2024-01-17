@@ -1,0 +1,32 @@
+﻿@model FeatVM
+
+@{
+    var sourceTypes = new SelectList(new List<string>() { "class", "race", "background", "other" }, Model.Source);
+}
+
+<div id="editorItem" class="row" style="margin-top:10px;margin-bottom:10px;">
+    <div class="col-2">
+        <input asp-for="@Model.Title" maxlength="100" class="form-control" />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+    </div>
+    <div class="col-2">
+        <select asp-for="@Model.Source" maxlength="100" asp-items="@sourceTypes" class="form-control">
+            <option value="">Select Source</option>
+        </select>
+        <span asp-validation-for="@Model.Source" class="text-danger"></span>
+    </div>
+    <div class="col-2">
+        <input asp-for="@Model.SourceType" maxlength="100" class="form-control" />
+        <span asp-validation-for="@Model.SourceType" class="text-danger"></span>
+    </div>
+    <div class="col-5">
+        <textarea asp-for="@Model.Definition" maxlength="1000" class="form-control"></textarea>
+        <span asp-validation-for="@Model.Definition" class="text-danger"></span>
+    </div>
+    <div class="col-1">
+        <a href="" data-value="/feats/delete/@Model.Id" class="deleteRow">X</a>
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="FeatId" id="FeatId" />
+    </div>
+</div>  

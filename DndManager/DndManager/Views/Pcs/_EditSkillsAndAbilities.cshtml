@@ -1,0 +1,70 @@
+﻿@model List<Application.Ability.AbilityVM>
+
+<div class="modal fade" id="editSkillsAndAbilitiesModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Edit Skills And Abilities</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="EditSkillsAndAbilities" asp-controller="Pcs">
+                    @for (int i = 0; i < 6; ++i)
+                    {
+                        <div class="row" style="margin-bottom:20px;">
+                            <input asp-for="@Model.ElementAt(i).Id" type="hidden" />
+                            <input asp-for="@Model.ElementAt(i).PcId" type="hidden" />
+
+                            <div class="col-md-4">
+                                <input asp-for="@Model.ElementAt(i).Name" readonly class="form-control-lg form-control-plaintext" />
+                            </div>
+                            <div class="col-md-3">
+                                <input min=1 max=20 asp-for="@Model.ElementAt(i).Value" class="form-control" />
+                            </div>
+                            <div class="col-md-2">
+                                <input type="checkbox" asp-for="@Model.ElementAt(i).SavingThrow" class="form-control" />
+                            </div>
+                            <div class="col">
+                                <span asp-validation-for="@Model.ElementAt(i).Value" class="text-danger"></span>
+                            </div>
+                            @if (Model.ElementAt(i).Skills.Count > 0)
+                            {
+                                <div class="col">
+                                    <a id="expandSkills" class="btn btn-light" type="button" data-toggle="collapse" href="#collapse@(Model.ElementAt(i).Name)" role="button" aria-expanded="false" aria-controls="collapse@(Model.ElementAt(i).Name)">
+                                        <i class="fas fa-plus float-right"></i>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                        <div class="collapse" id="collapse@(Model.ElementAt(i).Name)">
+                            @if (Model.ElementAt(i).Skills != null)
+                            {
+                                for (int j = 0; j < Model.ElementAt(i).Skills.Count; ++j)
+                                {
+                                    <div class="row" style="margin:10px;">
+                                        <input asp-for="@Model.ElementAt(i).Skills.ElementAt(j).Id" type="hidden" />
+                                        <input asp-for="@Model.ElementAt(i).Skills.ElementAt(j).AbilityId" type="hidden" />
+                                        <div class="col-md-5">
+                                            <input asp-for="@Model.ElementAt(i).Skills.ElementAt(j).Name" readonly class="form-control form-control-plaintext">
+                                        </div>
+                                        <div class="col-md-2">
+                                            <input asp-for="@Model.ElementAt(i).Skills.ElementAt(j).Proficient" class="form-control" />
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        </div>
+
+                    }
+
+                    <div class="modal-footer justify-content-center align-content-between">
+                        <div class="button form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

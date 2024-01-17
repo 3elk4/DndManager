@@ -1,0 +1,131 @@
+﻿@model CombatActionsWithAbilitiesVM
+
+<div>
+    <a href="/pcs/details/@ViewData["PcId"]"> Back to Character </a>
+</div>
+
+<input type="hidden" asp-for="@ViewData["PcId"]" name="PcId" id="PcId"/>
+
+<div class="container text-center">
+    <div id="editorRows" class="container text-center border">
+        @*style="margin-top:10px;margin-bottom:10px;"*@
+        @foreach (var action in Model.CombatActions)
+        {
+            var bonusstr = action.Id;
+            var acc = "accordion" + bonusstr;
+            var heading = "heading" + bonusstr;
+            var collps = "collapseActionCombat" + bonusstr;
+
+            <div id="editorItem" class="row" style="width:inherit;">
+                <div class="card" style="margin:10px; width:inherit;" id="@{@acc}">
+                    <div class="card-header" id="@{@heading}">
+                        <div class="row">
+                            <div class="col-3">
+                                <input asp-for="@action.Name" readonly class="form-control form-control-plaintext" />
+                            </div>
+                            <div class="col-2">
+                                <input asp-for="@action.Type" readonly class="form-control form-control-plaintext" />
+                            </div>
+                            <div class="col-1">
+                                <button type='button' class="btn btn-link" data-toggle="collapse" data-target="#@{@collps}" aria-expanded="false" aria-controls="@{@collps}">
+                                    Details
+                                </button>
+                            </div>
+                            <div class="col-2"></div>
+                            <div class="col-2">
+                                <button type='button' class="btn btn-link" onclick="addCombatAction(`/CombatActions/Edit/@action.Id`)">
+                                    Edit
+                                </button>
+                            </div>
+                            <div class="col-1">
+                                <form method="post">
+                                    <a href="" data-value="/combatactions/delete/@action.Id" class="deleteRow">X</a>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="@{@collps}" class="collapse" aria-labelledby="@{@heading}" data-parent="#@{@acc}">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5>Attack</h5>
+                                    @{
+                                        var attack = 0;
+                                        if (action.CombatAttack.AbilityId != null) attack += (int) PcHelper.Mod(@Model.Abilities.Find(a => a.Id.Equals(action.CombatAttack.AbilityId)).Value);
+                                        if (action.CombatAttack.IsProficient) attack += Model.Proficiency;
+                                        attack += action.CombatAttack.AdditionalBonus;
+                                    }
+                                    +@attack
+                                    @action.CombatAttack.Range
+                                </div>
+                                <div class="col">
+                                    <h5>Damage</h5>
+                                    @{
+                                        var damage = 0;
+                                        var dmgStr = "";
+
+                                        if (action.CombatDamage.AbilityId != null) damage += (int) PcHelper.Mod(@Model.Abilities.Find(a => a.Id.Equals(action.CombatAttack.AbilityId)).Value);
+                                        if (action.CombatDamage.DamageDice != null && action.CombatDamage.DamageDice.Length != 0) dmgStr += action.CombatDamage.DamageDice + " + ";
+
+                                        damage += action.CombatDamage.AdditionalBonus;
+                                        dmgStr += damage.ToString() + "  ";
+                                        if (action.CombatDamage.DamageType != null && action.CombatDamage.DamageType.Length != 0) dmgStr += action.CombatDamage.DamageType;
+
+                                    }
+                                    @dmgStr
+                                </div>
+                                <div class="col">
+                                    <h5>Saving Throw</h5>
+                                    @*{
+                                        var savingThrow = 0; ; // Wis Dc13 :')
+
+                                        if (action.CombatSavingThrow.AbilityId != null) savingThrow += abilities.Find(a => a.Id.Equals(action.CombatAttack.AbilityId)).Mod();
+                                    }
+                                    <input asp-for="@savingThrow" readonly class="form-control form-control-plaintext" />*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+
+<button>
+    <a onclick="addCombatAction(`/CombatActions/NewCombatAction/@ViewData["PcId"]`)"> Add new action </a>
+</button>
+<div id="modalCombatActionWrapper"></div>
+
+
+
+@section scripts {
+    <script type="text/javascript" src="~/js/dynamicItemsEdit.js"></script>
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+
+        function addCombatAction(url) {
+            $.ajax({
+                url: url,
+                type: 'GET',
+                cache: false,
+                success: function (result) {
+                    $('#modalCombatActionWrapper').html(result);
+                    $('#editCombatActionModal').modal('show');
+                }
+            });
+        }
+    </script>
+}

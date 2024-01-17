@@ -1,0 +1,84 @@
+﻿@model List<ProficiencyVM>
+
+<div>
+    <a href="/pcs/details/@ViewData["PcId"]"> Back to Character </a>
+</div>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" value="@ViewData["PcId"]" name="PcId" id="PcId" />
+    <div id="editorRows" class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+        <div class="row">
+            <div class="col">
+                <label>Name</label>
+            </div>
+            <div class="col">
+                <label>Type</label>
+            </div>
+            <div class="col">
+
+            </div>
+        </div>
+        @foreach (var proficiency in Model)
+        {
+            <partial name="_ProficiencyEdit" model="proficiency" />
+        }
+    </div>
+
+    <a id="addRow" asp-action="NewProficiency" asp-controller="Proficiencies" asp-route-id="@ViewData["PcId"]">Add New Proficiency</a>
+    <br />
+    <input type="submit" id="submit" value="Save" />
+</form>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/dynamicItemsEdit.js"></script>
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+
+        function prepareData() {
+            var Id = $("input[name='PcId']").val();
+            var Proficiencies = [];
+
+            var namesLen = $("input[name='Name']").length;
+
+            for (let i = 0; i < namesLen; i++) {
+                Proficiencies.push({ "Name": null, "Type": null, "Id": null, "PcId": Id });
+            }
+
+            $("input[name='Name']").each(function (i) {
+                Proficiencies[i].Name = $(this).val();
+            });
+
+            $("select[name='Type']").each(function (i) {
+                Proficiencies[i].Type = $(this).children("option").filter(":selected").text();
+            });
+
+            $("input[name='ProficiencyId']").each(function (i) {
+                if ($(this).val() !== "") {
+                    Proficiencies[i].Id = $(this).val();
+                }
+            });
+            return { "Id": Id, "Proficiencies": Proficiencies }
+        }
+
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            saveData('/proficiencies/edit', prepareData());
+        });
+    </script>
+}
+
+
+
+
+
+

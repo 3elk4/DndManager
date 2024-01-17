@@ -1,0 +1,23 @@
+﻿.wrapping-element {
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+.toast-container {
+  margin-top: 70px;
+  margin-right: 15px;
+}
+.toast-body {
+  min-width: 300px;
+  color: white;
+  background-color: darkseagreen;
+}
+.toast-body.info {
+  background-color: lightsteelblue;
+}
+.toast-body.warning {
+  background-color: lightyellow;
+}
+.toast-body.danger {
+  background-color: lightcoral;
+}

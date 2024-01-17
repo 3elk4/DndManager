@@ -1,0 +1,51 @@
+﻿@model List<PcVM>
+
+@{
+    ViewData["Title"] = "Pcs";
+}
+
+<div>
+    <a asp-action="Create"> Add new Pc</a>
+</div>
+
+<div class="card-columns" style="display: inline-block;">
+    @if (Model != null)
+    {
+        foreach (var pc in Model)
+        {
+            <div class="card" style="max-width:300px;">
+                <div class="card-header">
+                    @pc.Name
+                </div>
+                @*@{ 
+                    string base64String = pc.Image == null ? "" : "data:image/jpg;base64," + Convert.ToBase64String(pc.Image, 0, pc.Image.Length);
+                }
+                <img class="card-img-top" src="@base64String">*@
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        @if (@pc.DndClasses != null)
+                        {
+                            foreach (var dndClass in @pc.DndClasses)
+                            {
+                                if (dndClass.Name == null || dndClass.Name.Length == 0) continue;
+                                var title = dndClass.SubclassName.Length != 0 ? $"{dndClass.Name} ({dndClass.SubclassName})" : dndClass.Name;
+
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @title
+                                    <span class="badge bg-primary rounded-pill">@dndClass.Lvl</span>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+                <div class="card-footer d-flex justify-content-between align-items-center">
+
+                    <a href="/pcs/details/@pc.Id" class="card-link">View Details</a>
+                    <form asp-controller="Pcs" asp-action="Delete" asp-route-id="@pc.Id">
+                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete pc: @pc.Name?')"> X </button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+</div>

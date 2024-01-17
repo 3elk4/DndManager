@@ -1,0 +1,22 @@
+﻿@model DndClassVM
+
+<div id="editorItem" class="row" style="margin-top:10px;margin-bottom:10px;">
+    <div class="col-2">
+        <input asp-for="@Model.Name" maxlength="100" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="col-2">
+        <input asp-for="@Model.SubclassName" name="SubclassName" id="SubclassName" maxlength="50" class="form-control" />
+        <span asp-validation-for="@Model.SubclassName" class="text-danger"></span>
+    </div>
+    <div class="col-2">
+        <input asp-for="@Model.Lvl" max="20" min="1" class="form-control" />
+        <span asp-validation-for="@Model.Lvl" class="text-danger"></span>
+    </div>
+    <div class="col-1">
+        <a href="" data-value="/dndclasses/delete/@Model.Id" class="deleteRow">X</a>
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="DndClassId" id="DndClassId" />
+    </div>
+</div>  

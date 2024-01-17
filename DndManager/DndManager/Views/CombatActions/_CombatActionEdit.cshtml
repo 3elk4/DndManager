@@ -1,0 +1,147 @@
+﻿@*@model CombatActionVM
+
+<div class="modal fade" id="editCombatActionModal">
+    <div class="modal-dialog" style="width:30%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Add Combat Action </h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Edit" asp-controller="CombatActions">
+                    <input asp-for="Id" type="hidden" />
+                    <input asp-for="PcId" type="hidden" />
+                    <input asp-for="CombatAttack.Id" type="hidden" />
+                    <input asp-for="CombatDamage.Id" type="hidden" />
+                    <input asp-for="CombatSavingThrow.Id" type="hidden" />
+                    <input asp-for="CombatAttack.CombatActionId" type="hidden" value="@Model.Id" />
+                    <input asp-for="CombatDamage.CombatActionId" type="hidden" value="@Model.Id" />
+                    <input asp-for="CombatSavingThrow.CombatActionId" type="hidden" value="@Model.Id" />
+
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input type="text" asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Type" class="control-label"></label>
+                        <select asp-for="Type" maxlength="50" class="form-control">
+                            <option value="action">Action</option>
+                            <option value="bonus action">Bonus Action</option>
+                            <option value="reaction">Reaction</option>
+                        </select>
+                        <span asp-validation-for="Type" class="text-danger"></span>
+                    </div>
+
+                    <hr />
+
+                    <label>Attack</label>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatAttack.AbilityId" class="control-label"> Ability </label>
+                                <select asp-for="CombatAttack.AbilityId" maxlength="100" class="form-control">
+                                    <option value="">Choose ability</option>
+                                    @foreach (var ab in abilities)
+                                    {
+                                        <option value="@ab.Id">@ab.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="CombatAttack.AbilityId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatAttack.IsProficient" class="control-label"> Proficient? </label>
+                                <input type="checkbox" asp-for="CombatAttack.IsProficient" class="form-control" />
+                                <span asp-validation-for="CombatAttack.IsProficient" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatAttack.AdditionalBonus" class="control-label"> Bonus </label>
+                                <input type="number" asp-for="CombatAttack.AdditionalBonus" min="0" max="5000" class="form-control" />
+                                <span asp-validation-for="CombatAttack.AdditionalBonus" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatAttack.Range" class="control-label"></label>
+                                <input type="text" asp-for="CombatAttack.Range" class="form-control" />
+                                <span asp-validation-for="CombatAttack.Range" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr />
+
+                    <label>Damage</label>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatDamage.AbilityId" class="control-label"> Ability </label>
+                                <select asp-for="CombatDamage.AbilityId" maxlength="100" class="form-control">
+                                    <option value="">Choose ability</option>
+                                    @foreach (var ab in abilities)
+                                    {
+                                        <option value="@ab.Id">@ab.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="CombatDamage.AbilityId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatDamage.DamageDice" class="control-label"> </label>
+                                <input type="text" asp-for="CombatDamage.DamageDice" class="form-control" />
+                                <span asp-validation-for="CombatDamage.DamageDice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatDamage.DamageType" class="control-label"></label>
+                                <input type="text" asp-for="CombatDamage.DamageType" class="form-control" />
+                                <span asp-validation-for="CombatDamage.DamageType" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatAttack.AdditionalBonus" class="control-label"> Bonus </label>
+                                <input type="number" asp-for="CombatAttack.AdditionalBonus" min="0" max="5000" class="form-control" />
+                                <span asp-validation-for="CombatAttack.AdditionalBonus" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr />
+
+                    <label>Saving Throw</label>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label asp-for="CombatSavingThrow.AbilityId" class="control-label"> Ability </label>
+                                <select asp-for="CombatSavingThrow.AbilityId" maxlength="100" class="form-control">
+                                    <option value="">Choose ability</option>
+                                    @foreach (var ab in abilities)
+                                    {
+                                        <option value="@ab.Id">@ab.Name</option>
+                                    }
+
+                                </select>
+                                <span asp-validation-for="CombatSavingThrow.AbilityId" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer justify-content-center align-content-between">
+                        <div class="button form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>*@

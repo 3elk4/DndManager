@@ -1,0 +1,121 @@
+﻿@model SpellLvlInfoVM
+
+<div>
+    <a href="/spells/edit/@ViewData["PcId"]"> Back to Spell Info </a>
+</div>
+
+<form asp-action="EditSpellLvl" method="post">
+    <div class="row" style="margin-top:10px; margin-bottom:10px;">
+        <input type="hidden" value="@Model.Id" name="SpellLvlInfoId" id="SpellLvlInfoId" />
+        <input type="hidden" value="@Model.SpellInfoId" name="SpellInfoId" id="SpellInfoId" />
+
+        <div class="col-1">
+            <label>Lvl</label>
+        </div>
+        <div class="col-1">
+            <input asp-for="@Model.Lvl" readonly class="form-control form-control-plaintext" />
+        </div>
+        @if (Model.Lvl != 0)
+        {
+            <div class="col-1">
+                <label>Max</label>
+            </div>
+            <div class="col-1">
+                <input asp-for="@Model.Max" class="form-control" />
+            </div>
+            <div class="col-1">
+                <label>Remaining</label>
+            </div>
+            <div class="col-1">
+                <input asp-for="@Model.Remaining" class="form-control" />
+            </div>
+        }
+        <div class="col">
+            <a id="addRow" asp-action="NewSpell" asp-controller="Spells" asp-route-id="@Model.Id">Add New Spell</a>
+        </div>
+    </div>
+
+    <div id="editorRows" class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+        @foreach (var spell in Model.Spells)
+        {
+            <partial name="_SpellEdit" model="spell" />
+        }
+    </div>
+    <input type="submit" id="submit" value="save" />
+</form>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/dynamicSpellEdit.js"></script>
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+
+        function prepareData() {
+            //var Id = $("input[name='PcId']").val();
+            var SpellLvlInfoId = $("input[name='SpellLvlInfoId']").val();
+            var SpellInfoId = $("input[name='SpellInfoId']").val();
+            var Spells = [];
+
+            var namesLen = $("input[name='Name']").length;
+            for (let i = 0; i < namesLen; i++) {
+                Spells.push({
+                    "Name": null, "Description": null, "CastingTime": null, "CastingRange": null, "Components": null, "Duration": null,
+                    "Id": null, "SpellLvlInfoId": SpellLvlInfoId
+                });
+            }
+
+            $("input[name='Name']").each(function (i) {
+                Spells[i].Name = $(this).val();
+            });
+
+            $("textarea[name='Description']").each(function (i) {
+                Spells[i].Description = $(this).val();
+            });
+
+            $("input[name='CastingTime']").each(function (i) {
+                Spells[i].CastingTime = $(this).val();
+            });
+
+            $("input[name='CastingRange']").each(function (i) {
+                Spells[i].CastingRange = $(this).val();
+            });
+
+            $("input[name='Components']").each(function (i) {
+                Spells[i].Components = $(this).val();
+            });
+
+            $("input[name='Duration']").each(function (i) {
+                Spells[i].Duration = $(this).val();
+            });
+
+            $("input[name='SpellId']").each(function (i) {
+                if ($(this).val() !== "") {
+                    Spells[i].Id = $(this).val();
+                }
+            });
+
+
+            return {
+                "Id": SpellLvlInfoId, "SpellInfoId": SpellInfoId,
+                "Lvl": $("input[name='Lvl']").val(),
+                "Max": $("input[name='Max']").val(),
+                "Remaining": $("input[name='Remaining']").val(),
+                "Spells": Spells
+            };
+        }
+
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            saveData('/spells/editspelllvl', prepareData());
+        });
+    </script>
+}

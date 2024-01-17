@@ -1,0 +1,26 @@
+﻿@model ItemVM
+
+<div id="editorItem" class="row" style="margin-top:10px;margin-bottom:10px;">
+    <div class="col">
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <input asp-for="@Model.Quantity" class="form-control" />
+        <span asp-validation-for="@Model.Quantity" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <input asp-for="@Model.Weight" class="form-control" />
+        <span asp-validation-for="@Model.Weight" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <textarea asp-for="@Model.Notes" class="form-control"></textarea>
+        <span asp-validation-for="@Model.Notes" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <a href="" data-value="/items/delete/@Model.Id" class="deleteRow">X</a>
+    </div>
+    <div>
+        <input type="hidden" value="@Model.Id" name="ItemId" id="ItemId" />
+    </div>
+</div>  

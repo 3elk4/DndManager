@@ -1,0 +1,87 @@
+﻿@model List<DndClassVM>
+
+<div>
+    <a href="/pcs/details/@ViewData["PcId"]"> Back to Character </a>
+</div>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" value="@ViewData["PcId"]" name="PcId" id="PcId" />
+    <div id="editorRows" class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+        <div class="row">
+            <div class="col-2">
+                <label>Name</label>
+            </div>
+            <div class="col-2">
+                <label>Subname</label>
+            </div>
+            <div class="col-2">
+                <label>Lvl</label>
+            </div>
+            <div class="col-1">
+
+            </div>
+        </div>
+        @foreach (var dndClass in Model)
+        {
+            <partial name="_DndClassEdit" model="dndClass" />
+        }
+    </div>
+
+        <a id="addRow" asp-action="NewDndClass" asp-controller="DndClasses" asp-route-id="@ViewData["PcId"]">Add New Dnd Class</a> @*//todo: what if more than 4?*@
+
+    <br />
+    <input type="submit" id="submit" value="Save" />
+</form>
+
+@section scripts {
+    <script type="text/javascript" src="~/js/dynamicItemsEdit.js"></script>
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+
+        function prepareData() {
+            var Id = $("input[name='PcId']").val();
+            var DndClasses = [];
+
+            var namesLen = $("input[name='Name']").length;
+
+            for (let i = 0; i < namesLen; i++) {
+                DndClasses.push({ "Name": null, "Lvl": 0, "Subclass": { "Id": null, "Name": null, "DndClassId": null }, "Id": null, "PcId": Id });
+            }
+
+            $("input[name='Name']").each(function (i) {
+                DndClasses[i].Name = $(this).val();
+            });
+
+            $("input[name='Lvl']").each(function (i) {
+                DndClasses[i].Lvl = $(this).val();
+            });
+
+            $("input[name='SubclassName']").each(function (i) {
+                DndClasses[i].SubclassName = $(this).val();
+            });
+
+            $("input[name='DndClassId']").each(function (i) {
+                if ($(this).val() !== "") {
+                    DndClasses[i].Id = $(this).val();
+                }
+            });
+
+            return { "Id": Id, "DndClasses": DndClasses };
+        }
+
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            saveData('/dndclasses/edit', prepareData());
+        });
+    </script>
+}

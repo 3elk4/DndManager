@@ -1,0 +1,249 @@
+﻿@model PcVM
+
+@{
+    ViewData["Title"] = "New Pc";
+}
+
+<body>
+    <div>
+        <a asp-action="Index">Back to Characters</a>
+    </div>
+
+    <form asp-action="Create" id="regForm" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <div class="tab">
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
+                        <label asp-for="Name" class="control-label"></label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col">
+                    @*<div class="form-group">
+                        <label for="Photo"></label>
+                        <input asp-for="Photo" type="file"  class="form-control-file" id="image_file" accept=".png, .jpeg, .jpg">
+                    </div>*@
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="RaceName" class="control-label">Race</label>
+                <input asp-for="RaceName" class="form-control">
+                <span asp-validation-for="RaceName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <label asp-for="DndClasses.ElementAt(0).Name" class="control-label">Class</label>
+                            <input asp-for="DndClasses.ElementAt(0).Name" class="form-control" />
+                            <span asp-validation-for="DndClasses.ElementAt(0).Name" class="text-danger"></span>
+                        </div>
+                        <div class="col">
+                            <label asp-for="DndClasses.ElementAt(0).SubclassName" class="control-label">Subclass</label>
+                            <input asp-for="DndClasses.ElementAt(0).SubclassName" class="form-control" />
+                            <span asp-validation-for="DndClasses.ElementAt(0).SubclassName" class="text-danger"></span>
+                        </div>
+                        <div class="col">
+                            <label asp-for="DndClasses.ElementAt(0).Lvl" class="control-label"></label>
+                            <input type="number" asp-for="DndClasses.ElementAt(0).Lvl" class="form-control" min="1" max="20" />
+                            <span asp-validation-for="DndClasses.ElementAt(0).Lvl" class="text-danger"></span>
+                        </div>
+                    </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="BackgroundName" class="control-label">Background</label>
+                <input asp-for="BackgroundName" class="form-control" />
+                <span asp-validation-for="BackgroundName" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="tab">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="AC" class="control-label"></label>
+                        <input type="number" min="-7" max="1000" asp-for="AC" class="form-control" />
+                        <span asp-validation-for="AC" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Speed" class="control-label"></label>
+                        <input asp-for="Speed" class="form-control" />
+                        <span asp-validation-for="Speed" class="text-danger"></span>
+
+                    </div>
+                    <div class="col">
+                        <label asp-for="HitDice" class="control-label"></label>
+                        <input asp-for="HitDice" class="form-control" />
+                        <span asp-validation-for="Speed" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="HP" class="control-label"></label>
+                        <input type="number" min="1" max="1000" asp-for="HP" class="form-control" />
+                        <span asp-validation-for="HP" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h4>Abilities and Skills</h4>
+                @for (int i = 0; i < 6; ++i)
+                {
+                    <div class="row" style="margin-bottom:20px;">
+                        <div class="col-md-2">
+                            <input asp-for="@Model.Abilities.ElementAt(i).Name" readonly class="form-control-lg form-control-plaintext" />
+                        </div>
+                        <div class="col-md-2">
+                            <input min=1 max=20 asp-for="@Model.Abilities.ElementAt(i).Value" class="form-control" />
+                        </div>
+                        <div class="col-md-1">
+                            <input type="checkbox" asp-for="@Model.Abilities.ElementAt(i).SavingThrow" class="form-control" />
+                        </div>
+                        <div class="col">
+                            <span asp-validation-for="@Model.Abilities.ElementAt(i).Value" class="text-danger"></span>
+                        </div>
+                        @if (Model.Abilities.ElementAt(i).Skills.Count > 0)
+                        {
+                            <div class="col">
+                                <a id="expandSkills" class="btn btn-light" type="button" data-toggle="collapse" href="#collapse@(Model.Abilities.ElementAt(i).Name)" role="button" aria-expanded="false" aria-controls="collapse@(Model.Abilities.ElementAt(i).Name)">
+                                    <i class="fas fa-plus float-right"></i>
+                                </a>
+                            </div>
+                        }
+                    </div>
+
+
+                    <div class="collapse" id="collapse@(Model.Abilities.ElementAt(i).Name)">
+                        @if (Model.Abilities.ElementAt(i).Skills != null)
+                        {
+                            for (int j = 0; j < Model.Abilities.ElementAt(i).Skills.Count; ++j)
+                            {
+                                <div class="row" style="margin:10px;">
+                                    <div class="col-md-5">
+                                        <input asp-for="@Model.Abilities.ElementAt(i).Skills.ElementAt(j).Name" readonly class="form-control form-control-plaintext">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <input asp-for="@Model.Abilities.ElementAt(i).Skills.ElementAt(j).Proficient" class="form-control" />
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="tab">
+            <div class="form-group">
+                <h3>Bio</h3>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Bio.Age" class="control-label"></label>
+                        <input asp-for="Bio.Age" class="form-control" />
+                        <span asp-validation-for="Bio.Age" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Size" class="control-label"></label>
+                        <input asp-for="Bio.Size" class="form-control" />
+                        <span asp-validation-for="Bio.Size" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Weight" class="control-label"></label>
+                        <input asp-for="Bio.Weight" class="form-control" />
+                        <span asp-validation-for="Bio.Weight" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Height" class="control-label"></label>
+                        <input asp-for="Bio.Height" class="form-control" />
+                        <span asp-validation-for="Bio.Height" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Bio.Skin" class="control-label"></label>
+                        <input asp-for="Bio.Skin" class="form-control" />
+                        <span asp-validation-for="Bio.Skin" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Eyes" class="control-label"></label>
+                        <input asp-for="Bio.Eyes" class="form-control" />
+                        <span asp-validation-for="Bio.Eyes" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Hair" class="control-label"></label>
+                        <input asp-for="Bio.Hair" class="form-control" />
+                        <span asp-validation-for="Bio.Hair" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Alignment" class="control-label"></label>
+                        <input asp-for="Bio.Alignment" class="form-control" />
+                        <span asp-validation-for="Bio.Alignment" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <h3>Personal traits</h3>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Bio.Traits" class="control-label"></label>
+                        <textarea asp-for="Bio.Traits" class="form-control"></textarea>
+                        <span asp-validation-for="Bio.Traits" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Flaws" class="control-label"></label>
+                        <textarea asp-for="Bio.Flaws" class="form-control"></textarea>
+                        <span asp-validation-for="Bio.Flaws" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Bio.Bonds" class="control-label"></label>
+                        <textarea asp-for="Bio.Bonds" class="form-control"></textarea>
+                        <span asp-validation-for="Bio.Bonds" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Ideals" class="control-label"></label>
+                        <textarea asp-for="Bio.Ideals" class="form-control"></textarea>
+                        <span asp-validation-for="Bio.Ideals" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <h3>Bonds</h3>
+                <div class="row">
+                    <div class="col">
+                        <label asp-for="Bio.Allies" class="control-label"></label>
+                        <textarea asp-for="Bio.Allies" class="form-control"></textarea>
+                        <span asp-validation-for="Bio.Allies" class="text-danger"></span>
+                    </div>
+                    <div class="col">
+                        <label asp-for="Bio.Backstory" class="control-label"></label>
+                        <textarea asp-for="Bio.Backstory" class="form-control"></textarea>
+                        <span asp-validation-for="Bio.Backstory" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="overflow:auto;">
+            <div style="float:right;">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+            </div>
+        </div>
+
+        <!-- Circles which indicates the steps of the form: -->
+        <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+</form>
+
+    <link rel="stylesheet" href="~/css/formstyle.css" />
+    <script src="~/js/formWithTabs.js"></script>
+</body>
+
