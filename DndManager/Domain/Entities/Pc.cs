@@ -24,14 +24,14 @@ namespace Domain.Entities
         public int Proficiency { get; set; } = 2;
 
 
-        public Bio Bio { get; set; } = new Bio();
-        public SpellInfo SpellInfo { get; set; } = new SpellInfo();
+        public Bio Bio { get; init; } = new Bio();
+        public SpellInfo SpellInfo { get; init; } = new SpellInfo();
 
         public IList<DndClass> DndClasses { get; init; } 
         public IList<Item> Items { get; private set; } = new List<Item>();
         public IList<Feat> Feats { get; private set; } = new List<Feat>();
         public IList<Proficiency> Proficiencies { get; private set; } = new List<Proficiency>();
-        public IList<CombatAction> CombatsActions { get; set; } = new List<CombatAction>();
+        public IList<CombatAction> CombatsActions { get; private set; } = new List<CombatAction>();
         public IList<Ability> Abilities { get; init; }
     }
 }
