@@ -1,0 +1,11 @@
+﻿DndManager/.vs
+DndManager/Application/bin
+DndManager/Application/obj
+DndManager/DndManager/bin
+DndManager/Domain/bin
+DndManager/DndManager/appsettings.Development.json
+DndManager/DndManager/appsettings.json
+DndManager/DndManager/obj
+DndManager/Domain/obj
+DndManager/Infrastructure/bin
+DndManager/Infrastructure/obj
