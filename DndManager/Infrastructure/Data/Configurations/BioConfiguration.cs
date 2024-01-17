@@ -1,18 +1,15 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configurations
 {
-    class BioConfiguration : IEntityTypeConfiguration<Bio>
+    class BioConfiguration : BaseEntityConfiguration<Bio>
     {
-        public void Configure(EntityTypeBuilder<Bio> builder)
+        public override void Configure(EntityTypeBuilder<Bio> builder)
         {
+            base.Configure(builder);
+            //builder.Property(a => a.Age).HasMaxLength(45);
             builder.Property(a => a.Size).HasMaxLength(45).IsRequired(false);
             builder.Property(a => a.Weight).HasMaxLength(45).IsRequired(false);
             builder.Property(a => a.Height).HasMaxLength(45).IsRequired(false);

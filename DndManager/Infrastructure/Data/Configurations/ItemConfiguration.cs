@@ -1,18 +1,15 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configurations
 {
-    class ItemConfiguration : IEntityTypeConfiguration<Item>
+    class ItemConfiguration : BaseEntityConfiguration<Item>
     {
-        public void Configure(EntityTypeBuilder<Item> builder)
+        public override void Configure(EntityTypeBuilder<Item> builder)
         {
+            base.Configure(builder);
+
             builder.Property(a => a.Name).HasMaxLength(100).IsRequired();
             builder.Property(a => a.Quantity).IsRequired();
             builder.Property(a => a.Weight).IsRequired();

@@ -1,18 +1,15 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configurations
 {
-    class SpellConfiguration : IEntityTypeConfiguration<Spell>
+    class SpellConfiguration : BaseEntityConfiguration<Spell>
     {
-        public void Configure(EntityTypeBuilder<Spell> builder)
+        public override void Configure(EntityTypeBuilder<Spell> builder)
         {
+            base.Configure(builder);
+
             builder.Property(a => a.Name).HasMaxLength(50).IsRequired();
             builder.Property(a => a.Description).HasMaxLength(1000).IsRequired();
             builder.Property(a => a.CastingTime).HasMaxLength(100).IsRequired();

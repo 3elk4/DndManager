@@ -9,12 +9,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configurations
 {
-    class CombatSavingThrowConfiguration : IEntityTypeConfiguration<CombatSavingThrow>
+    class CombatSavingThrowConfiguration : BaseEntityConfiguration<CombatSavingThrow>
     {
-        public void Configure(EntityTypeBuilder<CombatSavingThrow> builder)
+        public override void Configure(EntityTypeBuilder<CombatSavingThrow> builder)
         {
-            builder.HasOne(a => a.CombatAction).WithOne(x => x.CombatSavingThrow).HasForeignKey<CombatAttack>(x => x.CombatActionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(a => a.Ability).WithOne(x => x.CombatSavingThrow).HasForeignKey<CombatAttack>(x => x.AbilityId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
+            base.Configure(builder);
+
+            builder.HasOne(a => a.CombatAction).WithOne(x => x.CombatSavingThrow).HasForeignKey<CombatSavingThrow>(x => x.CombatActionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Ability).WithOne(x => x.CombatSavingThrow).HasForeignKey<CombatSavingThrow>(x => x.AbilityId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

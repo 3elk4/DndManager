@@ -9,10 +9,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configurations
 {
-    class CombatAttackConfiguration : IEntityTypeConfiguration<CombatAttack>
+    class CombatAttackConfiguration : BaseEntityConfiguration<CombatAttack>
     {
-        public void Configure(EntityTypeBuilder<CombatAttack> builder)
+        public override void Configure(EntityTypeBuilder<CombatAttack> builder)
         {
+            base.Configure(builder);
+
             builder.Property(a => a.Range).HasMaxLength(50).IsRequired();
 
             builder.HasOne(a => a.CombatAction).WithOne(x => x.CombatAttack).HasForeignKey<CombatAttack>(x => x.CombatActionId).IsRequired().OnDelete(DeleteBehavior.Cascade);

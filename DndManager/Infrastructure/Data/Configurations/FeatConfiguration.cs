@@ -1,18 +1,15 @@
 ﻿using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Configurations
 {
-    class FeatConfiguration : IEntityTypeConfiguration<Feat>
+    class FeatConfiguration : BaseEntityConfiguration<Feat>
     {
-        public void Configure(EntityTypeBuilder<Feat> builder)
+        public override void Configure(EntityTypeBuilder<Feat> builder)
         {
+            base.Configure(builder);
+
             builder.Property(a => a.Title).HasMaxLength(100).IsRequired();
             builder.Property(a => a.Source).HasMaxLength(100).IsRequired();
             builder.Property(a => a.SourceType).HasMaxLength(100).IsRequired();
