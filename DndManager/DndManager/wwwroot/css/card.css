@@ -1,0 +1,29 @@
+﻿
+card {
+    max-width: 12%;
+    border-radius: 12px;
+}
+
+.card-header {
+    background-color: #c4a59b;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 20vw;
+    object-fit: cover;
+}
+
+.card-body {
+    /*background-color: #dbb6ab;*/
+}
+
+.card-footer {
+    align-items: center;
+    justify-content: space-between;
+    background-color: #c4a59b;
+}
+
+.badge {
+    background-color: #c4a59b;
+}

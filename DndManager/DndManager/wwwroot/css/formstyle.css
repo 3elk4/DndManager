@@ -1,20 +1,21 @@
 ﻿/* Style the form */
 #regForm {
-    background-color: #ffffff;
+    background-color: #c4a59b;
     margin: 20px auto;
     padding: 30px;
-    width: 90%;
+    width: 95%;
     min-width: 300px;
+    border-radius: 12px;
 }
 
 /* Style the input fields */
-input {
+/*input {
     padding: 10px;
     width: 100%;
     font-size: 17px;
     font-family: Raleway;
     border: 1px solid #aaaaaa;
-}
+}*/
 
     /* Mark input boxes that gets an error on validation: */
 /*input.invalid {
@@ -28,14 +29,14 @@ input {
 
 /* Make circles that indicate the steps of the form: */
 .step {
-    height: 15px;
-    width: 15px;
+    height: 18px;
+    width: 18px;
     margin: 0 2px;
-    background-color: #bbbbbb;
+    background-color: #b58f84;
     border: none;
     border-radius: 50%;
     display: inline-block;
-    opacity: 0.5;
+    opacity: 0.7;
 }
 
     /* Mark the active step: */
@@ -45,5 +46,5 @@ input {
 
     /* Mark the steps that are finished and valid: */
 .step.finish {
-    background-color: #04AA6D;
+    background-color: #a68176;
 }
