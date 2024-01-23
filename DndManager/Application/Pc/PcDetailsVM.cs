@@ -1,21 +1,21 @@
 ﻿using Application.Ability;
 using Application.Bio;
+using Application.Common.Extentions;
 using Application.Common.Models;
 using Application.DndClass;
 using Application.SpellInfo;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace Application.Pc
 {
-    public class PcVM : BaseVM
+    public class PcDetailsVM : BaseVM
     {
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please provide character's name")]
         [StringLength(100, ErrorMessage = "Character's name should be min 1 and max 100 length")]
         public string Name { get; init; }
-        //public byte[] Image { get; init; }
+        public string Image { get; init; }
         public IReadOnlyCollection<DndClassVM> DndClasses { get; init; }
         public IReadOnlyCollection<AbilityVM> Abilities { get; init; }
         public BioVM Bio { get; init; }
@@ -57,7 +57,10 @@ namespace Application.Pc
         {
             public Mapping()
             {
-                CreateMap<Domain.Entities.Pc, PcVM>();
+                CreateMap<Domain.Entities.Pc, PcDetailsVM>()
+                    .ForMember(dest => dest.Image,
+                               cfg => cfg.MapFrom(
+                                   src => src.Image.ConvertToBase64String()));
             }
         }
     }
