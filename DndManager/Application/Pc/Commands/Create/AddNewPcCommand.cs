@@ -15,7 +15,7 @@ namespace Application.Pc.Commands.Create
     public record AddNewPcCommand : IRequest<Result>, ICommand
     {
         public string Name { get; init; }
-        public byte[] Image { get; init; } //todo: byte or ifile?
+        public byte[] Image { get; init; }
         public string RaceName { get; init; }
         public string BackgroundName { get; init; }
 
@@ -23,20 +23,20 @@ namespace Application.Pc.Commands.Create
         public string Speed { get; init; }
         public int HP { get; init; }
         public string HitDice { get; init; }
-        public IReadOnlyCollection<AbilityVM> Abilities { get; init; }
-        public IReadOnlyCollection<DndClassVM> DndClasses { get; init; }
+        public IList<AbilityVM> Abilities { get; init; }
+        public IList<DndClassVM> DndClasses { get; init; }
         public BioVM Bio { get; init; }
         public SpellInfoVM SpellInfo { get; init; }
     }
 
     public class AddNewPcCommandHandler : IRequestHandler<AddNewPcCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.Pc> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public AddNewPcCommandHandler(IRepository<Domain.Entities.Pc> repository, IMapper mapper)
+        public AddNewPcCommandHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
@@ -59,10 +59,10 @@ namespace Application.Pc.Commands.Create
                 DndClasses = _mapper.Map<List<Domain.Entities.DndClass>>(request.DndClasses),
             };
 
-            _repository.Insert(item);
-            var result = await _repository.SaveAsync(cancellationToken);
+            _dbContext.Pcs.Add(item);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some problems occured during creating record." });
+            return result > 0 ? Result.Success() : Result.Failure(new List<string>() { "Some problems occured during creating record." });
         }
     }
 }

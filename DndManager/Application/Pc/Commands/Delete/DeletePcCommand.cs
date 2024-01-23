@@ -14,17 +14,19 @@ namespace Application.Pc.Commands.Delete
 
     public class DeletePcCommandHandler : IRequestHandler<DeletePcCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.Pc> _repository;
+        private readonly IDbContext _dbContext;
 
-        public DeletePcCommandHandler(IRepository<Domain.Entities.Pc> repository)
+        public DeletePcCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result> Handle(DeletePcCommand request, CancellationToken cancellationToken)
         {
-            _repository.Delete(request.Id);
-            var result = await _repository.SaveAsync(cancellationToken);
+            var entity = await _dbContext.Pcs.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            _dbContext.Pcs.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
         }
