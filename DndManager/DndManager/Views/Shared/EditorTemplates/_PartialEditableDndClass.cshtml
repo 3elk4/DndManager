@@ -1,0 +1,19 @@
+﻿@model DndClassVM
+
+<div class="row">
+    <div class="col">
+        <label asp-for="@Model.Name" class="control-label">Class</label>
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.SubclassName" class="control-label">Subclass</label>
+        <input asp-for="@Model.SubclassName" class="form-control" />
+        <span asp-validation-for="@Model.SubclassName" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Lvl" class="control-label"></label>
+        <input type="number" asp-for="@Model.Lvl" class="form-control" min="1" max="20" />
+        <span asp-validation-for="@Model.Lvl" class="text-danger"></span>
+    </div>
+</div>

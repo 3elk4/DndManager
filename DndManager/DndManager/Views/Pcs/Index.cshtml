@@ -1,51 +1,74 @@
-﻿@model List<PcVM>
+﻿@model List<PcBriefVM>
 
 @{
-    ViewData["Title"] = "Pcs";
+    ViewData["Title"] = "Playable Characters";
 }
 
-<div>
-    <a asp-action="Create"> Add new Pc</a>
-</div>
+<div class="container">
+    <div class="row justify-content-between  align-items-center">
+        <div class="col-sm">
+            <form class="form-inline" asp-controller="Pcs" asp-action="Index">
+                <input type="text" class="form-control" placeholder="Search...">
+                <button type="submit" class="btn btn-primary btn-md">
+                    <i class="fas fa-search"></i>
+                </button>
+            </form>
+        </div>
+        <div class="col-sm-1">
+            <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Pcs" asp-action="Create">
+                <i class="fas fa-plus"></i>
+            </a>
+        </div>
+    </div>
 
-<div class="card-columns" style="display: inline-block;">
-    @if (Model != null)
-    {
-        foreach (var pc in Model)
+    <div class="row">
+        @if (Model.Count == 0)
         {
-            <div class="card" style="max-width:300px;">
-                <div class="card-header">
-                    @pc.Name
-                </div>
-                @*@{ 
-                    string base64String = pc.Image == null ? "" : "data:image/jpg;base64," + Convert.ToBase64String(pc.Image, 0, pc.Image.Length);
+            <p> There's no playable character's yet. Please add new character to show some details. </p>
+        }
+        else
+        {
+            <div class="card-columns" style="display: inline-block;">
+                @foreach (var pc in Model)
+                {
+                    <div class="card box-shadow">
+                        <div class="card-header"> <h5> @pc.Name </h5> </div>
+
+                        <img class="card-img-top" src="@pc.Image">
+
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                @if (@pc.DndClasses == null || @pc.DndClasses.Count == 0)
+                                {
+                                    <p> This Pc does not contain class yet. </p>
+                                }
+                                else{
+                                    foreach (var dndClass in @pc.DndClasses)
+                                    {
+                                        if (dndClass.Name == null || dndClass.Name.Length == 0) continue;
+
+                                        var title = dndClass.SubclassName.Length != 0 ? $"{dndClass.Name} ({dndClass.SubclassName})" : dndClass.Name;
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            @title
+                                            <span class="badge  rounded-pill">@dndClass.Lvl</span>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+
+                        <div class="card-footer d-flex">
+                            <a class="btn btn-primary" role="button" asp-area="" asp-controller="Pcs" asp-action="Details" asp-route-id="@pc.Id"><i class="fas fa-info-circle"></i></a>
+                            <form asp-controller="Pcs" asp-action="Delete" asp-route-id="@pc.Id">
+                                <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete pc: @pc.Name?')"> <i class="fas fa-times"></i> </button>
+                            </form>
+                        </div>
+                    </div>
                 }
-                <img class="card-img-top" src="@base64String">*@
-                <div class="card-body">
-                    <ul class="list-group list-group-flush">
-                        @if (@pc.DndClasses != null)
-                        {
-                            foreach (var dndClass in @pc.DndClasses)
-                            {
-                                if (dndClass.Name == null || dndClass.Name.Length == 0) continue;
-                                var title = dndClass.SubclassName.Length != 0 ? $"{dndClass.Name} ({dndClass.SubclassName})" : dndClass.Name;
-
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    @title
-                                    <span class="badge bg-primary rounded-pill">@dndClass.Lvl</span>
-                                </li>
-                            }
-                        }
-                    </ul>
-                </div>
-                <div class="card-footer d-flex justify-content-between align-items-center">
-
-                    <a href="/pcs/details/@pc.Id" class="card-link">View Details</a>
-                    <form asp-controller="Pcs" asp-action="Delete" asp-route-id="@pc.Id">
-                        <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Are you sure you want to delete pc: @pc.Name?')"> X </button>
-                    </form>
-                </div>
             </div>
         }
-    }
+    </div>
 </div>
+
+

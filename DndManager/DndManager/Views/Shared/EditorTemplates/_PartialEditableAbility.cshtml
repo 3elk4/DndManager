@@ -1,0 +1,50 @@
+﻿@model Application.Ability.AbilityVM
+
+<div class="row">
+    <div class="col-4">
+        <input type="text" asp-for="@Model.Name" readonly class="form-control-plaintext" />
+        <span asp-validation-for="@Model.Value" class="text-danger"></span>
+    </div>
+    <div class="col-2">
+        <input type="number" min=1 max=20 asp-for="@Model.Value" class="form-control" />
+    </div>
+    <div class="col-2">
+        <input type="checkbox" asp-for="@Model.SavingThrow" class="form-control" />
+    </div>
+
+    @if (Model.Skills != null)
+    {
+        if (Model.Skills.Count > 0)
+        {
+            <div class="col">
+                <a id="expandSkills" class="btn btn-primary" data-toggle="collapse" href="#collapse@(Model.Name)" role="button" aria-expanded="false" aria-controls="collapse@(Model.Name)">
+                    Skills
+                </a>
+            </div>
+        }
+    }
+</div>
+@if (Model.Skills != null)
+{
+    if (Model.Skills.Count > 0)
+    {
+        <div class="row ml-3 mb-3">
+            <div class="collapse" id="collapse@(Model.Name)">
+                @for (int j = 0; j < Model.Skills.Count; ++j)
+                {
+                    <div class="row mb-1">
+                        <div class="col-3">
+                            <input type="checkbox" asp-for="@Model.Skills[j].Proficient" class="form-control" />
+                        </div>
+                        <div class="col">
+                            <input type="text" asp-for="@Model.Skills[j].Name" readonly class="form-control-plaintext">
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+}
+
+

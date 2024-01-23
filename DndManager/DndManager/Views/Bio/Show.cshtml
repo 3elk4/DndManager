@@ -1,0 +1,111 @@
+﻿@model BioVM
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" asp-for="Id" class="form-control" id="Id", name="Id" />
+    <input type="hidden" asp-for="PcId" class="form-control" />
+
+    <div class="container-fluid">
+        <div class="row align-items-center mb-3">
+            <div class="col-4 d-flex justify-content-start">
+                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Pcs" asp-action="Details" asp-route-id="@Model.PcId">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col-8 d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit" id="submit"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center box-shadow mt-3 mb-3">
+        <div class="form-group pt-3 pb-3">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Age" class="control-label"></label>
+                    <input type="number" asp-for="Age" class="form-control" />
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Size" class="control-label"></label>
+                    <input asp-for="Size" class="form-control" />
+                    <span asp-validation-for="Size" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Weight" class="control-label"></label>
+                    <input asp-for="Weight" class="form-control" />
+                    <span asp-validation-for="Weight" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Height" class="control-label"></label>
+                    <input asp-for="Height" class="form-control" />
+                    <span asp-validation-for="Height" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Skin" class="control-label"></label>
+                    <input asp-for="Skin" class="form-control" />
+                    <span asp-validation-for="Skin" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Eyes" class="control-label"></label>
+                    <input asp-for="Eyes" class="form-control" />
+                    <span asp-validation-for="Eyes" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Hair" class="control-label"></label>
+                    <input asp-for="Hair" class="form-control" />
+                    <span asp-validation-for="Hair" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Alignment" class="control-label"></label>
+                    <input asp-for="Alignment" class="form-control" />
+                    <span asp-validation-for="Alignment" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group pt-3 pb-3">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Traits" class="control-label"></label>
+                    <textarea rows="6" asp-for="Traits" class="form-control"></textarea>
+                    <span asp-validation-for="Traits" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Flaws" class="control-label"></label>
+                    <textarea rows="6" asp-for="Flaws" class="form-control"></textarea>
+                    <span asp-validation-for="Flaws" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Bonds" class="control-label"></label>
+                    <textarea rows="6" asp-for="Bonds" class="form-control"></textarea>
+                    <span asp-validation-for="Bonds" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Ideals" class="control-label"></label>
+                    <textarea rows="6" asp-for="Ideals" class="form-control"></textarea>
+                    <span asp-validation-for="Ideals" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="form-group pt-3 pb-3">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Allies" class="control-label"></label>
+                    <textarea rows="6" asp-for="Allies" class="form-control"></textarea>
+                    <span asp-validation-for="Allies" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Backstory" class="control-label"></label>
+                    <textarea rows="6" asp-for="Backstory" class="form-control"></textarea>
+                    <span asp-validation-for="Backstory" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
