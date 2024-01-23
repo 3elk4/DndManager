@@ -1,15 +1,20 @@
 ﻿@model List<TestVM>
 
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Dungeons and Dragons Manager";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container-fluid align-self-center">
+    <div class="row">
+        <div class="col-7 align-self-center text-center">
+            <h1 class="display-4">Welcome to DND Manager!</h1>
+            <p style="padding: 2%;">Place to keep data about your PCs, NPCs, Maps, Campaigns and many more! Players and Dungeon Masters are welcome!</p>
+        </div>
+        <div class="col-5">
+            <a class="btn btn-primary btn-lg" role="button" asp-area="" asp-controller="Pcs" asp-action="Index">Playable characters</a>
+            <a class="btn btn-primary btn-lg" role="button">Non-playable characters</a>
+            <a class="btn btn-primary btn-lg" role="button">Maps</a>
+            <a class="btn btn-primary btn-lg" role="button">Campaigns</a>
+        </div>
+    </div>
 </div>
-
-@foreach(var t in Model)
-{
-    <h1> @t.Name </h1>
-}

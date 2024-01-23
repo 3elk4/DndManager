@@ -1,0 +1,21 @@
+﻿@model string
+
+@{
+    ViewData["Title"] = "Oops...";
+    var splitted = @Model.Split(": ");
+}
+
+<div class="container ">
+    <div class="row justify-content-center align-content-center">
+        <div class="alert alert-danger mt-2 mb-1 text-center box-shadow">
+            <h3> Oopsy daisy... We couldn't find it! </h3>
+            <hr />
+            <p> @splitted[0] <b>@splitted[1]</b>. </p>
+        </div>
+    </div>
+    <div class="row justify-content-center align-content-center">
+        <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Home" asp-action="Index">
+            Return to home page
+        </a>
+    </div>
+</div>
