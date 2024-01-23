@@ -4,16 +4,16 @@ using Application.Pc;
 using Application.Pc.Commands.Create;
 using Application.Pc.Commands.Delete;
 using Application.Pc.Commands.Update;
-using Application.Pc.Queries.Get;
-using Application.Pc.Queries.GetMany;
+using Application.Pc.Queries.Show;
+using Application.Pc.Queries.Index;
 using Application.SpellInfo;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Helpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Application.Common.Extentions;
 
 namespace Presentation.Controllers
 {
@@ -46,7 +46,11 @@ namespace Presentation.Controllers
             var request = new GetPcByIdQuery() { Id = id };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
+            if (result.IsFailure)
+            {
+                Response.StatusCode = 404;
+                return View("NotFound", $"{string.Join(',', result.Errors)}");
+            }
 
             return View(result.Value);
         }
@@ -54,25 +58,24 @@ namespace Presentation.Controllers
         //// GET: PcsController/Create
         public ActionResult Create()
         {
-            return View(new PcVM() {
+            return View(new PcEditableVM() {
                 Abilities = PcHelper.GenerateAbilitiesWithSkills(),
                 DndClasses = new List<DndClassVM>() { new DndClassVM() },
-                Bio = new BioVM(),
-                SpellInfo = new SpellInfoVM() { SpellLvls = PcHelper.GenerateSpellLvls() } //todo: in formual choose cast ability
+                Bio = new BioVM()
             });
         }
 
         // POST: PcsController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(PcVM pcVM)
+        public async Task<ActionResult> Create(PcEditableVM pcVM)
         {
-            if (!ModelState.IsValid) error = 2;
+            if (!ModelState.IsValid) return View(pcVM);
             else
             {
                 var request = new AddNewPcCommand() { 
                     Name = pcVM.Name,
-                    //Image = PcHelper.PhotoIntoByteImage(pcVM.Image),
+                    Image = pcVM.Photo.PhotoIntoByteImage(),
                     RaceName = pcVM.RaceName,
                     BackgroundName = pcVM.BackgroundName,
                     AC = pcVM.AC,
@@ -82,14 +85,14 @@ namespace Presentation.Controllers
                     Abilities = pcVM.Abilities,
                     DndClasses = pcVM.DndClasses,
                     Bio = pcVM.Bio,
-                    SpellInfo = pcVM.SpellInfo
+                    SpellInfo = new SpellInfoVM() { SpellLvls = PcHelper.GenerateSpellLvls() }
                 };
                 var result = await _mediator.Send(request);
 
                 if (result.IsFailure) error = 1;
             }
 
-            return RedirectToAction(nameof(Index), new { error = error } );
+            return RedirectToAction(nameof(Index), new { errorCode = error } );
         }
 
         // GET: PcsController/Edit/5
@@ -108,7 +111,7 @@ namespace Presentation.Controllers
         // POST: PcsController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(PcVM pcVM)
+        public async Task<ActionResult> Edit(PcEditableVM pcVM)
         {
             if (!ModelState.IsValid) error = 2;
             else
@@ -116,7 +119,7 @@ namespace Presentation.Controllers
                 var request = new UpdatePcCommand()
                 {
                     Name = pcVM.Name,
-                    //Image = PcHelper.PhotoIntoByteImage(pcVM.Image),
+                    Image = pcVM.Photo.PhotoIntoByteImage(),
                     RaceName = pcVM.RaceName,
                     BackgroundName = pcVM.BackgroundName
                 };

@@ -1,11 +1,6 @@
 ﻿using Application.Ability;
-using Application.DndClass;
 using Application.SpellLvlInfo;
-using Microsoft.AspNetCore.Http;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace Presentation.Helpers
 {
@@ -19,43 +14,6 @@ namespace Presentation.Helpers
             {"Wisdom", new List<string> () { "Animal Handling", "Perception", "Medicine", "Survival", "Insight" } },
             {"Charisma", new List<string> () { "Deception", "Intimidation", "Performance", "Persuation" } }
         };
-
-        public static decimal Mod(int value)
-        {
-            return Math.Floor((decimal)(value - 10) / 2);
-        }
-
-        public static int Proficiency(List<DndClassVM> dndClasses)
-        {
-            var value = dndClasses.Select(d => d.Lvl).Sum();
-
-            switch (value)
-            {
-                case >= 1 and <= 4:
-                    return 2;
-                case >= 5 and <= 8:
-                    return 3;
-                case >= 9 and <= 12:
-                    return 4;
-                case >= 13 and <= 16:
-                    return 5;
-                case >= 17 and <= 20:
-                    return 6;
-            }
-            return 0;
-        }
-
-        public static byte[] PhotoIntoByteImage(IFormFile Photo)
-        {
-            if (Photo != null && Photo.Length > 0)
-            {
-                using MemoryStream ms = new MemoryStream();
-                Photo.CopyTo(ms);
-                Console.WriteLine(Convert.ToBase64String(ms.ToArray()));
-                return ms.ToArray();
-            }
-            return null;
-        }
 
         public static List<SpellLvlInfoVM> GenerateSpellLvls()
         {

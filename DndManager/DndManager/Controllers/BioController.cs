@@ -1,9 +1,9 @@
 ﻿using Application.Bio;
 using Application.Bio.Commands.Update;
 using Application.Bio.Queries.Get;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using System.Threading.Tasks;
 
 namespace Presentation.Controllers
@@ -18,7 +18,7 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
-        public async Task<ActionResult> Edit(string id)
+        public async Task<ActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -34,14 +34,14 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(BioVM bio)
         {
-            if (!ModelState.IsValid) return View(bio);
+            if (!ModelState.IsValid) return View("Show", bio);
 
-            var request = new UpdateBioCommand() { };
+            var request = new UpdateBioCommand() { Bio = bio };
             var result = await _mediator.Send(request);
 
             if(result.IsFailure) error = 1;
 
-            return RedirectToAction("Edit", bio.Id);
+            return RedirectToAction("Show", "Bio", new RouteValueDictionary() { { "id", bio.Id } });
         }
     }
 }

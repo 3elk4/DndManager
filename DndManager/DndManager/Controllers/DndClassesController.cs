@@ -20,7 +20,7 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
-        public async Task<ActionResult> EditAsync(string id)
+        public async Task<ActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -35,7 +35,7 @@ namespace Presentation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(string id, [FromBody] List<DndClassVM> dndClasses)
+        public async Task<ActionResult> Edit(string id, [FromBody] List<DndClassVM> dndClasses)
         {
             if (!ModelState.IsValid) error = 2;
             else
@@ -46,22 +46,22 @@ namespace Presentation.Controllers
                 if (result.IsFailure) error = 1;
             }
 
-            return Json(new { redirectToUrl = Url.Action("EditAsync", "DndClasses", new { id = id }), error });
+            return Json(new { redirectToUrl = Url.Action("Show", "DndClasses", new { id = id }), error });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(string id, [FromBody] string pcId)
+        public async Task<ActionResult> Delete(string id, [FromBody] string pcId)
         {
             var request = new DeleteDndClassCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return Json(new { redirectToUrl = Url.Action("EditAsync", "DndClasses", new { id = pcId }), error });
+            return Json(new { redirectToUrl = Url.Action("Show", "DndClasses", new { id = pcId }), error });
         }
 
-        public async Task<IActionResult> NewDndClassAsync(string id)
+        public async Task<IActionResult> NewDndClass(string id)
         {
             if (id == null) return new BadRequestResult();
 
