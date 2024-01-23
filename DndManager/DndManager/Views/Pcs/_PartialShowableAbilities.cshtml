@@ -1,0 +1,42 @@
+﻿@model List<Application.Ability.AbilityVM>
+
+@foreach(var ability in Model.OrderByDescending(ab => ab.Skills.Count))
+{
+    var abilityMod = ability.Value.Mod();
+
+    <div class="row mt-3 mb-2">
+        <div class="col-3">
+            <div class="border">
+                <b> @ability.Name.ToUpper().Substring(0, 3) </b>
+                <h4> @abilityMod </h4>
+                @if (@ability.SavingThrow)
+                {
+                    <span class="badge badge-secondary rounded-pill">@ability.Value</span>
+                }
+                else
+                {
+                    <span class="badge bg-transparent badge-secondary rounded-pill">@ability.Value</span>
+                }
+            </div>
+        </div>
+        <div class="col">
+                @foreach (var skill in ability.Skills)
+                {
+                    <div class="row">
+                        <div class="col-3">
+                            <input type="checkbox" asp-for="@skill.Proficient" disabled />
+                        </div>
+                        <div class="col-2">
+                            @{
+                                var skillMod = @skill.Proficient ? abilityMod + Int32.Parse(ViewData["Proficiency"].ToString()) : abilityMod;
+                            }
+                            <h5> @skillMod </h5>
+                        </div>
+                        <div class="col">
+                            @skill.Name
+                        </div>
+                    </div>
+                }
+        </div>
+    </div>
+}
