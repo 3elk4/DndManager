@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Extentions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
 using MediatR;
@@ -14,19 +15,19 @@ namespace Application.SpellInfo.Queries.Get
     }
     public class GetSpellInfoWithAbilitiesByPcIdQueryHandler : IRequestHandler<GetSpellInfoWithAbilitiesByPcIdQuery, Result<SpellInfoAndAbilitiesVM>>, IQuery
     {
-        private readonly IRepository<Domain.Entities.Pc> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetSpellInfoWithAbilitiesByPcIdQueryHandler(IRepository<Domain.Entities.Pc> repository, IMapper mapper)
+        public GetSpellInfoWithAbilitiesByPcIdQueryHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
         public async Task<Result<SpellInfoAndAbilitiesVM>> Handle(GetSpellInfoWithAbilitiesByPcIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetByID(request.Id, "SpellInfo, SpellInfo.SpellLvls, Abilities");
-            if (result != null) return Result<SpellInfoAndAbilitiesVM>.Success(_mapper.Map<SpellInfoAndAbilitiesVM>(result));
+            var result = await _dbContext.Pcs.ProjectToSingle<Domain.Entities.Pc, SpellInfoAndAbilitiesVM>(x => x.Id.Equals(request.Id), _mapper.ConfigurationProvider);
+            if (result != null) return Result<SpellInfoAndAbilitiesVM>.Success(result);
 
             return Result<SpellInfoAndAbilitiesVM>.Failure(null, new List<string>() { $"Can't find record with id: {request.Id}" });
 

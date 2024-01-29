@@ -11,7 +11,7 @@ namespace Application.Ability
         public string Name { get; set; }
         public bool Proficient { get; set; }
 
-        [Required]
+        //[Required]
         public string AbilityId { get; set; }
 
         private class Mapping : Profile
@@ -19,6 +19,7 @@ namespace Application.Ability
             public Mapping()
             {
                 CreateMap<Domain.Entities.Skill, SkillVM>();
+                CreateMap<SkillVM, Domain.Entities.Skill>();
             }
         }
     }

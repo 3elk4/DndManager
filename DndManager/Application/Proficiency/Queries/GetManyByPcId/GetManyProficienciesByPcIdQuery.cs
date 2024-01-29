@@ -1,10 +1,10 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Extentions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,23 +17,23 @@ namespace Application.Proficiency.Queries.GetManyByPcId
 
     public class GetManyFeatsByPcIdQueryHandler : IRequestHandler<GetManyProficienciesByPcIdQuery, Result<List<ProficiencyVM>>>, IQuery
     {
-        private readonly IRepository<Domain.Entities.Proficiency> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetManyFeatsByPcIdQueryHandler(IRepository<Domain.Entities.Proficiency> repository, IMapper mapper)
+        public GetManyFeatsByPcIdQueryHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
         public async Task<Result<List<ProficiencyVM>>> Handle(GetManyProficienciesByPcIdQuery request, CancellationToken cancellationToken)
         {
             return Result<List<ProficiencyVM>>.Success(
-                await _repository
-                    .Get(filter: item => item.PcId.Equals(request.PcId))
-                    .AsNoTracking()
-                    .ProjectTo<ProficiencyVM>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken));
+                await _dbContext
+                    .Proficiencies
+                    .Where( item => item.PcId.Equals(request.PcId))
+                    .ProjectToListAsync<ProficiencyVM>(_mapper.ConfigurationProvider)
+                );
         }
 
     }

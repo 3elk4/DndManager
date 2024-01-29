@@ -6,10 +6,10 @@ namespace Application.Bio
 {
     public class BioVM : BaseVM
     {
-        [Required]
+        //[Required]
         public string PcId { get; init; }
 
-        [MaxLength(45, ErrorMessage = "Age should be min 0 and max 45 length")]
+        [Range(1, 5000, ErrorMessage = "Age should be min 1 and max 5000 length")]
         public int Age { get; set; }
 
         [MaxLength(45, ErrorMessage = "Size should be min 0 and max 45 length")]
@@ -56,6 +56,7 @@ namespace Application.Bio
             public Mapping()
             {
                 CreateMap<Domain.Entities.Bio, BioVM>();
+                CreateMap<BioVM, Domain.Entities.Bio>();
             }
         }
     }

@@ -17,7 +17,7 @@ namespace Application.DndClass
         [MaxLength(50, ErrorMessage = "Subclass name should be max 50 length")]
         public string SubclassName { get; set; }
 
-        [Required]
+        //[Required]
         public string PcId { get; set; }
 
         private class Mapping : Profile
@@ -25,6 +25,7 @@ namespace Application.DndClass
             public Mapping()
             {
                 CreateMap<Domain.Entities.DndClass, DndClassVM>();
+                CreateMap<DndClassVM, Domain.Entities.DndClass>();
             }
         }
     }

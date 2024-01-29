@@ -16,16 +16,17 @@ namespace Application.Ability
         public int Value { get; set; }
         public bool SavingThrow { get; set; }
 
-        [Required]
+        //[Required]
         public string PcId { get; set; }
 
-        public IReadOnlyCollection<SkillVM> Skills { get; init; }
+        public IList<SkillVM> Skills { get; init; }
 
         private class Mapping : Profile
         {
             public Mapping()
             {
                 CreateMap<Domain.Entities.Ability, AbilityVM>();
+                CreateMap<AbilityVM, Domain.Entities.Ability>();
             }
         }
     }

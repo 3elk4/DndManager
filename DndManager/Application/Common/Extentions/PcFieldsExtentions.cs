@@ -32,7 +32,7 @@ namespace Application.Common.Extentions
             return (int)Math.Floor((decimal)(value - 10) / 2);
         }
 
-        public static int Proficiency(this List<DndClassVM> dndClasses)
+        public static int Proficiency(this List<DndClassVM> dndClasses) //todo: use it!!!
         {
             var value = dndClasses.Select(d => d.Lvl).Sum();
 

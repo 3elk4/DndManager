@@ -20,6 +20,7 @@ namespace Application.SpellInfo
             public Mapping()
             {
                 CreateMap<Domain.Entities.SpellInfo, SpellInfoVM>();
+                CreateMap<SpellInfoVM, Domain.Entities.SpellInfo>();
             }
         }
     }

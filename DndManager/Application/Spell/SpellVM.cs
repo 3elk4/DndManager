@@ -38,6 +38,7 @@ namespace Application.Spell
             public Mapping()
             {
                 CreateMap<Domain.Entities.Spell, SpellVM>();
+                CreateMap<SpellVM, Domain.Entities.Spell>();
             }
         }
     }

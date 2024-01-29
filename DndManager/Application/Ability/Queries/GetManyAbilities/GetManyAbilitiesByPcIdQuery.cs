@@ -17,25 +17,25 @@ namespace Application.Ability.Queries.GetManyAbilities
         public string PcId { get; init; }
     }
 
-    public class GetManyAbilitiesByPcIdQueryHandler : IRequestHandler<GetManyAbilitiesByPcIdQuery, Result<List<AbilityVM>>>, IQuery
-    {
-        private readonly IRepository<Domain.Entities.Ability> _repository;
-        private readonly IMapper _mapper;
+    //public class GetManyAbilitiesByPcIdQueryHandler : IRequestHandler<GetManyAbilitiesByPcIdQuery, Result<List<AbilityVM>>>, IQuery
+    //{
+    //    private readonly IRepository<Domain.Entities.Ability> _repository;
+    //    private readonly IMapper _mapper;
 
-        public GetManyAbilitiesByPcIdQueryHandler(IRepository<Domain.Entities.Ability> repository, IMapper mapper)
-        {
-            _repository = repository;
-            _mapper = mapper;
-        }
+    //    public GetManyAbilitiesByPcIdQueryHandler(IRepository<Domain.Entities.Ability> repository, IMapper mapper)
+    //    {
+    //        _repository = repository;
+    //        _mapper = mapper;
+    //    }
 
-        public async Task<Result<List<AbilityVM>>> Handle(GetManyAbilitiesByPcIdQuery request, CancellationToken cancellationToken)
-        {
-            return Result<List<AbilityVM>>.Success(
-                await _repository
-                    .Get(filter: feat => feat.PcId.Equals(request.PcId), includeProperties: "Skills")
-                    .AsNoTracking()
-                    .ProjectTo<AbilityVM>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken));
-        }
-    }
+    //    public async Task<Result<List<AbilityVM>>> Handle(GetManyAbilitiesByPcIdQuery request, CancellationToken cancellationToken)
+    //    {
+    //        return Result<List<AbilityVM>>.Success(
+    //            await _repository
+    //                .Get(filter: feat => feat.PcId.Equals(request.PcId), includeProperties: "Skills")
+    //                .AsNoTracking()
+    //                .ProjectTo<AbilityVM>(_mapper.ConfigurationProvider)
+    //                .ToListAsync(cancellationToken));
+    //    }
+    //}
 }

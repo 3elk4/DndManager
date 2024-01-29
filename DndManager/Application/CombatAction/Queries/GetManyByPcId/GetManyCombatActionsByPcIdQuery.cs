@@ -1,4 +1,5 @@
 ﻿using Application.CombatAction;
+using Application.Common.Extentions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
@@ -18,19 +19,19 @@ namespace Application.CombatAction.Queries.GetManyByPcId
 
     public class GetManyCombatActionsByPcIdQueryHandler : IRequestHandler<GetManyCombatActionsByPcIdQuery, Result<CombatActionsWithAbilitiesVM>>, IQuery
     {
-        private readonly IRepository<Domain.Entities.Pc> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetManyCombatActionsByPcIdQueryHandler(IRepository<Domain.Entities.Pc> repository, IMapper mapper)
+        public GetManyCombatActionsByPcIdQueryHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
         public async Task<Result<CombatActionsWithAbilitiesVM>> Handle(GetManyCombatActionsByPcIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetByID(request.PcId, "CombatActions, CombatAction.CombatAttack, CombatAction.CombatDamage, CombatAction.CombatSavingThrow, Abilities");
-            if (result != null) return Result<CombatActionsWithAbilitiesVM>.Success(_mapper.Map<CombatActionsWithAbilitiesVM>(result));
+            var result = await _dbContext.Pcs.ProjectToSingle<Domain.Entities.Pc, CombatActionsWithAbilitiesVM>(x => x.Id.Equals(request.PcId), _mapper.ConfigurationProvider);
+            if (result != null) return Result<CombatActionsWithAbilitiesVM>.Success(result);
 
             return Result<CombatActionsWithAbilitiesVM>.Failure(null, new List<string>() { $"Can't find records with pc id: {request.PcId}" });
 
