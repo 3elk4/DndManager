@@ -5,18 +5,18 @@
 }
 
 <div id="editorRow" class="row" style="margin-top:10px;margin-bottom:10px;">
-    <div class="col">
+    <div class="col-6 pb-2 pt-2">
         <input asp-for="@Model.Name" class="form-control" />
         <span asp-validation-for="@Model.Name" class="text-danger"></span>
     </div>
-    <div class="col">
+    <div class="col-5 pb-2 pt-2">
         <select asp-for="@Model.Type" asp-items="@proficiencyTypes" class="form-control">
             <option value="">Select Type</option>
         </select>
         <span asp-validation-for="@Model.Type" class="text-danger"></span>
     </div>
-    <div class="col">
-        <a href="" data-value="/proficiencies/delete/@Model.Id" class="deleteRow">X</a>
+    <div class="col-1 pb-2 pt-2">
+        <a href="" data-value="/proficiencies/delete/@Model.Id" class="deleteRow btn btn-primary" type="button">X</a>
     </div>
     <div>
         <input type="hidden" value="@Model.Id" name="ProficiencyId" id="ProficiencyId" />

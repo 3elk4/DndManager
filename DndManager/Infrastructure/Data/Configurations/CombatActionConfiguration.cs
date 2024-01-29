@@ -17,7 +17,7 @@ namespace Infrastructure.Data.Configurations
             //builder.OwnsOne(a => a.CombatDamage);
             //builder.OwnsOne(a => a.CombatSavingThrow);
 
-            builder.HasOne(a => a.Pc).WithMany(x => x.CombatsActions).HasForeignKey(x => x.PcId).IsRequired().OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Pc).WithMany(x => x.CombatActions).HasForeignKey(x => x.PcId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

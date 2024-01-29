@@ -24,7 +24,7 @@ namespace Presentation.Controllers
             this._mediator = mediator;
         }
 
-        public async Task<IActionResult> ShowAsync(string id)
+        public async Task<IActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -59,7 +59,7 @@ namespace Presentation.Controllers
 
     [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(CombatActionVM CombatAction)
+        public async Task<IActionResult> Edit(CombatActionVM CombatAction)
         { 
             if (!ModelState.IsValid) error = 2;
             else
@@ -75,17 +75,17 @@ namespace Presentation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAsync(string id, [FromBody] string pcId)
+        public async Task<IActionResult> Delete(string id, [FromBody] string pcId)
         {
             var request = new DeleteCombatActionCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return Json(new { redirectToUrl = Url.Action("ShowAsync", "CombatActions", new { id = pcId }), error });
+            return Json(new { redirectToUrl = Url.Action("Show", "CombatActions", new { id = pcId }), error });
         }
 
-        public async Task<IActionResult> NewCombatActionAsync(string id)
+        public async Task<IActionResult> NewCombatAction(string id)
         {
             if (id == null) return new BadRequestResult();
 

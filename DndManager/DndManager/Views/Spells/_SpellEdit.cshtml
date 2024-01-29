@@ -7,23 +7,25 @@
     var collps = "collapseSpell" + bonusstr;
 }
 
-<div id="editorItem" class="row" style="width:inherit;">
-    <div class="card" style="margin:10px; width:inherit;" id="@{@acc}">
+<div id="editorItem" class="row" style="width: inherit;">
+    <div class="card mb-2 mt-2 box-shadow" style="width: inherit;" id="@{@acc}">
         <div class="card-header" id="@{@heading}">
-            <div class="row">
+            <input type="hidden" value="@Model.Id" name="SpellId" id="SpellId" />
+
+            <div class="row d-flex align-content-center justify-content-between">
                 <div class="col-8">
                     <input asp-for="@Model.Name" class="form-control" />
                 </div>
                 <div class="col-2">
-                    <button type='button' class="btn btn-link" data-toggle="collapse" data-target="#@{@collps}" aria-expanded="false" aria-controls="@{@collps}">
-                        Open Details
+                    <button type='button' class="btn btn-primary" data-toggle="collapse" data-target="#@{@collps}" aria-expanded="false" aria-controls="@{@collps}">
+                        Details
                     </button>
                 </div>
                 <div class="col-2">
-                    <a href="" data-value="/Spells/DeleteSpell/@Model.Id" class="deleteRow">Delete Row</a>
-                </div>
-                <div class="col">
-                    <input type="hidden" value="@Model.Id" name="SpellId" id="SpellId" />
+                    <form asp-controller="Spells" asp-action="DeleteSpell" asp-route-id="@Model.Id">
+                        <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete spell: @Model.Name?')"> <i class="fas fa-times"></i> </button>
+                    </form>
+                    @*<a href="" data-value="/Spells/DeleteSpell/@Model.Id" class="deleteRow">Delete Row</a>*@
                 </div>
             </div>
         </div>
@@ -53,7 +55,7 @@
                 <div class="row">
                     <div class="col">
                         <label>Description</label>
-                        <textarea style="width:inherit;" asp-for="@Model.Description"> </textarea>
+                        <textarea rows="6" style="width:inherit;" asp-for="@Model.Description"> </textarea>
                     </div>
                 </div>
             </div>

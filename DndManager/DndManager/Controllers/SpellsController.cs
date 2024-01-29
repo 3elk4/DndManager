@@ -22,7 +22,7 @@ namespace Presentantion.Controllers
             _mediator = mediator;
         }
 
-        public async Task<ActionResult> Edit(string id)
+        public async Task<ActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -35,7 +35,7 @@ namespace Presentantion.Controllers
             return View(result.Value);
         }
 
-        public async Task<ActionResult> EditSpellLvlAsync(string id)
+        public async Task<ActionResult> ShowSpellLvl(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -51,7 +51,7 @@ namespace Presentantion.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditSpellLvlAsync([FromBody] SpellLvlInfoVM sliVM)
+        public async Task<ActionResult> EditSpellLvl([FromBody] SpellLvlInfoVM sliVM)
         {
             if (!ModelState.IsValid) error = 2;
             else
@@ -62,10 +62,10 @@ namespace Presentantion.Controllers
                 if (result.IsFailure) error = 1;
             }
 
-            return Json(new { redirectToUrl = Url.Action("EditSpellLvl", "Spells", new { id = sliVM.Id }), error });
+            return Json(new { redirectToUrl = Url.Action("ShowSpellLvl", "Spells", new { id = sliVM.Id }), error });
         }
 
-        public async Task<ActionResult> EditAbilityAsync(string id)
+        public async Task<ActionResult> ShowAbility(string id)
         {
             var request = new GetSpellInfoWithAbilitiesByPcIdQuery() { Id = id };
             var result = await _mediator.Send(request);
@@ -77,7 +77,7 @@ namespace Presentantion.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAbilityAsync(SpellInfoAndAbilitiesVM siaVM)
+        public async Task<ActionResult> EditAbility(SpellInfoAndAbilitiesVM siaVM)
         {
 
             if (!ModelState.IsValid) error = 2;
@@ -89,10 +89,10 @@ namespace Presentantion.Controllers
                 if (result.IsFailure) error = 1;
             }
 
-            return RedirectToAction("ShowAsync", new { id = siaVM.SpellInfo.PcId, errorCode = error });
+            return RedirectToAction("Show", new { id = siaVM.SpellInfo.PcId, errorCode = error });
         }
 
-        public async Task<IActionResult> NewSpellAsync(string id)
+        public async Task<IActionResult> NewSpell(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -106,14 +106,14 @@ namespace Presentantion.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteSpellAsync(string id, [FromBody] string spelllvlInfoId)
+        public async Task<ActionResult> DeleteSpell(string id, [FromBody] string spelllvlInfoId)
         {
             var request = new DeleteSpellCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return Json(new { redirectToUrl = Url.Action("EditSpellLvlAsync", "Spells", new { id = spelllvlInfoId }), error });
+            return Json(new { redirectToUrl = Url.Action("EditSpellLvl", "Spells", new { id = spelllvlInfoId }), error });
         }
     }
 }

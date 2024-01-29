@@ -1,20 +1,34 @@
 ﻿@model List<ProficiencyVM>
 
-<div>
-    <a href="/pcs/details/@ViewData["PcId"]"> Back to Character </a>
-</div>
-
 <form asp-action="Edit" method="post">
     <input type="hidden" value="@ViewData["PcId"]" name="PcId" id="PcId" />
-    <div id="editorRows" class="container text-center border" style="margin-top:10px;margin-bottom:10px;">
+
+    <div class="container-fluid">
+        <div class="row align-items-center mb-3">
+            <div class="col-4 d-flex justify-content-start">
+                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Pcs" asp-action="Details" asp-route-id="@ViewData["PcId"]">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col-4  d-flex justify-content-center">
+                <h5> Proficiencies </h5>
+            </div>
+            <div class="col-4 d-flex justify-content-end">
+                <a class="btn btn-primary" type="button" id="addRow" asp-action="NewProficiency" asp-controller="Proficienies" asp-route-id="@ViewData["PcId"]"><i class="fas fa-plus"></i></a>
+                <button class="btn btn-primary" type="submit" id="submit"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="editorRows" class="container text-center box-shadow">
         <div class="row">
-            <div class="col">
+            <div class="col-6 pb-2 pt-2">
                 <label>Name</label>
             </div>
-            <div class="col">
+            <div class="col-5 pb-2 pt-2">
                 <label>Type</label>
             </div>
-            <div class="col">
+            <div class="col-1 pb-2 pt-2">
 
             </div>
         </div>
@@ -23,10 +37,6 @@
             <partial name="_ProficiencyEdit" model="proficiency" />
         }
     </div>
-
-    <a id="addRow" asp-action="NewProficiency" asp-controller="Proficiencies" asp-route-id="@ViewData["PcId"]">Add New Proficiency</a>
-    <br />
-    <input type="submit" id="submit" value="Save" />
 </form>
 
 @section scripts {

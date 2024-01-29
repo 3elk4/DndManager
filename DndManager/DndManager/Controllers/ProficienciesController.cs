@@ -3,10 +3,8 @@ using Application.Proficiency.Commands.Create;
 using Application.Proficiency.Commands.Delete;
 using Application.Proficiency.Commands.UpdateMany;
 using Application.Proficiency.Queries.GetManyByPcId;
-using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -21,7 +19,7 @@ namespace DndEncounter.Controllers
             _mediator = mediator;
         }
 
-        public async Task<ActionResult> EditAsync(string id)
+        public async Task<ActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -36,7 +34,7 @@ namespace DndEncounter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAsync(string id, [FromBody] List<ProficiencyVM> proficiencies)
+        public async Task<ActionResult> Edit(string id, [FromBody] List<ProficiencyVM> proficiencies)
         {
             if (!ModelState.IsValid) error = 2;
             else
@@ -47,22 +45,22 @@ namespace DndEncounter.Controllers
                 if (result.IsFailure) error = 1;
             }
 
-            return Json(new { redirectToUrl = Url.Action("EditAsync", "Proficiencies", new { id = id }), error });
+            return Json(new { redirectToUrl = Url.Action("Show", "Proficiencies", new { id = id }), error });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteAsync(string id, [FromBody] string pcId)
+        public async Task<ActionResult> Delete(string id, [FromBody] string pcId)
         {
             var request = new DeleteProficiencyCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return Json(new { redirectToUrl = Url.Action("EditAsync", "Proficienciess", new { id = pcId }), error });
+            return Json(new { redirectToUrl = Url.Action("Show", "Proficienciess", new { id = pcId }), error });
         }
 
-        public async Task<IActionResult> NewProficiencyAsync(string id)
+        public async Task<IActionResult> NewProficiency(string id)
         {
             if (id == null) return new BadRequestResult();
 
