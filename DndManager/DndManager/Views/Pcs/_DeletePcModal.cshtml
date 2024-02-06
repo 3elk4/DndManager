@@ -1,0 +1,20 @@
+﻿<div id="deletePcModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete pc: <b id="id"></b></p>
+            </div>
+            <div class="modal-footer">
+                <form asp-controller="Pcs" asp-action="Delete" method="post" class="form-inline" role="form">
+                    <input type="hidden" id="id">
+                    <button type="submit" class="btn btn-danger"><span class="glyphicon glyphicon-trash" style="vertical-align:middle;margin-top: -5px"></span> Delete</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

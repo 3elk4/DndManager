@@ -18,6 +18,9 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
+
+        [Route("bio/{id}")]
+        [HttpGet]
         public async Task<ActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
@@ -30,6 +33,7 @@ namespace Presentation.Controllers
             return View(result.Value);
         }
 
+        [Route("bio/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(BioVM bio)

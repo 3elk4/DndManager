@@ -51,6 +51,10 @@ a:active {
     border-radius: 12px;
 }
 
+.container-navbar {
+    background-color: #b58f84;
+}
+
 /*h1 h2 h3 h4 h5 h6 {
     color: #471d10;
 }*/
@@ -83,6 +87,10 @@ html {
 
 .box-shadow {
     box-shadow: 0 4px 8px rgba(0, 0, 0, .10), 0 15px 30px 0 rgba(0,0,0,0.15);
+}
+
+.no-box-shadow {
+    box-shadow: 0 0 0 0;
 }
 
 .alert-danger {

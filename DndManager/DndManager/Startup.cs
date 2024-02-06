@@ -1,13 +1,14 @@
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Presentation.Services;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using FormHelper;
 
 namespace DndManager
 {
@@ -23,14 +24,49 @@ namespace DndManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddResponseCaching();
+            services.AddScoped<IUser, CurrentUser>();
+
+            services.AddControllersWithViews().AddFormHelper();
             services.AddInfrastructureServices(Configuration);
             services.AddApplicationServices();
+
+            services.AddRouting(options => options.LowercaseUrls = true);
+
+
+            services.AddControllers(options =>
+            {
+                options.CacheProfiles.Add("Cache5minutes",
+                    new CacheProfile()
+                    {
+                        Duration = 300,
+                        Location = ResponseCacheLocation.Client,
+                        VaryByHeader = "User-Agent"
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseResponseCaching();
+
+
+            app.Use(async (context, next) =>
+            {
+                context.Response.GetTypedHeaders().CacheControl =
+                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+                    {
+                        Public = true,
+                        MaxAge = TimeSpan.FromSeconds(10)
+                    };
+                context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+                    new string[] { "Accept-Encoding" };
+
+                await next();
+            });
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -42,12 +78,18 @@ namespace DndManager
                 app.UseHsts();
             }
 
+            app.UseExceptionHandler(options => { });
+
+            app.UseFormHelper();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            //app.UseAuthentication();
             //app.UseAuthorization();
+
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,7 +1,7 @@
 ﻿@model SpellInfoAndAbilitiesVM
 
 @{
-    var ability = Model.Abilities.First(a => a.Id.Equals(Model.SpellInfo.AbilityId));
+    var ability = Model.Abilities.FirstOrDefault(a => a.Id.Equals(Model.SpellInfo.AbilityId));
     var spelllvls = Model.SpellInfo.SpellLvls.OrderBy(x => x.Lvl);
 }
 
@@ -16,18 +16,16 @@
             <h5> Spells </h5>
         </div>
         <div class="col-4 d-flex justify-content-end">
-            <a class="btn btn-primary" type="button" onclick="editSpellAbility(`/Spells/EditAbility/@ViewData["PcId"]`)">
-                <i class="fas fa-edit"></i>
-            </a>
-            <div id="modalSpellAbilityWrapper"></div>
+            <partial name="_SpellInfoAbilityEditableModal" model="@Model" />
+            <button class="btn btn-primary" id="editSpellAbility" data-toggle="modal" data-target="#editSpellAbilityModal"><i class="fas fa-edit"></i></button>
         </div>
     </div>
     <div class="row">
         <div class="col-4">
             <div class="container text-center box-shadow mb-3 mt-3">
                 <div class="row p-3">
-                    <label> Ability </label>
-                    <input asp-for="@ability.Name" readonly class="form-control form-control-plaintext" />
+                    <label> <h5>Ability </h5> </label>
+                    <input asp-for="@ability.Name" readonly class="form-control-plaintext" />
                 </div>
 
                 @{
@@ -41,12 +39,12 @@
                 }
 
                 <div class="row p-3">
-                    <label>Save DC</label>
-                    <input asp-for="@saveDc" readonly class="form-control form-control-plaintext" />
+                    <label><h5>Save DC</h5></label>
+                    <input asp-for="@saveDc" readonly class="form-control-plaintext" />
                 </div>
                 <div class="row p-3">
-                    <label>Attack Bonus</label>
-                    <input asp-for="@attackBonus" readonly class="form-control form-control-plaintext" />
+                    <label><h5>Attack Bonus</h5></label>
+                    <input asp-for="@attackBonus" readonly class="form-control-plaintext" />
                 </div>
                
             </div>
@@ -58,7 +56,7 @@
                     {
                         var spellLvl = spelllvls.ElementAt(i);
                         <div class="col p-2">
-                            <a class="btn btn-primary" type="button" href="/Spells/ShowSpellLvl/@spellLvl.Id"> <b>@spellLvl.Lvl</b> </a>
+                            <a class="btn btn-primary" role="button" asp-action="ShowSpellLvl" asp-controller="Spells" asp-route-spellinfoid="@spellLvl.SpellInfoId" asp-route-id="@spellLvl.Id" > <b>@spellLvl.Lvl</b> </a>
                         </div>
                     }
                 </div>
@@ -68,7 +66,7 @@
                     {
                         var spellLvl = spelllvls.ElementAt(i);
                         <div class="col p-2">
-                            <a class="btn btn-primary" type="button" href="/Spells/ShowSpellLvl/@spellLvl.Id"> <b>@spellLvl.Lvl</b> </a>
+                            <a class="btn btn-primary" role="button"  asp-action="ShowSpellLvl" asp-controller="Spells" asp-route-spellinfoid="@spellLvl.SpellInfoId" asp-route-id="@spellLvl.Id"> <b>@spellLvl.Lvl</b> </a>
                         </div>
                     }
                 </div>
@@ -95,18 +93,6 @@
             }
             else if (errorCode === '2') {
                 toast('danger', 'Provided data is invalid!');
-            }
-
-            function editSpellAbility(url) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    cache: false,
-                    success: function (result) {
-                        $('#modalSpellAbilityWrapper').html(result);
-                        $('#editSpellAbilityModal').modal('show');
-                    }
-                });
             }
         </script>
     }

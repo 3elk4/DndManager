@@ -1,0 +1,45 @@
+﻿@model SpellVM
+
+
+<div class="row">
+    <input hidden type="text" asp-for="@Model.Id" />
+    <input hidden type="text" asp-for="@Model.SpellLvlInfoId" />
+
+    <div class="col">
+        <label asp-for="@Model.Name" class="control-label"></label>
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+</div>
+<br />
+<div class="row">
+    <div class="col">
+        <label asp-for="@Model.CastingTime" class="control-label"></label>
+        <input asp-for="@Model.CastingTime" class="form-control" />
+        <span asp-validation-for="@Model.CastingTime" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.CastingRange" class="control-label"> Range </label>
+        <input asp-for="@Model.CastingRange" class="form-control" />
+        <span asp-validation-for="@Model.CastingRange" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Duration" class="control-label"></label>
+        <input asp-for="@Model.Duration" class="form-control" />
+        <span asp-validation-for="@Model.Duration" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Components" class="control-label"></label>
+        <input asp-for="@Model.Components" class="form-control" />
+        <span asp-validation-for="@Model.Components" class="text-danger"></span>
+    </div>
+
+</div>
+<br />
+<div class="row">
+    <div class="col">
+        <label asp-for="@Model.Description" class="control-label"></label>
+        <textarea rows="6" style="width:inherit;" asp-for="@Model.Description"> </textarea>
+        <span asp-validation-for="@Model.Description" class="text-danger"></span>
+    </div>
+</div>

@@ -18,6 +18,7 @@ using Application.Common.Extentions;
 namespace Presentation.Controllers
 {
     //[Authorize]
+
     public class PcsController : Controller
     {
         private readonly IMediator _mediator;
@@ -27,18 +28,23 @@ namespace Presentation.Controllers
             _mediator = mediator;
         }
 
-        // GET: PcsController
-        public async Task<ActionResult> Index()
+        [Route("pcs")]
+        [ResponseCache(CacheProfileName = "Cache5minutes")]
+        [HttpGet]
+        public async Task<ActionResult> Index(string searchString, int pageNumber = 1)
         {
-            var request = new GetManyPcsQuery();
+            var request = new GetManyPcsQuery() { SearchString = searchString, PageNumber = pageNumber, PageSize = 2};
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
 
+            ViewData["CurrentFilter"] = searchString;
             return View(result.Value);
         }
 
-        // GET: PcsController/Details/5
+        [Route("pcs/{id}")]
+        [ResponseCache(CacheProfileName = "Cache5minutes", VaryByQueryKeys = new string[] { "id" })]
+        [HttpGet]
         public async Task<ActionResult> Details(string id)
         {
             if (id == null) return new BadRequestResult();
@@ -46,29 +52,26 @@ namespace Presentation.Controllers
             var request = new GetPcByIdQuery() { Id = id };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure)
-            {
-                Response.StatusCode = 404;
-                return View("NotFound", $"{string.Join(',', result.Errors)}");
-            }
+            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
 
             return View(result.Value);
         }
 
-        //// GET: PcsController/Create
+        [Route("pcs/create")]
+        [HttpGet]
         public ActionResult Create()
         {
-            return View(new PcEditableVM() {
+            return View(new PcCreatableVM() {
                 Abilities = PcHelper.GenerateAbilitiesWithSkills(),
                 DndClasses = new List<DndClassVM>() { new DndClassVM() },
                 Bio = new BioVM()
             });
         }
 
-        // POST: PcsController/Create
+        [Route("pcs/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(PcEditableVM pcVM)
+        public async Task<ActionResult> Create(PcCreatableVM pcVM)
         {
             if (!ModelState.IsValid) return View(pcVM);
             else
@@ -89,13 +92,14 @@ namespace Presentation.Controllers
                 };
                 var result = await _mediator.Send(request);
 
-                if (result.IsFailure) error = 1;
+                if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
             }
 
             return RedirectToAction(nameof(Index), new { errorCode = error } );
         }
 
-        // GET: PcsController/Edit/5
+        [Route("pcs/{id}/edit")]
+        [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
             if (id == null) return new BadRequestResult();
@@ -104,119 +108,69 @@ namespace Presentation.Controllers
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
+            var pc = new PcEditableVM()
+            {
+                Id = result.Value.Id,
+                Name = result.Value.Name,
+                RaceName = result.Value.RaceName,
+                BackgroundName = result.Value.BackgroundName,
+                Inspiration = result.Value.Inspiration,
+                AC = result.Value.AC,
+                Speed = result.Value.Speed,
+                HP = result.Value.HP,
+                CurrentHP = result.Value.CurrentHP,
+                TempHP = result.Value.TempHP,
+                HitDice = result.Value.HitDice,
+                Abilities = (IList<Application.Ability.AbilityVM>)result.Value.Abilities
+            };
 
-            return PartialView("_Edit", result.Value);
+            return View("Edit", pc);
         }
 
-        // POST: PcsController/Edit/5
+        [Route("pcs/{id}/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(PcEditableVM pcVM)
         {
-            if (!ModelState.IsValid) error = 2;
-            else
-            {
-                var request = new UpdatePcCommand()
-                {
-                    Name = pcVM.Name,
-                    Image = pcVM.Photo.PhotoIntoByteImage(),
-                    RaceName = pcVM.RaceName,
-                    BackgroundName = pcVM.BackgroundName
-                };
-                var result = await _mediator.Send(request);
+            //if (!ModelState.IsValid) error = 2;
+            //else
+            //{
 
-                if (result.IsFailure) error = 1;
-            }
+            //}
+            var request = new UpdatePcCommand()
+            {
+                Id = pcVM.Id,
+                Name = pcVM.Name,
+                Image = pcVM.Photo.PhotoIntoByteImage(),
+                RaceName = pcVM.RaceName,
+                BackgroundName = pcVM.BackgroundName,
+                Inspiration = pcVM.Inspiration,
+                AC = pcVM.AC,
+                Speed = pcVM.Speed,
+                HP = pcVM.HP,
+                CurrentHP = pcVM.CurrentHP,
+                TempHP = pcVM.TempHP,
+                HitDice = pcVM.HitDice,
+                Abilities = pcVM.Abilities,
+            };
+            var result = await _mediator.Send(request);
+
+            if (result.IsFailure) error = 1;
 
             return RedirectToAction("Details", new { id = pcVM.Id, errorCode = error });
         }
 
-        //public ActionResult EditInfo(string id)
-        //{
-        //    if (id == null) return new BadRequestResult();
-
-        //    var info = service.GetInfoById(id);
-        //    if (info == null) return NotFound();
-
-        //    return PartialView("_EditInfo", EditInfoConfigToViewModel().CreateMapper().Map<Info, InfoDetailsViewModel>(info));
-        //}
-
-        //// POST: PcsController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult EditInfo(InfoDetailsViewModel infoDVM)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            var info = EditInfoViewModelConfigToModel().CreateMapper().Map<InfoDetailsViewModel, Info>(infoDVM);
-        //            service.EditInfo(info);
-        //        }
-        //        catch (Exception)
-        //        {
-        //            error = 1;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        error = 2;
-        //    }
-        //    return RedirectToAction("Details", new { id = infoDVM.PcId, errorCode = error });
-        //}
-
-        //public ActionResult EditSkillsAndAbilities(string id)
-        //{
-        //    if (id == null) return new BadRequestResult();
-
-        //    var pcIdAndAbilities = service.GetAbilitiesByInfoId(id);
-        //    if (pcIdAndAbilities.Abilities == null) return NotFound();
-        //    var abilities = EditAbilitiesConfigToViewModel().CreateMapper()
-        //        .Map<List<Ability>, List<ViewModels.Pc.PartialEdit.AbilityViewModel>>(pcIdAndAbilities.Abilities);
-        //    abilities.ForEach(ab => ab.PcId = pcIdAndAbilities.PcId);
-
-        //    return PartialView("_EditSkillsAndAbilities", abilities);
-        //}
-
-        //// POST: PcsController/Edit/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult EditSkillsAndAbilities(List<ViewModels.Pc.PartialEdit.AbilityViewModel> abilitiesVM)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            var abilities = EditAbilitiesViewModelConfigToModel()
-        //                .CreateMapper()
-        //                .Map< List<ViewModels.Pc.PartialEdit.AbilityViewModel>, List<Ability>>(abilitiesVM);
-        //            service.EditAbilities(abilities);
-        //        }
-        //        catch (Exception)
-        //        {
-        //            error = 1;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        error = 2;
-        //    }
-        //    return RedirectToAction("Details", new { id = abilitiesVM.First().PcId, errorCode = error });
-        //}
-
-
-
-        // POST: PcsController/Delete/5
+        [Route("pcs/{id}/delete")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(string id, IFormCollection collection)
+        public async Task<ActionResult> Delete(string id)
         {
             var request = new DeletePcCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return RedirectToAction(nameof(Index), new { error = error });
+            return RedirectToAction("Index", "Pcs");
         }
     }
 }

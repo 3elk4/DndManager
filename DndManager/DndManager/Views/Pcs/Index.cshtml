@@ -1,4 +1,4 @@
-﻿@model List<PcBriefVM>
+﻿@model PaginatedListVM<PcBriefVM>
 
 @{
     ViewData["Title"] = "Playable Characters";
@@ -7,8 +7,8 @@
 <div class="container">
     <div class="row justify-content-between  align-items-center">
         <div class="col-sm">
-            <form class="form-inline" asp-controller="Pcs" asp-action="Index">
-                <input type="text" class="form-control" placeholder="Search...">
+            <form class="form-inline" asp-controller="Pcs" asp-action="Index" asp-antiforgery="false" method="get">
+                <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-primary btn-md">
                     <i class="fas fa-search"></i>
                 </button>
@@ -22,14 +22,14 @@
     </div>
 
     <div class="row">
-        @if (Model.Count == 0)
+        @if (Model.Items.Count == 0)
         {
             <p> There's no playable character's yet. Please add new character to show some details. </p>
         }
         else
         {
             <div class="card-columns" style="display: inline-block;">
-                @foreach (var pc in Model)
+                @foreach (var pc in Model.Items)
                 {
                     <div class="card box-shadow">
                         <div class="card-header"> <h5> @pc.Name </h5> </div>
@@ -42,7 +42,8 @@
                                 {
                                     <p> This Pc does not contain class yet. </p>
                                 }
-                                else{
+                                else
+                                {
                                     foreach (var dndClass in @pc.DndClasses)
                                     {
                                         if (dndClass.Name == null || dndClass.Name.Length == 0) continue;
@@ -60,7 +61,8 @@
 
                         <div class="card-footer d-flex">
                             <a class="btn btn-primary" role="button" asp-area="" asp-controller="Pcs" asp-action="Details" asp-route-id="@pc.Id"><i class="fas fa-info-circle"></i></a>
-                            <form asp-controller="Pcs" asp-action="Delete" asp-route-id="@pc.Id">
+
+                            <form asp-controller="Pcs" asp-action="Delete" asp-route-id="@pc.Id" asp-antiforgery="true">
                                 <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete pc: @pc.Name?')"> <i class="fas fa-times"></i> </button>
                             </form>
                         </div>
@@ -69,6 +71,42 @@
             </div>
         }
     </div>
+    <div class="row d-flex justify-content-between align-items-center" style="width: inherit;">
+        @{
+            var prevDisabled = !Model.HasPreviousPage ? "invisible" : "";
+            var nextDisabled = !Model.HasNextPage ? "invisible" : "";
+        }
+
+        <a asp-action="Index"
+           asp-controller="Pcs"
+           asp-route-pageNumber="@(Model.PageNumber - 1)"
+           asp-route-searchString="@ViewData["CurrentFilter"]"
+           class="btn btn-primary @prevDisabled">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <span class="badge  rounded-pill">@Model.PageNumber</span>
+        <a asp-action="Index"
+           asp-controller="Pcs"
+           asp-route-pageNumber="@(Model.PageNumber + 1)"
+           asp-route-searchString="@ViewData["CurrentFilter"]"
+           class="btn btn-primary @nextDisabled">
+            <i class="fas fa-arrow-right"></i>
+        </a>
+    </div>
 </div>
 
-
+@section scripts {
+    <script>
+        const { search } = window.location;
+        const errorCode = (new URLSearchParams(search)).get('errorCode');
+        if (errorCode === '0') {
+            toast('success', 'Data was successfully saved!');
+        }
+        else if (errorCode === '1') {
+            toast('danger', 'Something went wrong while saving data...');
+        }
+        else if (errorCode === '2') {
+            toast('danger', 'Provided data is invalid!');
+        }
+    </script>
+}

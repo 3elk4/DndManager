@@ -1,5 +1,7 @@
-﻿using Application.Spell.Commands.Create;
+﻿using Application.Spell;
+using Application.Spell.Commands.Create;
 using Application.Spell.Commands.Delete;
+using Application.Spell.Commands.Update;
 using Application.SpellInfo;
 using Application.SpellInfo.Commands.Update;
 using Application.SpellInfo.Queries.Get;
@@ -22,6 +24,9 @@ namespace Presentantion.Controllers
             _mediator = mediator;
         }
 
+
+        [Route("spells/{id}")]
+        [HttpGet]
         public async Task<ActionResult> Show(string id)
         {
             if (id == null) return new BadRequestResult();
@@ -35,7 +40,23 @@ namespace Presentantion.Controllers
             return View(result.Value);
         }
 
-        public async Task<ActionResult> ShowSpellLvl(string id)
+        [Route("spells/{id}/ability")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditAbility(SpellInfoAndAbilitiesVM siaVM, [FromRoute] string id)
+        {
+            var request = new UpdateSpellInfoCommand() { Id = siaVM.SpellInfo.Id, AbilityId = siaVM.SpellInfo.AbilityId, };
+            var result = await _mediator.Send(request);
+
+            if (result.IsFailure) error = 1;
+
+            return RedirectToAction("Show", new { id = id, errorCode = error });
+        }
+
+
+        [Route("spells/{spellinfoid}/lvl/{id}")]
+        [HttpGet]
+        public async Task<ActionResult> ShowSpellLvl(string spellinfoid, string id)
         {
             if (id == null) return new BadRequestResult();
 
@@ -44,76 +65,63 @@ namespace Presentantion.Controllers
 
             if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
 
-            ViewData["SpellInfoId"] = result.Value.SpellInfoId;
-            return View("_SpellLvlEdit", result.Value);
+            ViewData["SpellInfoId"] = spellinfoid;
+            ViewData["SpellLvlInfoId"] = id;
+            return View(result.Value);
         }
 
-
+        [Route("spells/{spellinfoid}/lvl/{id}")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditSpellLvl([FromBody] SpellLvlInfoVM sliVM)
+        public async Task<ActionResult> EditSpellLvl(SpellLvlInfoVM sliVM, [FromRoute] string spellinfoid, [FromRoute] string id)
         {
-            if (!ModelState.IsValid) error = 2;
-            else
-            {
-                var request = new UpdateSpellLvlInfoCommand() {  };
-                var result = await _mediator.Send(request);
-
-                if (result.IsFailure) error = 1;
-            }
-
-            return Json(new { redirectToUrl = Url.Action("ShowSpellLvl", "Spells", new { id = sliVM.Id }), error });
-        }
-
-        public async Task<ActionResult> ShowAbility(string id)
-        {
-            var request = new GetSpellInfoWithAbilitiesByPcIdQuery() { Id = id };
-            var result = await _mediator.Send(request);
-
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
-            return PartialView("_EditSpellAbility", result);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditAbility(SpellInfoAndAbilitiesVM siaVM)
-        {
-
-            if (!ModelState.IsValid) error = 2;
-            else
-            {
-                var request = new UpdateSpellInfoCommand() { Id = siaVM.SpellInfo.Id, AbilityId = siaVM.SpellInfo.AbilityId, };
-                var result = await _mediator.Send(request);
-
-                if (result.IsFailure) error = 1;
-            }
-
-            return RedirectToAction("Show", new { id = siaVM.SpellInfo.PcId, errorCode = error });
-        }
-
-        public async Task<IActionResult> NewSpell(string id)
-        {
-            if (id == null) return new BadRequestResult();
-
-            var request = new AddNewSpellCommand() { SpellLvlInfoId = id, Name = "", CastingRange = "", CastingTime = "", Components = "", Duration = "", Description = "" };
+            var request = new UpdateSpellLvlInfoCommand() { Id = id, Max = sliVM.Max, Remaining = sliVM.Remaining };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return PartialView("_SpellEdit", result);
+            return RedirectToAction("ShowSpellLvl", new { spellinfoid = spellinfoid, id = id, errorCode = error });
         }
 
+        [Route("spells/{spellinfoid}/lvl/{lvlid}/newspell")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteSpell(string id, [FromBody] string spelllvlInfoId)
+        public async Task<IActionResult> NewSpell(SpellVM spell, [FromRoute] string spellinfoid, [FromRoute] string lvlid)
+        {
+            if (lvlid == null) return new BadRequestResult();
+
+            var request = new AddNewSpellCommand() { SpellLvlInfoId = lvlid, Name = spell.Name, CastingRange = spell.CastingRange, CastingTime = spell.CastingTime, Components = spell.Components, Duration = spell.Duration, Description = spell.Description };
+            var result = await _mediator.Send(request);
+
+            if (result.IsFailure) error = 1;
+
+            return RedirectToAction("ShowSpellLvl", new { spellinfoid = spellinfoid, id = lvlid, errorCode = error });
+        }
+
+        [Route("spells/{spellinfoid}/lvl/{lvlid}/spell/{id}/edit")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditSpell(SpellVM spell, [FromRoute] string id, [FromRoute] string lvlid, [FromRoute] string spellinfoid)
+        {
+            var request = new UpdateSpellCommand() { Id = id, Name = spell.Name, CastingRange = spell.CastingRange, CastingTime = spell.CastingTime, Components = spell.Components, Duration = spell.Duration, Description = spell.Description };
+            var result = await _mediator.Send(request);
+
+            if (result.IsFailure) error = 1;
+
+            return RedirectToAction("ShowSpellLvl", new { spellinfoid = spellinfoid, id = lvlid, errorCode = error });
+        }
+
+        [Route("spells/{spellinfoid}/lvl/{lvlid}/spell/{id}/delete")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> DeleteSpell(string id, [FromRoute] string lvlid, [FromRoute] string spellinfoid)
         {
             var request = new DeleteSpellCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return Json(new { redirectToUrl = Url.Action("EditSpellLvl", "Spells", new { id = spelllvlInfoId }), error });
+            return RedirectToAction("ShowSpellLvl", new { spellinfoid = spellinfoid, id = lvlid, errorCode = error });
         }
     }
 }

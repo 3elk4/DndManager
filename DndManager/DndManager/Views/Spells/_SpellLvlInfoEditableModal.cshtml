@@ -1,0 +1,38 @@
+﻿@model SpellLvlInfoVM
+
+<div class="modal fade" id="editSpellLvlModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Change spell lvl details </h5>
+            </div>
+            <div class="modal-body">
+                <form asp-action="EditSpellLvl" asp-controller="Spells" asp-route-id="@Model.Id" asp-route-spellinfoid="@Model.SpellInfoId" method="post">
+                    <div class="row">
+                        <input asp-for="@Model.Id" type="hidden" />
+
+                        <div class="col">
+                            <label asp-for="@Model.Max" class="control-label"></label>
+                            <input asp-for="@Model.Max" class="form-control" />
+                            <span asp-validation-for="@Model.Max" class="text-danger"></span>
+                        </div>
+                        <div class="col">
+                            <label asp-for="@Model.Remaining" class="control-label"></label>
+                            <input asp-for="@Model.Remaining" class="form-control" />
+                            <span asp-validation-for="@Model.Remaining" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer justify-content-between align-content-center mt-3">
+                        <button class="btn btn-primary m-0" type="submit" id="submit"><i class="fas fa-check"></i></button>
+                        <button type="button" class="btn btn-primary m-0" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

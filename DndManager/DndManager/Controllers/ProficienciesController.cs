@@ -1,8 +1,8 @@
 ﻿using Application.Proficiency;
 using Application.Proficiency.Commands.Create;
 using Application.Proficiency.Commands.Delete;
-using Application.Proficiency.Commands.UpdateMany;
-using Application.Proficiency.Queries.GetManyByPcId;
+using Application.Proficiency.Commands.Update;
+using Application.Proficiency.Queries.Index;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -19,57 +19,73 @@ namespace DndEncounter.Controllers
             _mediator = mediator;
         }
 
-        public async Task<ActionResult> Show(string id)
+        [Route("pcs/{pcid}/proficiencies")]
+        [HttpGet]
+        public async Task<ActionResult> Index(string pcid)
         {
-            if (id == null) return new BadRequestResult();
+            if (pcid == null) return new BadRequestResult();
 
-            var request = new GetManyProficienciesByPcIdQuery() { PcId = id };
+            var request = new GetManyProficienciesByPcIdQuery() { PcId = pcid };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
 
-            ViewData["PcId"] = id;
+            ViewData["PcId"] = pcid;
             return View(result.Value);
         }
 
+        [Route("pcs/{pcid}/proficiencies/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(string id, [FromBody] List<ProficiencyVM> proficiencies)
+        public async Task<IActionResult> Create(ProficiencyVM dndClassVM, [FromRoute] string pcid)
         {
-            if (!ModelState.IsValid) error = 2;
-            else
+            if (pcid == null) return new BadRequestResult();
+
+            var request = new AddNewProficiencyCommand()
             {
-                var request = new UpdateManyProficienciesCommand() { Proficiencies = proficiencies };
-                var result = await _mediator.Send(request);
+                PcId = pcid,
+                Name = dndClassVM.Name,
+                Type = dndClassVM.Type,
+            };
+            var result = await _mediator.Send(request);
 
-                if (result.IsFailure) error = 1;
-            }
+            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
 
-            return Json(new { redirectToUrl = Url.Action("Show", "Proficiencies", new { id = id }), error });
+            return RedirectToAction("Index", "Proficiencies", new { errorCode = error, pcid = pcid });
         }
 
+
+        [Route("pcs/{pcid}/proficiencies/{id}/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(string id, [FromBody] string pcId)
+        public async Task<ActionResult> Edit(ProficiencyVM dndClassVM, [FromRoute] string pcid, [FromRoute] string id)
+        {
+            if (pcid == null || id == null) return new BadRequestResult();
+
+            var request = new UpdateProficiencyCommand()
+            {
+                Id = id,
+                Name = dndClassVM.Name,
+                Type = dndClassVM.Type
+            };
+            var result = await _mediator.Send(request);
+
+            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
+
+            return RedirectToAction("Index", "Proficiencies", new { errorCode = error, pcid = pcid });
+        }
+
+        [Route("pcs/{pcid}/proficiencies/{id}/delete")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(string pcid, string id)
         {
             var request = new DeleteProficiencyCommand() { Id = id };
             var result = await _mediator.Send(request);
 
             if (result.IsFailure) error = 1;
 
-            return Json(new { redirectToUrl = Url.Action("Show", "Proficienciess", new { id = pcId }), error });
-        }
-
-        public async Task<IActionResult> NewProficiency(string id)
-        {
-            if (id == null) return new BadRequestResult();
-
-            var request = new AddNewProficiencyCommand() { PcId = id, Name = "", Type = "other" };
-            var result = await _mediator.Send(request);
-
-            if (result.IsFailure) error = 1;
-
-            return PartialView("_ProficiencyEdit", result.Value);
+            return RedirectToAction("Index", new { pcid = pcid });
         }
     }
 }

@@ -1,0 +1,70 @@
+﻿@model SpellLvlInfoVM
+
+
+<div class="container-fluid">
+    <div class="row align-items-center mb-3">
+        <div class="col-4 d-flex justify-content-start">
+            <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Spells" asp-action="Show" asp-route-id="@ViewData["SpellInfoId"]">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="col-4  d-flex justify-content-center">
+            <h5> Spells - lvl @Model.Lvl </h5>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            @if (Model.Lvl != 0)
+            {
+                <partial name="_SpellLvlInfoEditableModal" model="@Model" />
+                <button class="btn btn-primary" id="editSpellLvlInfo" data-toggle="modal" data-target="#editSpellLvlModal"><i class="fas fa-edit"></i></button>
+
+            }
+            <partial name="_SpellCreatableModal" model="new SpellVM()" view-data="ViewData" />
+            <button class="btn btn-primary" id="addNewSpell" data-toggle="modal" data-target="#spellCreatableModal"><i class="fas fa-plus"></i></button>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+
+        <input type="hidden" value="@Model.Id" name="SpellLvlInfoId" id="SpellLvlInfoId" />
+        <input type="hidden" value="@Model.SpellInfoId" name="SpellInfoId" id="SpellInfoId" />
+
+        <div class="col-4">
+            <div class="container box-shadow text-center">
+                <div class="row p-3">
+                    <label> <h5> Lvl </h5> </label>
+                    <input asp-for="@Model.Lvl" readonly class="form-control-plaintext" />
+                </div>
+
+                @if (Model.Lvl != 0)
+                {
+                    <div class="row p-3">
+                        <label> <h5>Max</h5> </label>
+                        <input asp-for="@Model.Max" readonly class="form-control-plaintext" />
+                    </div>
+                    <div class="row p-3">
+                        <label> <h5>Remaining</h5> </label>
+                        <input asp-for="@Model.Remaining" readonly class="form-control-plaintext" />
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-8">
+            <div id="editorRows" class="container text-center">
+                @foreach (var spell in Model.Spells)
+                {
+                    <partial name="_ShowSpellPartial" model="spell" view-data='ViewData' />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script>
+        function showSpellEditableModal(id) {
+            $('#spellEditableModal_'.concat(id)).modal('show');
+        }
+    </script>
+}

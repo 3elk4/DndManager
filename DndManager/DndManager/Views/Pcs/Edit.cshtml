@@ -1,0 +1,117 @@
+﻿@model PcEditableVM
+
+@{
+    ViewData["Title"] = "Edit Player";
+}
+
+<form asp-controller="Pcs" asp-action="Edit" asp-route-id="@Model.Id" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <input type="hidden" value="@Model.Id" name="Id" id="Id" />
+
+    <div class="container box-shadow mt-3 mb-3 p-3" style="background-color: #c4a59b; border-radius: 12px;">
+        <div class="row align-items-center mb-3">
+            <div class="col-4 d-flex justify-content-start">
+                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Pcs" asp-action="Details" asp-route-id="@Model.Id">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col-4  d-flex justify-content-center">
+                <h5> Change character's fields and save.  </h5>
+            </div>
+            <div class="col-4 d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit" id="submit"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+
+        <div class="row mb-3 mt-3 p-3">
+            <div class="col-8">
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for="Photo">Photo</label>
+                    <input asp-for="Photo" type="file" class="form-control-file" id="image_file" accept=".png, .jpeg, .jpg">
+                </div>
+            </div>
+        </div>
+        <div class="row mb-3 mt-3 p-3">
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="RaceName" class="control-label">Race</label>
+                    <input asp-for="RaceName" class="form-control">
+                    <span asp-validation-for="RaceName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label asp-for="BackgroundName" class="control-label">Background</label>
+                    <input asp-for="BackgroundName" class="form-control" />
+                    <span asp-validation-for="BackgroundName" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3 mt-3 p-3">
+            <div class="col">
+                <label asp-for="Inspiration" class="control-label"></label>
+                <input type="checkbox" asp-for="Inspiration" class="form-control" />
+                <span asp-validation-for="Inspiration" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="AC" class="control-label"></label>
+                <input type="number" min="-7" max="1000" asp-for="AC" class="form-control" />
+                <span asp-validation-for="AC" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="Speed" class="control-label"></label>
+                <input asp-for="Speed" class="form-control" />
+                <span asp-validation-for="Speed" class="text-danger"></span>
+
+            </div>
+            <div class="col">
+                <label asp-for="HitDice" class="control-label"></label>
+                <input asp-for="HitDice" class="form-control" />
+                <span asp-validation-for="Speed" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="HP" class="control-label"></label>
+                <input type="number" min="1" max="1000" asp-for="HP" class="form-control" />
+                <span asp-validation-for="HP" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="CurrentHP" class="control-label"></label>
+                <input type="number" min="1" max="1000" asp-for="CurrentHP" class="form-control" />
+                <span asp-validation-for="CurrentHP" class="text-danger"></span>
+            </div>
+            <div class="col">
+                <label asp-for="TempHP" class="control-label"></label>
+                <input type="number" min="0" max="1000" asp-for="TempHP" class="form-control" />
+                <span asp-validation-for="TempHP" class="text-danger"></span>
+            </div>
+        </div>
+        <hr />
+        <div class="row mb-3 mt-3 p-3">
+            <div class="col">
+                @for (int i = 0; i < 3; ++i)
+                {
+                    @Html.EditorFor(m => m.Abilities[i], "_PartialEditableAbility")
+                }
+            </div>
+            <div class="col">
+                @for (int i = 3; i < 6; ++i)
+                {
+                    @Html.EditorFor(m => m.Abilities[i], "_PartialEditableAbility")
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

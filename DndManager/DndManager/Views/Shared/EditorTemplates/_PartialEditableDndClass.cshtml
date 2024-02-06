@@ -1,6 +1,9 @@
 ﻿@model DndClassVM
 
 <div class="row">
+    <input hidden type="text" asp-for="@Model.Id"/>
+    <input hidden type="text" asp-for="@Model.PcId" />
+
     <div class="col">
         <label asp-for="@Model.Name" class="control-label">Class</label>
         <input asp-for="@Model.Name" class="form-control" />
@@ -13,7 +16,7 @@
     </div>
     <div class="col">
         <label asp-for="@Model.Lvl" class="control-label"></label>
-        <input type="number" asp-for="@Model.Lvl" class="form-control" min="1" max="20" />
+        <input type="number" asp-for="@Model.Lvl" class="form-control"/>
         <span asp-validation-for="@Model.Lvl" class="text-danger"></span>
     </div>
 </div>

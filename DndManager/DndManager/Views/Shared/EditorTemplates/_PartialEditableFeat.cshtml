@@ -1,0 +1,33 @@
+﻿@model FeatVM
+
+@{
+    var sourceTypes = new SelectList(new List<string>() { "class", "race", "background", "other" }, Model.Source);
+}
+
+<div class="row">
+    <input hidden type="text" asp-for="@Model.Id" />
+    <input hidden type="text" asp-for="@Model.PcId" />
+
+    <div class="col">
+        <label asp-for="@Model.Title" class="control-label"></label>
+        <input asp-for="@Model.Title" class="form-control" />
+        <span asp-validation-for="@Model.Title" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Source" class="control-label"></label>
+        <select asp-for="@Model.Source" asp-items="@sourceTypes" class="form-control">
+            <option value="">Select Source</option>
+        </select>
+        <span asp-validation-for="@Model.Source" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.SourceType" class="control-label"></label>
+        <input asp-for="@Model.SourceType" class="form-control" />
+        <span asp-validation-for="@Model.SourceType" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Definition" class="control-label"></label>
+        <input type="text" asp-for="@Model.Definition" class="form-control" />
+        <span asp-validation-for="@Model.Definition" class="text-danger"></span>
+    </div>
+</div>

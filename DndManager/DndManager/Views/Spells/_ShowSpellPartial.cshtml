@@ -1,0 +1,65 @@
+﻿@model SpellVM
+
+@{
+    var bonusstr = Model.Id;
+    var acc = "accordion" + bonusstr;
+    var heading = "heading" + bonusstr;
+    var collps = "collapseSpell" + bonusstr;
+}
+
+
+<div class="card mb-2 mt-2 box-shadow" style="width: inherit;" id="@{@acc}">
+    <div class="card-header" id="@{@heading}">
+        <input type="hidden" value="@Model.Id" name="SpellId" id="SpellId" />
+
+        <div class="row d-flex align-content-center justify-content-between">
+            <div class="col-6">
+                <input asp-for="@Model.Name" readonly class="form-control-plaintext" />
+            </div>
+            <div class="col-2">
+                <button type='button' class="btn btn-primary" data-toggle="collapse" data-target="#@{@collps}" aria-expanded="false" aria-controls="@{@collps}">
+                    Details
+                </button>
+            </div>
+            <div class="col-4 d-flex justify-content-end align-content-center">
+                <partial name="_SpellEditableModal" model="@Model" view-data="ViewData" />
+                <button class="btn btn-primary m-0 mr-3" id="editSpell" onclick="showSpellEditableModal(`@Model.Id`)"><i class="fas fa-edit"></i></button>
+
+                <form asp-controller="Spells" asp-action="DeleteSpell" asp-route-spellinfoid="@ViewData["SpellInfoId"]" asp-route-lvlid="@Model.SpellLvlInfoId" asp-route-id="@Model.Id">
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete spell: @Model.Name?')"> <i class="fas fa-times"></i> </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="@{@collps}" class="collapse" aria-labelledby="@{@heading}" data-parent="#@{@acc}">
+        <div class="card-body">
+            <div class="row">
+                <div class="col justify-content-center">
+                    <h5>Casting Time</h5>
+                    <input asp-for="@Model.CastingTime" readonly class="form-control-plaintext text-center" />
+                </div>
+                <div class="col justify-content-center">
+                    <h5>Range</h5>
+                    <input asp-for="@Model.CastingRange" readonly class="form-control-plaintext text-center" />
+                </div>
+                <div class="col justify-content-center">
+                     <h5>Duration</h5>
+                    <input asp-for="@Model.Duration" readonly class="form-control-plaintext text-center" />
+                </div>
+                <div class="col justify-content-center">
+                    <h5>Components</h5>
+                    <input asp-for="@Model.Components" readonly class="form-control-plaintext text-center" />
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
+                <div class="col">
+                    <label><h5>Description</h5></label>
+                    <textarea rows="6" style="width:inherit;" readonly asp-for="@Model.Description"> </textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
