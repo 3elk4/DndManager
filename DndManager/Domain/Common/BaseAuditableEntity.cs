@@ -7,15 +7,11 @@ using System.Threading.Tasks;
 
 namespace Domain.Common
 {
-    public abstract class BaseAuditableEntity : BaseEntity //todo: fix db with fields
+    public abstract class BaseAuditableEntity : BaseEntity
     {
-        [NotMapped]
-        public DateTimeOffset Created { get; set; }
-        [NotMapped]
+        public DateTime Created { get; set; }
         public string? CreatedBy { get; set; }
-        [NotMapped]
-        public DateTimeOffset LastModified { get; set; }
-        [NotMapped]
+        public DateTime LastModified { get; set; }
         public string? LastModifiedBy { get; set; }
     }
 }

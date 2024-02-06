@@ -21,7 +21,6 @@ namespace Domain.Entities
         public int CurrentHP { get; set; }
         public int TempHP { get; set; }
         public string HitDice { get; set; }
-        public int Proficiency { get; set; } = 2;
 
 
         public Bio Bio { get; init; } = new Bio();

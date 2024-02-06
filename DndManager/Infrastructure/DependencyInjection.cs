@@ -19,7 +19,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             //Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
 
-            //services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+
+            services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
             //services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
 
@@ -31,14 +32,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
-
             //services.AddScoped<AppDbContextInitializer>();
 
 
-            //services
-            //    .AddDefaultIdentity<User>()
-            //    .AddRoles<IdentityRole>()
-            //    .AddEntityFrameworkStores<AppDbContext>();
+            services
+                .AddDefaultIdentity<User>()
+                //.AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
 
             //services.AddTransient<IIdentityService, IdentityService>();
 

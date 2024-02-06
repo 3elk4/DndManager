@@ -18,7 +18,6 @@ namespace Infrastructure.Data.Configurations
             builder.Property(a => a.CurrentHP).IsRequired();
             builder.Property(a => a.TempHP).IsRequired();
             builder.Property(a => a.HitDice).IsRequired();
-            builder.Property(a => a.Proficiency).IsRequired();
         }
     }
 }
