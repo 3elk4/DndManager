@@ -3,6 +3,7 @@ using Application.DndClass;
 using Application.Pc;
 using Microsoft.AspNetCore.Http;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -22,9 +23,10 @@ namespace Application.Common.Extentions
         }
         public static int PassiveWisdom(this PcDetailsVM pc)
         {
+            var proficiency = pc.DndClasses.Proficiency();
             AbilityVM wis = pc.Abilities.First(a => a.Name.Equals("Wisdom"));
             SkillVM perc = wis.Skills.First(s => s.Name.Equals("Perception"));
-            return 10 + wis.Value.Mod() + (perc.Proficient ? pc.Proficiency : 0);
+            return 10 + wis.Value.Mod() + (perc.Proficient ? proficiency : 0);
         }
 
         public static int Mod(this int value)
@@ -32,9 +34,14 @@ namespace Application.Common.Extentions
             return (int)Math.Floor((decimal)(value - 10) / 2);
         }
 
-        public static int Proficiency(this List<DndClassVM> dndClasses) //todo: use it!!!
+        public static int Proficiency(this IEnumerable<object> dndClasses)
         {
-            var value = dndClasses.Select(d => d.Lvl).Sum();
+            var value = dndClasses.Sum(d =>
+            {
+                if (d is DndClassVM dvm) return dvm.Lvl;
+                else if (d is Domain.Entities.DndClass de) return de.Lvl;
+                else return 0;
+            });
 
             switch (value)
             {

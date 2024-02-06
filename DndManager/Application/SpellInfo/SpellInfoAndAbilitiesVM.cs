@@ -1,4 +1,5 @@
 ﻿using Application.Ability;
+using Application.Common.Extentions;
 using AutoMapper;
 using System.Collections.Generic;
 
@@ -14,7 +15,10 @@ namespace Application.SpellInfo
         {
             public Mapping()
             {
-                CreateMap<Domain.Entities.Pc, SpellInfoAndAbilitiesVM>();
+                CreateMap<Domain.Entities.Pc, SpellInfoAndAbilitiesVM>()
+                    .ForMember(dest => dest.Proficiency,
+                               cfg => cfg.MapFrom(
+                                   src => src.DndClasses.Proficiency()));
             }
         }
     }

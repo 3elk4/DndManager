@@ -14,17 +14,19 @@ namespace Application.Feat.Command.Delete
 
     public class DeleteFeatCommandHandler : IRequestHandler<DeleteFeatCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.Feat> _repository;
+        private readonly IDbContext _dbContext;
 
-        public DeleteFeatCommandHandler(IRepository<Domain.Entities.Feat> repository)
+        public DeleteFeatCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result> Handle(DeleteFeatCommand request, CancellationToken cancellationToken)
         {
-            _repository.Delete(request.Id);
-            var result = await _repository.SaveAsync(cancellationToken);
+            var entity = await _dbContext.Feats.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            _dbContext.Feats.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
         }

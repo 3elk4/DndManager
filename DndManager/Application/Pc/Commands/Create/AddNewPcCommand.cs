@@ -1,5 +1,6 @@
 ﻿using Application.Ability;
 using Application.Bio;
+using Application.Common.Extentions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.DndClass;
@@ -52,7 +53,6 @@ namespace Application.Pc.Commands.Create
                 Speed = request.Speed,
                 HP = request.HP,
                 HitDice = request.HitDice,
-                Proficiency = 2,
                 Bio = _mapper.Map<Domain.Entities.Bio>(request.Bio),
                 SpellInfo = _mapper.Map<Domain.Entities.SpellInfo>(request.SpellInfo),
                 Abilities = _mapper.Map<List<Domain.Entities.Ability>>(request.Abilities),

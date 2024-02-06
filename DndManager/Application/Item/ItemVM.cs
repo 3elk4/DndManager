@@ -20,8 +20,6 @@ namespace Application.Item
 
         [MaxLength(500, ErrorMessage = "Item's notes should be between 0 and 500")]
         public string Notes { get; set; }
-
-        [Required]
         public string PcId { get; set; }
 
         private class Mapping : Profile

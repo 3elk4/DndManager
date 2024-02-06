@@ -14,17 +14,19 @@ namespace Application.CombatAction.Commands.Delete
 
     public class DeleteCombatActionCommandHandler : IRequestHandler<DeleteCombatActionCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.CombatAction> _repository;
+        private readonly IDbContext _dbContext;
 
-        public DeleteCombatActionCommandHandler(IRepository<Domain.Entities.CombatAction> repository)
+        public DeleteCombatActionCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result> Handle(DeleteCombatActionCommand request, CancellationToken cancellationToken)
         {
-            _repository.Delete(request.Id);
-            var result = await _repository.SaveAsync(cancellationToken);
+            var entity = await _dbContext.CombatActions.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            _dbContext.CombatActions.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
         }

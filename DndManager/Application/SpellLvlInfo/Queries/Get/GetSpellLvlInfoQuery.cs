@@ -1,4 +1,5 @@
-﻿using Application.Common.Interfaces;
+﻿using Application.Common.Extentions;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
 using MediatR;
@@ -15,19 +16,19 @@ namespace Application.SpellLvlInfo.Queries.Get
 
     public class GetSpellLvlInfoQueryHandler : IRequestHandler<GetSpellLvlInfoQuery, Result<SpellLvlInfoVM>>, IQuery
     {
-        private readonly IRepository<Domain.Entities.SpellLvlInfo> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public GetSpellLvlInfoQueryHandler(IRepository<Domain.Entities.SpellLvlInfo> repository, IMapper mapper)
+        public GetSpellLvlInfoQueryHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
         public async Task<Result<SpellLvlInfoVM>> Handle(GetSpellLvlInfoQuery request, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetByID(request.Id, "Spells");
-            if (result != null) return Result<SpellLvlInfoVM>.Success(_mapper.Map<SpellLvlInfoVM>(result));
+            var result = await _dbContext.SpellLvlInfo.ProjectToSingle<Domain.Entities.SpellLvlInfo, SpellLvlInfoVM>(x => x.Id.Equals(request.Id), _mapper.ConfigurationProvider);
+            if (result != null) return Result<SpellLvlInfoVM>.Success(result);
 
             return Result<SpellLvlInfoVM>.Failure(null, new List<string>() { $"Can't find record with id: {request.Id}" });
         }

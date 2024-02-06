@@ -9,7 +9,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Item.Queries.GetManyByPcId
+namespace Application.Item.Queries.Index
 {
     public record GetManyItemsByPcIdQuery : IRequest<Result<List<ItemVM>>>, IQuery
     {
@@ -29,11 +29,15 @@ namespace Application.Item.Queries.GetManyByPcId
 
         public async Task<Result<List<ItemVM>>> Handle(GetManyItemsByPcIdQuery request, CancellationToken cancellationToken)
         {
-            return Result<List<ItemVM>>.Success(await _dbContext.Items
+            {
+                return Result<List<ItemVM>>.Success(
+                    await _dbContext
+                    .Items
                     .Where(item => item.PcId.Equals(request.PcId))
                     .ProjectToListAsync<ItemVM>(_mapper.ConfigurationProvider)
                     );
-        }
+            }
 
+        }
     }
 }

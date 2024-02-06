@@ -26,10 +26,15 @@ namespace Application.SpellInfo.Queries.Get
 
         public async Task<Result<SpellInfoAndAbilitiesVM>> Handle(GetSpellInfoWithAbilitiesByPcIdQuery request, CancellationToken cancellationToken)
         {
-            var result = await _dbContext.Pcs.ProjectToSingle<Domain.Entities.Pc, SpellInfoAndAbilitiesVM>(x => x.Id.Equals(request.Id), _mapper.ConfigurationProvider);
+
+            var spellinfo = await _dbContext.SpellInfo.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            if(spellinfo == null) return Result<SpellInfoAndAbilitiesVM>.Failure(null, new List<string>() { $"Can't find record with id: {request.Id}" });
+
+            var result = await _dbContext.Pcs.ProjectToSingle<Domain.Entities.Pc, SpellInfoAndAbilitiesVM>(x => x.Id.Equals(spellinfo.PcId), _mapper.ConfigurationProvider);
             if (result != null) return Result<SpellInfoAndAbilitiesVM>.Success(result);
 
-            return Result<SpellInfoAndAbilitiesVM>.Failure(null, new List<string>() { $"Can't find record with id: {request.Id}" });
+            return Result<SpellInfoAndAbilitiesVM>.Failure(null, new List<string>() { $"Can't find record with id: {spellinfo.PcId}" });
 
         }
     }

@@ -14,17 +14,19 @@ namespace Application.Proficiency.Commands.Delete
 
     public class DeleteProficiencyCommandHandler : IRequestHandler<DeleteProficiencyCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.Proficiency> _repository;
+        private readonly IDbContext _dbContext;
 
-        public DeleteProficiencyCommandHandler(IRepository<Domain.Entities.Proficiency> repository)
+        public DeleteProficiencyCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result> Handle(DeleteProficiencyCommand request, CancellationToken cancellationToken)
         {
-            _repository.Delete(request.Id);
-            var result = await _repository.SaveAsync(cancellationToken);
+            var entity = await _dbContext.Proficiencies.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            _dbContext.Proficiencies.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
         }

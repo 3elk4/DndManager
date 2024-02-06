@@ -1,5 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using AutoMapper;
 using MediatR;
 using System;
 using System.Collections.Generic;
@@ -10,59 +11,30 @@ namespace Application.Bio.Commands.Update
 {
     public record UpdateBioCommand() : IRequest<Result<int>>, ICommand
     {
-        public string Id { get; init; }
-        public int Age { get; init; }
-        public string Size { get; init; }
-        public string Weight { get; init; }
-        public string Height { get; init; }
-        public string Skin { get; init; }
-        public string Eyes { get; init; }
-        public string Hair { get; init; }
-        public string Alignment { get; init; }
-        public string Traits { get; init; }
-        public string Flaws { get; init; }
-        public string Bonds { get; init; }
-        public string Ideals { get; init; }
-        public string Allies { get; init; }
-        public string Backstory { get; init; }
+        public BioVM Bio { get; init; }
     }
 
     public class UpdateBioCommandHandler : IRequestHandler<UpdateBioCommand, Result<int>>
     {
-        private readonly IRepository<Domain.Entities.Bio> _repository;
+        private readonly IDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public UpdateBioCommandHandler(IRepository<Domain.Entities.Bio> repository)
+        public UpdateBioCommandHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<Result<int>> Handle(UpdateBioCommand request, CancellationToken cancellationToken)
         {
-            var bio = new Domain.Entities.Bio()
-            {
-                Id = request.Id,
-                Age = request.Age,
-                Size = request.Size,
-                Weight = request.Weight,
-                Height = request.Height,
-                Skin = request.Skin,
-                Eyes = request.Eyes,
-                Hair = request.Hair,
-                Alignment = request.Alignment,
-                Traits = request.Traits,
-                Flaws = request.Flaws,
-                Bonds = request.Bonds,
-                Ideals = request.Ideals,
-                Allies = request.Allies,
-                Backstory = request.Backstory
-            };
+            var bio = _mapper.Map<Domain.Entities.Bio>(request.Bio);
 
-            _repository.Update(bio);
-            var result = await _repository.SaveAsync(cancellationToken);
+            _dbContext.Bio.Update(bio);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ?
                     Result<int>.Success(result) :
                     Result<int>.Failure(0, new List<string>() { "Some errors occured during updating records." });
-            }
+        }
     }
 }

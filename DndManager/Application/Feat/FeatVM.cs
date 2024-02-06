@@ -18,7 +18,6 @@ namespace Application.Feat
         [MaxLength(100, ErrorMessage = "Feat source type should be min 1 and max 100 length")]
         public string SourceType { get; set; }
 
-        [Required(AllowEmptyStrings = true, ErrorMessage = "Please provide feat definition")]
         [MaxLength(1000, ErrorMessage = "Feat definition should be min 1 and max 1000 length")]
         public string Definition { get; set; }
 

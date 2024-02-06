@@ -13,33 +13,27 @@ namespace Application.SpellLvlInfo.Commands.Update
         public string Id { get; init; }
         public int Max { get; init; }
         public int Remaining { get; init; }
-        public int Lvl { get; init; }
-
-        public IReadOnlyCollection<SpellVM> Spells { get; init; }
     }
 
     public class UpdateSpellLvlInfoCommandHandler : IRequestHandler<UpdateSpellLvlInfoCommand, Result<int>>
     {
-        private readonly IRepository<Domain.Entities.SpellLvlInfo> _repository;
+        private readonly IDbContext _dbContext;
 
-        public UpdateSpellLvlInfoCommandHandler(IRepository<Domain.Entities.SpellLvlInfo> repository)
+        public UpdateSpellLvlInfoCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result<int>> Handle(UpdateSpellLvlInfoCommand request, CancellationToken cancellationToken)
         {
-            var spellLvlInfo = new Domain.Entities.SpellLvlInfo()
-            {
-                Id = request.Id,
-                Max = request.Max,
-                Remaining = request.Remaining,
-                Lvl = request.Lvl,
-               // Spells = request.Spells todo: edit spells separatly?
-            };
+            var entity = await _dbContext.SpellLvlInfo.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            _repository.Update(spellLvlInfo);
-            var result = await _repository.SaveAsync(cancellationToken);
+            if (entity == null) Result<int>.Failure(0, new List<string>() { $"Can't find a spell lvl with id {request.Id}." });
+
+            entity.Max = request.Max;
+            entity.Remaining = request.Remaining;
+
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ?
                     Result<int>.Success(result) :

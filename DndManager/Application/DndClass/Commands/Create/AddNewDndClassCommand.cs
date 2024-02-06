@@ -19,12 +19,12 @@ namespace Application.DndClass.Commands.Create
 
     public class AddNewDndClassCommandHandler : IRequestHandler<AddNewDndClassCommand, Result<DndClassVM>>
     {
-        private readonly IRepository<Domain.Entities.DndClass> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public AddNewDndClassCommandHandler(IRepository<Domain.Entities.DndClass> repository, IMapper mapper)
+        public AddNewDndClassCommandHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
@@ -34,12 +34,12 @@ namespace Application.DndClass.Commands.Create
             {
                 Name = request.Name,
                 Lvl = request.Lvl,
-                SubclassName = request.SubclassName,
+                SubclassName = request.SubclassName ?? "",
                 PcId = request.PcId
             };
 
-            _repository.Insert(dndClass);
-            var result = await _repository.SaveAsync(cancellationToken);
+            _dbContext.DndClasses.Add(dndClass);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ?
                 Result<DndClassVM>.Success(_mapper.Map<DndClassVM>(dndClass)) :

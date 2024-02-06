@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.DndClass.Queries.GetManyByPcId
+namespace Application.DndClass.Queries.Index
 {
     public record GetManyDndClasssByPcIdQuery : IRequest<Result<List<DndClassVM>>>, IQuery
     {

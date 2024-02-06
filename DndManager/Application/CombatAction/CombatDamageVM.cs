@@ -22,6 +22,7 @@ namespace Application.CombatAction
             public Mapping()
             {
                 CreateMap<Domain.Entities.CombatDamage, CombatDamageVM>();
+                CreateMap<CombatDamageVM, Domain.Entities.CombatDamage>();
             }
         }
     }

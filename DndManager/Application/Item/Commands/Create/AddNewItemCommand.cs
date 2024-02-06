@@ -19,12 +19,12 @@ namespace Application.Item.Commands.Create
 
     public class AddNewItemCommandHandler : IRequestHandler<AddNewItemCommand, Result<ItemVM>>
     {
-        private readonly IRepository<Domain.Entities.Item> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public AddNewItemCommandHandler(IRepository<Domain.Entities.Item> repository, IMapper mapper)
+        public AddNewItemCommandHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
@@ -35,12 +35,12 @@ namespace Application.Item.Commands.Create
                 Name = request.Name,
                 Quantity = request.Quantity,
                 Weight = request.Weight,
-                Notes = request.Notes,
+                Notes = request.Notes ?? "",
                 PcId = request.PcId
             };
 
-            _repository.Insert(item);
-            var result = await _repository.SaveAsync(cancellationToken);
+            _dbContext.Items.Add(item);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ?
                 Result<ItemVM>.Success(_mapper.Map<ItemVM>(item)) :

@@ -14,17 +14,19 @@ namespace Application.Item.Commands.Delete
 
     public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.Item> _repository;
+        private readonly IDbContext _dbContext;
 
-        public DeleteItemCommandHandler(IRepository<Domain.Entities.Item> repository)
+        public DeleteItemCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result> Handle(DeleteItemCommand request, CancellationToken cancellationToken)
         {
-            _repository.Delete(request.Id);
-            var result = await _repository.SaveAsync(cancellationToken);
+            var entity = await _dbContext.Items.FindAsync(new object[] { request.Id }, cancellationToken);
+
+            _dbContext.Items.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
         }

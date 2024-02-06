@@ -30,7 +30,6 @@ namespace Application.Spell
         [MaxLength(50, ErrorMessage = "Max length of spell's duration is 50")]
         public string Duration { get; set; }
 
-        [Required]
         public string SpellLvlInfoId { get; set; }
 
         private class Mapping : Profile

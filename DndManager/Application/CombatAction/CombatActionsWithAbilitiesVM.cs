@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Application.Common.Extentions;
+using AutoMapper;
 using System.Collections.Generic;
 
 namespace Application.CombatAction
@@ -14,7 +15,10 @@ namespace Application.CombatAction
         {
             public Mapping()
             {
-                CreateMap<Domain.Entities.Pc, CombatActionsWithAbilitiesVM>();
+                CreateMap<Domain.Entities.Pc, CombatActionsWithAbilitiesVM>()
+                    .ForMember(dest => dest.Proficiency,
+                        cfg => cfg.MapFrom(
+                            src => src.DndClasses.Proficiency()));
             }
         }
     }

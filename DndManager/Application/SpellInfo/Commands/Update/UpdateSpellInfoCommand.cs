@@ -16,27 +16,26 @@ namespace Application.SpellInfo.Commands.Update
 
     public class UpdateSpellInfoCommandHandler : IRequestHandler<UpdateSpellInfoCommand, Result<int>>
     {
-        private readonly IRepository<Domain.Entities.SpellInfo> _repository;
+        private readonly IDbContext _dbContext;
 
-        public UpdateSpellInfoCommandHandler(IRepository<Domain.Entities.SpellInfo> repository)
+        public UpdateSpellInfoCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result<int>> Handle(UpdateSpellInfoCommand request, CancellationToken cancellationToken)
         {
-            var spellInfo = new Domain.Entities.SpellInfo()
-            {
-                Id = request.Id,
-                AbilityId = request.AbilityId
-            };
+            var entity = await _dbContext.SpellInfo.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            _repository.Update(spellInfo);
-            var result = await _repository.SaveAsync(cancellationToken);
+            if (entity == null) Result<int>.Failure(0, new List<string>() { $"Can't find a spell info with id {request.Id}." });
+
+            entity.AbilityId = request.AbilityId;
+
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ?
                     Result<int>.Success(result) :
-                    Result<int>.Failure(0, new List<string>() { "Some errors occured during updating records." });
+                    Result<int>.Failure(0, new List<string>() { "Some errors occured during updating record." });
         }
     }
 }

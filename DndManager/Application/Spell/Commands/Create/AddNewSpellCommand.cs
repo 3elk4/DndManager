@@ -20,11 +20,11 @@ namespace Application.Spell.Commands.Create
 
     public class AddNewSpellCommandHandler : IRequestHandler<AddNewSpellCommand, Result>
     {
-        private readonly IRepository<Domain.Entities.Spell> _repository;
+        private readonly IDbContext _dbContext;
 
-        public AddNewSpellCommandHandler(IRepository<Domain.Entities.Spell> repository)
+        public AddNewSpellCommandHandler(IDbContext dbContext)
         {
-            _repository = repository;
+            _dbContext = dbContext;
         }
 
         public async Task<Result> Handle(AddNewSpellCommand request, CancellationToken cancellationToken)
@@ -40,8 +40,8 @@ namespace Application.Spell.Commands.Create
                 SpellLvlInfoId = request.SpellLvlInfoId
             };
 
-            _repository.Insert(spell);
-            var result = await _repository.SaveAsync(cancellationToken);
+            _dbContext.Spells.Add(spell);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
             return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some problems occured during creating record." });
         }

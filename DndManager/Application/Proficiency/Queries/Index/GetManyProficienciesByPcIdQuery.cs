@@ -8,7 +8,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Application.Proficiency.Queries.GetManyByPcId
+namespace Application.Proficiency.Queries.Index
 {
     public record GetManyProficienciesByPcIdQuery : IRequest<Result<List<ProficiencyVM>>>, IQuery
     {

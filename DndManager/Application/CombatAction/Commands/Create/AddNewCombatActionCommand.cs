@@ -20,12 +20,12 @@ namespace Application.CombatAction.Command.Create
 
     public class AddNewCombatActionCommandHandler : IRequestHandler<AddNewCombatActionCommand, Result<CombatActionVM>>
     {
-        private readonly IRepository<Domain.Entities.CombatAction> _repository;
+        private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public AddNewCombatActionCommandHandler(IRepository<Domain.Entities.CombatAction> repository, IMapper mapper)
+        public AddNewCombatActionCommandHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
             _mapper = mapper;
         }
 
@@ -36,27 +36,30 @@ namespace Application.CombatAction.Command.Create
                 Name = request.Name,
                 Type = request.Type,
                 PcId = request.PcId,
-                CombatAttack = new Domain.Entities.CombatAttack() { 
+                CombatAttack = new Domain.Entities.CombatAttack()
+                {
                     IsProficient = request.CombatAttack.IsProficient,
                     Range = request.CombatAttack.Range,
                     AdditionalBonus = request.CombatAttack.AdditionalBonus,
                     AbilityId = request.CombatAttack.AbilityId
                 },
-                CombatDamage = new Domain.Entities.CombatDamage() {
+                CombatDamage = new Domain.Entities.CombatDamage()
+                {
                     AbilityId = request.CombatDamage.AbilityId,
                     DamageDice = request.CombatDamage.DamageDice,
                     DamageType = request.CombatDamage.DamageType,
                     AdditionalBonus = request.CombatDamage.AdditionalBonus
                 },
-                CombatSavingThrow = new Domain.Entities.CombatSavingThrow() { 
+                CombatSavingThrow = new Domain.Entities.CombatSavingThrow()
+                {
                     AbilityId = request.CombatSavingThrow.AbilityId
                 }
             };
 
-            _repository.Insert(combatAction);
-            var result = await _repository.SaveAsync(cancellationToken);
+            _dbContext.CombatActions.Add(combatAction);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return result == 1 ?
+            return result > 0 ?
                 Result<CombatActionVM>.Success(_mapper.Map<CombatActionVM>(combatAction)) :
                 Result<CombatActionVM>.Failure(null, new List<string>() { "Some problems occured during creating record." });
         }

@@ -20,6 +20,7 @@ namespace Application.CombatAction
             public Mapping()
             {
                 CreateMap<Domain.Entities.CombatAttack, CombatAttackVM>();
+                CreateMap<CombatAttackVM, Domain.Entities.CombatAttack>();
             }
         }
     }

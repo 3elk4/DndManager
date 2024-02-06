@@ -1,6 +1,7 @@
 ﻿
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using AutoMapper;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
@@ -20,45 +21,33 @@ namespace Application.CombatAction.Commands.Update
 
     public class UpdateCombatActionCommandHandler : IRequestHandler<UpdateCombatActionCommand, Result<int>>
     {
-        private readonly IRepository<Domain.Entities.CombatAction> _repository;
+        private readonly IDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public UpdateCombatActionCommandHandler(IRepository<Domain.Entities.CombatAction> repository)
+        public UpdateCombatActionCommandHandler(IDbContext dbContext, IMapper mapper)
         {
-            _repository = repository;
+            _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public async Task<Result<int>> Handle(UpdateCombatActionCommand request, CancellationToken cancellationToken)
         {
-            var combatAction = new Domain.Entities.CombatAction()
-            {
-                Id = request.Id,
-                Type = request.Type,
-                CombatAttack = new Domain.Entities.CombatAttack()
-                {
-                    IsProficient = request.CombatAttack.IsProficient,
-                    Range = request.CombatAttack.Range,
-                    AdditionalBonus = request.CombatAttack.AdditionalBonus,
-                    AbilityId = request.CombatAttack.AbilityId
-                },
-                CombatDamage = new Domain.Entities.CombatDamage()
-                {
-                    AbilityId = request.CombatDamage.AbilityId,
-                    DamageDice = request.CombatDamage.DamageDice,
-                    DamageType = request.CombatDamage.DamageType,
-                    AdditionalBonus = request.CombatDamage.AdditionalBonus
-                },
-                CombatSavingThrow = new Domain.Entities.CombatSavingThrow()
-                {
-                    AbilityId = request.CombatSavingThrow.AbilityId
-                }
-            };
+            var entity = await _dbContext.CombatActions.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            _repository.Update(combatAction);
-            var result = await _repository.SaveAsync(cancellationToken);
+            if (entity == null) Result<int>.Failure(0, new List<string>() { $"Can't find a class with id {request.Id}." });
 
-            return result == 1 ?
+            entity.Name = request.Name;
+            entity.Type = request.Type;
+
+            _dbContext.CombatAttacks.Update(_mapper.Map<Domain.Entities.CombatAttack>(request.CombatAttack));
+            _dbContext.CombatDamages.Update(_mapper.Map<Domain.Entities.CombatDamage>(request.CombatDamage));
+            _dbContext.CombatSavingThrows.Update(_mapper.Map<Domain.Entities.CombatSavingThrow>(request.CombatSavingThrow));
+
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return result > 0 ?
                    Result<int>.Success(result) :
-                   Result<int>.Failure(0, new List<string>() { "Some errors occured during updating records." });
+                   Result<int>.Failure(0, new List<string>() { "Some errors occured during updating record." });
         }
     }
 }

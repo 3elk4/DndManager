@@ -13,6 +13,7 @@ namespace Application.CombatAction
             public Mapping()
             {
                 CreateMap<Domain.Entities.CombatSavingThrow, CombatSavingThrowVM>();
+                CreateMap<CombatSavingThrowVM, Domain.Entities.CombatSavingThrow>();
             }
         }
     }

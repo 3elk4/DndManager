@@ -12,21 +12,23 @@ namespace Application.Spell.Commands.Delete
         public string Id { get; init; }
     }
 
-    //public class DeleteSpellCommandHandler : IRequestHandler<DeleteSpellCommand, Result>
-    //{
-    //    private readonly IRepository<Domain.Entities.Spell> _repository;
+    public class DeleteSpellCommandHandler : IRequestHandler<DeleteSpellCommand, Result>
+    {
+        private readonly IDbContext _dbContext;
 
-    //    public DeleteSpellCommandHandler(IRepository<Domain.Entities.Spell> repository)
-    //    {
-    //        _repository = repository;
-    //    }
+        public DeleteSpellCommandHandler(IDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
 
-    //    public async Task<Result> Handle(DeleteSpellCommand request, CancellationToken cancellationToken)
-    //    {
-    //        _repository.Delete(request.Id);
-    //        var result = await _repository.SaveAsync(cancellationToken);
+        public async Task<Result> Handle(DeleteSpellCommand request, CancellationToken cancellationToken)
+        {
+            var entity = await _dbContext.Spells.FindAsync(new object[] { request.Id }, cancellationToken);
 
-    //        return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
-    //    }
-    //}
+            _dbContext.Spells.Remove(entity);
+            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+
+            return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
+        }
+    }
 }

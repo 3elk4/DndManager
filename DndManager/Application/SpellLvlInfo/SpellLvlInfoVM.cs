@@ -27,6 +27,7 @@ namespace Application.SpellLvlInfo
             public Mapping()
             {
                 CreateMap<Domain.Entities.SpellLvlInfo, SpellLvlInfoVM>();
+                CreateMap<SpellLvlInfoVM, Domain.Entities.SpellLvlInfo>();
             }
         }
     }

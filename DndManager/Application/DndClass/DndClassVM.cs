@@ -15,7 +15,7 @@ namespace Application.DndClass
         public int Lvl { get; set; }
 
         [MaxLength(50, ErrorMessage = "Subclass name should be max 50 length")]
-        public string SubclassName { get; set; }
+        public string SubclassName { get; set; } = "";
 
         //[Required]
         public string PcId { get; set; }
