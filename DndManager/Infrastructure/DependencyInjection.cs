@@ -28,6 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
                 options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21)));
+                options.ConfigureWarnings(w => w.Ignore(CoreEventId.RowLimitingOperationWithoutOrderByWarning));
             });
 
             services.AddScoped<IDbContext>(provider => provider.GetRequiredService<AppDbContext>());

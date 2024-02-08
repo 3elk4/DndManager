@@ -39,7 +39,7 @@ namespace Presentation.Controllers
         [HttpPost]
         [FormValidator]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromBody] DndClassVM dndClassVM, [FromRoute] string pcid)
+        public async Task<IActionResult> Create(DndClassVM dndClassVM, [FromRoute] string pcid)
         {
             if (pcid == null) return new BadRequestResult();
 
