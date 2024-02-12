@@ -18,7 +18,7 @@ namespace Domain.Entities
         public int ProficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
         public int Challange { get; set; }
-        public int ChallangeExp { get; set; }
+        public int ChallangeXp { get; set; }
 
         public NpcSpellInfo SpellInfo { get; init; } = new NpcSpellInfo();
         public IList<NpcProficiency> Proficiencies { get; init; } = new List<NpcProficiency>();

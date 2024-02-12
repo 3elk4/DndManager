@@ -13,5 +13,7 @@ namespace Domain.Entities
         public Npc Npc { get; set; } = null!;
 
         public IList<NpcSkill> Skills { get; private set; } = new List<NpcSkill>();
+
+        public NpcSpellInfo? SpellInfo { get; set; }
     }
 }
