@@ -37,9 +37,10 @@
                         <img class="card-img-top" src="@npc.Image">
 
                         <div class="card-body">
-                            @npc.Size, @npc.Type, @npc.Alignment
-                            @npc.Challange (@npc.ChallangeExp XP)
-                           
+                            <div class="d-flex justify-content-between align-items-center">
+                                @npc.Size, @npc.Type, @npc.Alignment
+                                <span class="badge  rounded-pill">@npc.Challange (@npc.ChallangeXp XP)</span>
+                            </div>
                         </div>
 
                         <div class="card-footer d-flex">

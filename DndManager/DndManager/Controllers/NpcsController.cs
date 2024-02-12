@@ -15,11 +15,11 @@ using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
-    public class NpcController : Controller
+    public class NpcsController : Controller
     {
         private readonly IMediator _mediator;
 
-        public NpcController(IMediator mediator)
+        public NpcsController(IMediator mediator)
         {
             _mediator = mediator;
         }
@@ -86,7 +86,7 @@ namespace Presentation.Controllers
                     ProficiencyBonus = pcVM.ProficiencyBonus,
                     PassivePerception = pcVM.PassivePerception,
                     Challange = pcVM.Challange,
-                    ChallangeExp = pcVM.ChallangeExp,
+                    ChallangeXp = pcVM.ChallangeXp,
                     Abilities = pcVM.Abilities
                 };
                 var result = await _mediator.Send(request);
@@ -97,7 +97,7 @@ namespace Presentation.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [Route("pcs/{id}/edit")]
+        [Route("npcs/{id}/edit")]
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
@@ -122,14 +122,14 @@ namespace Presentation.Controllers
                 ProficiencyBonus = result.Value.ProficiencyBonus,
                 PassivePerception = result.Value.PassivePerception,
                 Challange = result.Value.Challange,
-                ChallangeExp = result.Value.ChallangeExp,
+                ChallangeXp = result.Value.ChallangeXp,
                 Abilities = (IList<Application.NpcAbility.NpcAbilityVM>)result.Value.Abilities,
             };
 
             return View("Edit", npc);
         }
 
-        [Route("pcs/{id}/edit")]
+        [Route("npcs/{id}/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(NpcEditableVM pcVM)
@@ -150,7 +150,7 @@ namespace Presentation.Controllers
                 ProficiencyBonus = pcVM.ProficiencyBonus,
                 PassivePerception = pcVM.PassivePerception,
                 Challange = pcVM.Challange,
-                ChallangeExp = pcVM.ChallangeExp,
+                ChallangeXp = pcVM.ChallangeXp,
                 Abilities = pcVM.Abilities
             };
             var result = await _mediator.Send(request);
@@ -160,7 +160,7 @@ namespace Presentation.Controllers
             return RedirectToAction("Details", new { id = pcVM.Id });
         }
 
-        [Route("pcs/{id}/delete")]
+        [Route("npcs/{id}/delete")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string id)
@@ -170,7 +170,7 @@ namespace Presentation.Controllers
 
             if (result.IsFailure) return BadRequest();
 
-            return RedirectToAction("Index", "Pcs");
+            return RedirectToAction("Index", "Npcs");
         }
     }
 }
