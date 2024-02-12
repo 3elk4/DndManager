@@ -24,7 +24,7 @@ namespace Application.Npc.Commands.Create
         public int ProficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
         public int Challange { get; init; }
-        public int ChallangeExp { get; init; }
+        public int ChallangeXp { get; init; }
         public IList<NpcAbilityVM> Abilities { get; init; }
     }
 
@@ -56,7 +56,7 @@ namespace Application.Npc.Commands.Create
                 ProficiencyBonus = request.ProficiencyBonus,
                 PassivePerception = request.PassivePerception,
                 Challange = request.Challange,
-                ChallangeExp = request.ChallangeExp,
+                ChallangeXp = request.ChallangeXp,
                 SpellInfo = new Domain.Entities.NpcSpellInfo(),
                 Abilities = _mapper.Map<List<Domain.Entities.NpcAbility>>(request.Abilities),
             };

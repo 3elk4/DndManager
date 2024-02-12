@@ -28,7 +28,7 @@ namespace Application.Npc.Commands.Update
         public int ProficiencyBonus { get; set; }
         public int PassivePerception { get; set; }
         public int Challange { get; init; }
-        public int ChallangeExp { get; init; }
+        public int ChallangeXp { get; init; }
         public IList<NpcAbilityVM> Abilities { get; init; }
     }
 
@@ -62,7 +62,7 @@ namespace Application.Npc.Commands.Update
             entity.ProficiencyBonus = request.ProficiencyBonus;
             entity.PassivePerception = request.PassivePerception;
             entity.Challange = request.Challange;
-            entity.ChallangeExp = request.ChallangeExp;
+            entity.ChallangeXp = request.ChallangeXp;
 
             foreach (var ability in _mapper.Map<List<Domain.Entities.NpcAbility>>(request.Abilities))
             {

@@ -51,7 +51,7 @@ namespace Application.Npc
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Please provide character's challange")]
         public int Challange { get; init; }
-        public int ChallangeExp { get; init; }
+        public int ChallangeXp { get; init; }
 
         public IReadOnlyCollection<NpcAbilityVM> Abilities { get; init; }
         public NpcSpellInfoVM SpellInfo { get; init; }
