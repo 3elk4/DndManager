@@ -59,7 +59,8 @@ namespace Presentation.Controllers
         {
             return View(new NpcEditableVM()
             {
-                Abilities = NpcHelper.GenerateAbilitiesWithSkills()
+                Abilities = NpcHelper.GenerateAbilitiesWithSkills(),
+                SpellInfo = new Application.NpcSpellInfo.NpcSpellInfoVM()
             });
         }
 
@@ -87,7 +88,8 @@ namespace Presentation.Controllers
                     PassivePerception = pcVM.PassivePerception,
                     Challange = pcVM.Challange,
                     ChallangeXp = pcVM.ChallangeXp,
-                    Abilities = pcVM.Abilities
+                    Abilities = pcVM.Abilities,
+                    SpellInfo = pcVM.SpellInfo
                 };
                 var result = await _mediator.Send(request);
 
@@ -124,6 +126,7 @@ namespace Presentation.Controllers
                 Challange = result.Value.Challange,
                 ChallangeXp = result.Value.ChallangeXp,
                 Abilities = (IList<Application.NpcAbility.NpcAbilityVM>)result.Value.Abilities,
+                SpellInfo = result.Value.SpellInfo
             };
 
             return View("Edit", npc);
@@ -151,7 +154,8 @@ namespace Presentation.Controllers
                 PassivePerception = pcVM.PassivePerception,
                 Challange = pcVM.Challange,
                 ChallangeXp = pcVM.ChallangeXp,
-                Abilities = pcVM.Abilities
+                Abilities = pcVM.Abilities,
+                SpellInfo = pcVM.SpellInfo
             };
             var result = await _mediator.Send(request);
 
