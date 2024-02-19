@@ -1,0 +1,25 @@
+﻿@model NpcActionVM
+
+<div class="modal fade" id="npcActionEditableModal_@Model.Id">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Edit </h5>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Edit" asp-controller="NpcActions" asp-route-npcid="@Model.NpcId" asp-route-id="@Model.Id" method="post">
+                    @Html.EditorFor(m => m, "_PartialEditableNpcAction")
+
+                    <div class="modal-footer justify-content-between align-content-center mt-3">
+                        <button class="btn btn-primary m-0" type="submit" id="submit"><i class="fas fa-check"></i></button>
+                        <button type="button" class="btn btn-primary m-0" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
