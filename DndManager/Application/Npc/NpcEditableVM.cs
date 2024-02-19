@@ -1,5 +1,6 @@
 ﻿using Application.Common.Models;
 using Application.NpcAbility;
+using Application.NpcSpellInfo;
 using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -52,5 +53,7 @@ namespace Application.Npc
         public IFormFile Photo { get; set; }
 
         public IList<NpcAbilityVM> Abilities { get; init; }
+
+        public NpcSpellInfoVM SpellInfo { get; set; }
     }
 }

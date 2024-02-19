@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.NpcAbility;
+using Application.NpcSpellInfo;
 using AutoMapper;
 using MediatR;
 using System.Collections.Generic;
@@ -26,6 +27,7 @@ namespace Application.Npc.Commands.Create
         public int Challange { get; init; }
         public int ChallangeXp { get; init; }
         public IList<NpcAbilityVM> Abilities { get; init; }
+        public NpcSpellInfoVM SpellInfo { get; init; }
     }
 
     public class AddNewNpcCommandHandler : IRequestHandler<AddNewNpcCommand, Result>
@@ -57,8 +59,8 @@ namespace Application.Npc.Commands.Create
                 PassivePerception = request.PassivePerception,
                 Challange = request.Challange,
                 ChallangeXp = request.ChallangeXp,
-                SpellInfo = new Domain.Entities.NpcSpellInfo(),
                 Abilities = _mapper.Map<List<Domain.Entities.NpcAbility>>(request.Abilities),
+                SpellInfo = _mapper.Map<Domain.Entities.NpcSpellInfo>(request.SpellInfo)
             };
 
             _dbContext.Npcs.Add(item);

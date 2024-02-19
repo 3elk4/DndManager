@@ -1,6 +1,7 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
 using Application.NpcAbility;
+using Application.NpcSpellInfo;
 using AutoMapper;
 using MediatR;
 using System;
@@ -30,6 +31,7 @@ namespace Application.Npc.Commands.Update
         public int Challange { get; init; }
         public int ChallangeXp { get; init; }
         public IList<NpcAbilityVM> Abilities { get; init; }
+        public NpcSpellInfoVM SpellInfo { get; init; }
     }
 
     public class UpdateNpcCommandHandler : IRequestHandler<UpdateNpcCommand, Result<int>>
@@ -63,6 +65,8 @@ namespace Application.Npc.Commands.Update
             entity.PassivePerception = request.PassivePerception;
             entity.Challange = request.Challange;
             entity.ChallangeXp = request.ChallangeXp;
+
+            _dbContext.NpcSpellInfo.Update(_mapper.Map<Domain.Entities.NpcSpellInfo>(request.SpellInfo));
 
             foreach (var ability in _mapper.Map<List<Domain.Entities.NpcAbility>>(request.Abilities))
             {
