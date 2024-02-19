@@ -7,7 +7,7 @@ namespace Domain.Entities
         public string DamageDice { get; set; }
         public string DamageType { get; set; }
 
-        public string NpcActionId { get; set; }
+        public string ActionId { get; set; }
         public NpcAction Action { get; set; } = null!;
     }
 }
