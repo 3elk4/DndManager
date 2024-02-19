@@ -1,0 +1,77 @@
+﻿@model List<NpcFeatVM>
+
+<input type="hidden" value="@ViewData["NpcId"]" name="NpcId" id="NpcId" />
+
+<div class="container-fluid">
+    <div class="row align-feats-center mb-3">
+        <div class="col-4 d-flex justify-content-start">
+            <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Npcs" asp-action="Details" asp-route-id="@ViewData["NpcId"]">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+        </div>
+        <div class="col-4  d-flex justify-content-center">
+            <h5> Feats </h5>
+        </div>
+        <div class="col-4 d-flex justify-content-end">
+            <partial name="_NpcFeatCreatableModal" model="new NpcFeatVM()" view-data="@ViewData" />
+            <button class="btn btn-primary" id="addFeat" data-toggle="modal" data-target="#npcFeatCreatableModal"><i class="fas fa-plus"></i></button>
+        </div>
+    </div>
+</div>
+
+<div class="container container-navbar box-shadow m-3 mb-4">
+    <div class="row d-flex justify-content-between align-feats-center pb-3 pt-3">
+        <div class="col-3">
+            <label><b>Name</b></label>
+        </div>
+        <div class="col-2">
+            <label><b>Regeneration time</b></label>
+        </div>
+        <div class="col-3">
+            <label><b>Description</b></label>
+        </div>
+        <div class="col-2">
+
+        </div>
+    </div>
+</div>
+
+
+@foreach (var feat in Model)
+{
+    <div class="container box-shadow m-3">
+        <div class="row d-flex justify-content-between align-feats-center pb-3 pt-3">
+
+            <div class="col-3">
+                <input asp-for="@feat.Name" readonly class="form-control-plaintext" />
+            </div>
+            <div class="col-2">
+                <input asp-for="@feat.TimeRegeneration" readonly class="form-control-plaintext" />
+            </div>
+            <div class="col-3">
+                <input asp-for="@feat.Description" readonly class="form-control-plaintext" />
+            </div>
+            <div class="col-2 d-flex justify-content-end align-content-center">
+                <partial name="_NpcFeatEditableModal" model="@feat" />
+                <button class="btn btn-primary m-0 mr-3" role="button" id="editFeat" onclick="showFeatEditableModal(`@feat.Id`)"><i class="fas fa-edit"></i></button>
+
+                <form asp-controller="NpcFeats" asp-action="Delete" asp-route-id="@feat.Id" asp-route-npcid="@feat.NpcId">
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete feat: @feat.Name?')"> <i class="fas fa-times"></i> </button>
+                </form>
+            </div>
+            <div>
+
+            </div>
+        </div>
+    </div>
+
+}
+
+
+@section scripts{
+    <script>
+        function showFeatEditableModal(id) {
+            $('#npcFeatEditableModal_'.concat(id)).modal('show');
+        }
+    </script>
+}

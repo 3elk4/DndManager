@@ -1,0 +1,28 @@
+﻿@model NpcProficiencyVM
+
+@{
+    var proficiencyTypes = new SelectList(new List<string>() { "language", "sense", "dmgvul", "dmgres", "dmgimmun", "condimmun" }, Model.Type);
+}
+
+<div class="row">
+    <input hidden type="text" asp-for="@Model.Id" />
+    <input hidden type="text" asp-for="@Model.NpcId" />
+
+    <div class="col">
+        <label asp-for="@Model.Name" class="control-label"></label>
+        <input asp-for="@Model.Name" class="form-control" />
+        <span asp-validation-for="@Model.Name" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Type" class="control-label"></label>
+        <select asp-for="@Model.Type" asp-items="@proficiencyTypes" class="form-control">
+            <option value="">Select Type</option>
+        </select>
+        <span asp-validation-for="@Model.Type" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="@Model.Range" class="control-label"></label>
+        <input asp-for="@Model.Range" class="form-control" />
+        <span asp-validation-for="@Model.Range" class="text-danger"></span>
+    </div>
+</div>

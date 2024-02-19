@@ -1,0 +1,25 @@
+﻿@model NpcProficiencyVM
+
+<div class="modal fade" id="npcProficiencyCreatableModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Create </h5>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" asp-controller="NpcProficiencies" asp-route-npcid="@ViewData["NpcId"]" method="post">
+                    @Html.EditorFor(m => m, "_PartialEditableNpcProficiency")
+
+                    <div class="modal-footer justify-content-between align-content-center mt-3">
+                        <button class="btn btn-primary m-0" type="submit" id="submit"><i class="fas fa-check"></i></button>
+                        <button type="button" class="btn btn-primary m-0" data-dismiss="modal"><i class="fas fa-times"></i></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
