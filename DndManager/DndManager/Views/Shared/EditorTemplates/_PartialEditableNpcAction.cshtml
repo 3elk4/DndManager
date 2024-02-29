@@ -1,0 +1,84 @@
+﻿@model NpcActionVM
+
+<div class="row">
+    <input hidden type="text" asp-for="@Model.Id" />
+    <input hidden type="text" asp-for="@Model.NpcId" />
+    <input asp-for="Attack.Id" type="hidden" />
+    <input asp-for="Damage.Id" type="hidden" />
+    <input asp-for="Attack.ActionId" type="hidden" />
+    <input asp-for="Damage.ActionId" type="hidden" />
+
+    <div class="col">
+        <label asp-for="Name" class="control-label"></label>
+        <input type="text" asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="Type" class="control-label"></label>
+        <select asp-for="Type" maxlength="50" class="form-control">
+            <option value="action">Action</option>
+            <option value="bonus action">Bonus Action</option>
+            <option value="reaction">Reaction</option>
+        </select>
+        <span asp-validation-for="Type" class="text-danger"></span>
+    </div>
+</div>
+
+<hr />
+
+<label><h5>Attack</h5></label>
+
+<div class="row">
+    <div class="col">
+        <label asp-for="Attack.Type" class="control-label"></label>
+        <select asp-for="Attack.Type" maxlength="50" class="form-control">
+            <option value="melee">Melee</option>
+            <option value="ranged">Ranged</option>
+        </select>
+        <span asp-validation-for="Attack.Type" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="Attack.Range" class="control-label"></label>
+        <input type="text" asp-for="Attack.Range" class="form-control" />
+        <span asp-validation-for="Attack.Range" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="Attack.Target" class="control-label"></label>
+        <input type="text" asp-for="Attack.Target" class="form-control" />
+        <span asp-validation-for="Attack.Target" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="Attack.ToHit" class="control-label"></label>
+        <input type="number" asp-for="Attack.ToHit" class="form-control" />
+        <span asp-validation-for="Attack.ToHit" class="text-danger"></span>
+    </div>
+</div>
+
+
+<hr />
+
+<label><h5>Damage</h5></label>
+
+<div class="row">
+    <div class="col">
+        <label asp-for="Damage.DamageDice" class="control-label"> Damage Dice </label>
+        <input type="text" asp-for="Damage.DamageDice" class="form-control" />
+        <span asp-validation-for="Damage.DamageDice" class="text-danger"></span>
+    </div>
+    <div class="col">
+        <label asp-for="Damage.DamageType" class="control-label"> Damage Type </label>
+        <input type="text" asp-for="Damage.DamageType" class="form-control" />
+        <span asp-validation-for="Damage.DamageType" class="text-danger"></span>
+    </div>
+</div>
+
+<hr />
+
+<div class="row">
+    <div class="col">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea rows="6" asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+</div>
+

@@ -1,0 +1,238 @@
+﻿@model NpcEditableVM
+
+@{
+    ViewData["Title"] = "Update Player";
+}
+
+<body>
+    <div class="container">
+        <div class="row justify-content-between align-items-center">
+            <div class="col-sm-1">
+                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Npcs" asp-action="Details" asp-route-id="@Model.Id">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col">
+                <p> Please change fields to update new non-playable character. </p>
+            </div>
+        </div>
+
+        <div class="row justify-content-between align-items-center">
+            <form asp-controller="Npcs" asp-action="Edit" id="regForm" class="box-shadow" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input hidden type="text" asp-for="@Model.Id" />
+
+                <div class="row justify-content-between align-items-center mb-4">
+                    <div class="col">
+                        <button class="btn btn-primary" type="button" id="prevBtn" onclick="nextPrev(-1)"><i class="fas fa-caret-left"></i></button>
+                    </div>
+                    <div class="col">
+                        <div style="text-align:center;margin-top:5px;">
+                            <span class="step"></span>
+                            <span class="step"></span>
+                            <span class="step"></span>
+                        </div>
+                    </div>
+                    <div class="col d-flex justify-content-end">
+                        <button class="btn btn-primary" type="button" id="nextBtn" onclick="nextPrev(1)"><i class="fas fa-caret-right"></i></button>
+                    </div>
+                </div>
+
+
+                <div class="tab">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-8">
+                                <div class="form-group">
+                                    <label asp-for="Name" class="control-label"></label>
+                                    <input asp-for="Name" class="form-control" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="Photo">Photo</label>
+                                    <input asp-for="Photo" type="file" class="form-control-file" id="image_file" accept=".png, .jpeg, .jpg">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label asp-for="Size" class="control-label"></label>
+                                <select asp-for="Size" class="form-control">
+                                    <option value="Tiny">Tiny</option>
+                                    <option value="Small">Small</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="Large">Large</option>
+                                    <option value="Huge">Huge</option>
+                                    <option value="Gargantuan">Gargantuan</option>
+                                </select>
+                                <span asp-validation-for="Size" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="Type" class="control-label"></label>
+                                <select asp-for="Type" class="form-control">
+                                    <option value="Humanoid">Humanoid</option>
+                                    <option value="Elemental">Elemental</option>
+                                    <option value="Monstrosity">Monstrosity</option>
+                                    <option value="Undead">Undead</option>
+                                    <option value="Aberration">Aberration</option>
+                                    <option value="Construct">Construct</option>
+                                    <option value="Dragon">Dragon</option>
+                                    <option value="Fey">Fey</option>
+                                    <option value="Plant">Plant</option>
+                                    <option value="Beast">Beast</option>
+                                    <option value="Fiend">Fiend</option>
+                                    <option value="Giant">Giant</option>
+                                    <option value="Celestial">Celestial</option>
+                                    <option value="Ooze">Ooze</option>
+                                </select>
+                                <span asp-validation-for="Type" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="Alignment" class="control-label"></label>
+                                <input asp-for="Alignment" class="form-control">
+                                <span asp-validation-for="Alignment" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label asp-for="Challange" class="control-label"></label>
+                                <input asp-for="Challange" class="form-control">
+                                <span asp-validation-for="Challange" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="ChallangeXp" class="control-label"> XP</label>
+                                <input asp-for="ChallangeXp" class="form-control">
+                                <span asp-validation-for="ChallangeXp" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label asp-for="AC" class="control-label"></label>
+                                <input type="number" min="-7" max="1000" asp-for="AC" class="form-control" />
+                                <span asp-validation-for="AC" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="AcType" class="control-label"> AC Type</label>
+                                <input asp-for="AcType" class="form-control" />
+                                <span asp-validation-for="AcType" class="text-danger"></span>
+
+                            </div>
+                            <div class="col">
+                                <label asp-for="HP" class="control-label"></label>
+                                <input asp-for="HP" class="form-control" />
+                                <span asp-validation-for="HP" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="HpFormula" class="control-label"> Hp Formula</label>
+                                <input asp-for="HpFormula" class="form-control" />
+                                <span asp-validation-for="HpFormula" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label asp-for="Speed" class="control-label"></label>
+                                <input asp-for="Speed" class="form-control" />
+                                <span asp-validation-for="Speed" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="ProficiencyBonus" class="control-label">Proficiency Bonus </label>
+                                <input type="number" min="1" max="1000" asp-for="ProficiencyBonus" class="form-control" />
+                                <span asp-validation-for="ProficiencyBonus" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="PassivePerception" class="control-label"> Passive Perception</label>
+                                <input type="number" min="1" max="1000" asp-for="PassivePerception" class="form-control" />
+                                <span asp-validation-for="PassivePerception" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <hr />
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                @for (int i = 0; i < 3; ++i)
+                                {
+                                    @Html.EditorFor(m => m.Abilities[i], "_PartialEditableNpcAbility")
+                                }
+                            </div>
+                            <div class="col">
+                                @for (int i = 3; i < 6; ++i)
+                                {
+                                    @Html.EditorFor(m => m.Abilities[i], "_PartialEditableNpcAbility")
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab">
+                    <div class="form-group">
+                        <div class="row">
+                            <input hidden type="text" asp-for="@Model.SpellInfo.Id" />
+                            <input hidden type="text" asp-for="@Model.SpellInfo.NpcId" />
+
+                            <div class="col">
+                                <label asp-for="SpellInfo.NpcAbilityId" class="control-label"> Spell Ability </label>
+                                <select asp-for="@Model.SpellInfo.NpcAbilityId" maxlength="100" class="form-control">
+                                    <option value="">None</option>
+                                    @foreach (var ab in Model.Abilities)
+                                    {
+                                        <option value="@ab.Id">@ab.Name</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="SpellInfo.NpcAbilityId" class="text-danger"></span>
+                            </div>
+                            
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col">
+                                <label asp-for="SpellInfo.CasterLvl" class="control-label"> Caster Lvl</label>
+                                <input asp-for="SpellInfo.CasterLvl" class="form-control" />
+                                <span asp-validation-for="SpellInfo.CasterLvl" class="text-danger"></span>
+
+                            </div>
+                            <div class="col">
+                                <label asp-for="SpellInfo.GlobalAttackMod" class="control-label">Global Attack Mod</label>
+                                <input asp-for="SpellInfo.GlobalAttackMod" class="form-control" />
+                                <span asp-validation-for="SpellInfo.GlobalAttackMod" class="text-danger"></span>
+                            </div>
+                            <div class="col">
+                                <label asp-for="SpellInfo.SpellSaveDcMod" class="control-label"> Spell Save DC Mod </label>
+                                <input asp-for="SpellInfo.SpellSaveDcMod" class="form-control" />
+                                <span asp-validation-for="SpellInfo.SpellSaveDcMod" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="~/css/formstyle.css" />
+    <script src="~/js/formWithTabs.js"></script>
+</body>
+
+
+

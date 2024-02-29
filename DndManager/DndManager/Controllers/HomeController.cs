@@ -1,11 +1,8 @@
-﻿
-using Application.Test.Queries.GetMany;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.ViewModels;
-using System.Diagnostics;
 
 namespace Presentation.Controllers
 {
@@ -22,10 +19,7 @@ namespace Presentation.Controllers
 
         public async System.Threading.Tasks.Task<IActionResult> Index()
         {
-            var request = new GetManyTestsQuery();
-            var result = await _mediator.Send(request);
-
-            return View(result.Value);
+            return View();
         }
 
         public IActionResult Privacy()

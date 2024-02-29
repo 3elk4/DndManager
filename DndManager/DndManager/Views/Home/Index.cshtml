@@ -1,5 +1,4 @@
-﻿@model List<TestVM>
-
+﻿
 @{
     ViewData["Title"] = "Dungeons and Dragons Manager";
 }
@@ -12,7 +11,7 @@
         </div>
         <div class="col-5">
             <a class="btn btn-primary btn-lg" role="button" asp-area="" asp-controller="Pcs" asp-action="Index">Playable characters</a>
-            <a class="btn btn-primary btn-lg" role="button">Non-playable characters</a>
+            <a class="btn btn-primary btn-lg" role="button" asp-area="" asp-controller="Npcs" asp-action="Index">Non-playable characters</a>
             <a class="btn btn-primary btn-lg" role="button">Maps</a>
             <a class="btn btn-primary btn-lg" role="button">Campaigns</a>
         </div>
