@@ -3,7 +3,7 @@
 <input type="hidden" value="@ViewData["NpcId"]" name="NpcId" id="NpcId" />
 
 <div class="container-fluid">
-    <div class="row align-feats-center mb-3">
+    <div class="row align-items-center mb-3">
         <div class="col-4 d-flex justify-content-start">
             <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Npcs" asp-action="Details" asp-route-id="@ViewData["NpcId"]">
                 <i class="fas fa-arrow-left"></i>
@@ -20,14 +20,14 @@
 </div>
 
 <div class="container container-navbar box-shadow m-3 mb-4">
-    <div class="row d-flex justify-content-between align-feats-center pb-3 pt-3">
+    <div class="row d-flex justify-content-between align-items-center pb-3 pt-3">
         <div class="col-3">
             <label><b>Name</b></label>
         </div>
         <div class="col-2">
             <label><b>Regeneration time</b></label>
         </div>
-        <div class="col-3">
+        <div class="col-5">
             <label><b>Description</b></label>
         </div>
         <div class="col-2">
@@ -48,7 +48,7 @@
             <div class="col-2">
                 <input asp-for="@feat.TimeRegeneration" readonly class="form-control-plaintext" />
             </div>
-            <div class="col-3">
+            <div class="col-5">
                 <input asp-for="@feat.Description" readonly class="form-control-plaintext" />
             </div>
             <div class="col-2 d-flex justify-content-end align-content-center">
