@@ -1,4 +1,5 @@
 ﻿using Application.NpcAbility;
+using System;
 using System.Collections.Generic;
 
 namespace Presentation.Helpers
@@ -23,7 +24,7 @@ namespace Presentation.Helpers
 
         private static NpcAbilityVM GenerateAbility(KeyValuePair<string, List<string>> keyValuePair)
         {
-            return new NpcAbilityVM() { Name = keyValuePair.Key, Skills = GenerateSkills(keyValuePair.Value) };
+            return new NpcAbilityVM() { Id = Guid.NewGuid().ToString(), Name = keyValuePair.Key, Skills = GenerateSkills(keyValuePair.Value) };
         }
 
         private static List<NpcSkillVM> GenerateSkills(List<string> skillNames)
