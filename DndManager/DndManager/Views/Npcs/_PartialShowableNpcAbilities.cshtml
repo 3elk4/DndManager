@@ -1,0 +1,33 @@
+﻿@model List<NpcAbilityVM>
+
+@foreach (var ability in Model.OrderByDescending(ab => ab.Skills.Count))
+{
+    var abilityMod = ability.Value.Mod();
+    var abilityName = @ability.Name.ToUpper().Substring(0, 3);
+
+<div class="row mt-3 mb-2">
+    <div class="col-3">
+        <div class="border">
+            <b> @abilityName </b>
+            <h4> @ability.Value </h4>
+            <b> ST </b>
+            <h6> @ability.SavingThrowBonus </h6>
+        </div>
+    </div>
+    <div class="col">
+        @foreach (var skill in ability.Skills)
+        {
+            <div class="row">
+                <div class="row mb-1">
+                    <div class="col-8">
+                        <input type="text" asp-for="@skill.Name" readonly class="form-control-plaintext" />
+                    </div>
+                    <div class="col">
+                        <input type="number" asp-for="@skill.Bonus" class="form-control-plaintext">
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+}

@@ -1,25 +1,27 @@
 ﻿@model NpcEditableVM
 
 @{
-    ViewData["Title"] = "New Player";
+    ViewData["Title"] = "Update Player";
 }
 
 <body>
     <div class="container">
         <div class="row justify-content-between align-items-center">
             <div class="col-sm-1">
-                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Npcs" asp-action="Index">
+                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Npcs" asp-action="Details" asp-route-id="@Model.Id">
                     <i class="fas fa-arrow-left"></i>
                 </a>
             </div>
             <div class="col">
-                <p> Please fill empty fields to create new non-playable character. </p>
+                <p> Please change fields to update new non-playable character. </p>
             </div>
         </div>
 
         <div class="row justify-content-between align-items-center">
-            <form asp-controller="Npcs" asp-action="Create" id="regForm" class="box-shadow" enctype="multipart/form-data">
+            <form asp-controller="Npcs" asp-action="Edit" id="regForm" class="box-shadow" enctype="multipart/form-data">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input hidden type="text" asp-for="@Model.Id" />
 
                 <div class="row justify-content-between align-items-center mb-4">
                     <div class="col">
@@ -107,7 +109,7 @@
                                 <span asp-validation-for="Challange" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label asp-for="ChallangeXp" class="control-label"> XP </label>
+                                <label asp-for="ChallangeXp" class="control-label"> XP</label>
                                 <input asp-for="ChallangeXp" class="form-control">
                                 <span asp-validation-for="ChallangeXp" class="text-danger"></span>
                             </div>
@@ -124,7 +126,7 @@
                                 <span asp-validation-for="AC" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label asp-for="AcType" class="control-label">AC Type</label>
+                                <label asp-for="AcType" class="control-label"> AC Type</label>
                                 <input asp-for="AcType" class="form-control" />
                                 <span asp-validation-for="AcType" class="text-danger"></span>
 
@@ -135,7 +137,7 @@
                                 <span asp-validation-for="HP" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label asp-for="HpFormula" class="control-label">HP Formula</label>
+                                <label asp-for="HpFormula" class="control-label"> Hp Formula</label>
                                 <input asp-for="HpFormula" class="form-control" />
                                 <span asp-validation-for="HpFormula" class="text-danger"></span>
                             </div>
@@ -150,12 +152,12 @@
                                 <span asp-validation-for="Speed" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label asp-for="ProficiencyBonus" class="control-label">Proficiency Bonus</label>
+                                <label asp-for="ProficiencyBonus" class="control-label">Proficiency Bonus </label>
                                 <input type="number" min="1" max="1000" asp-for="ProficiencyBonus" class="form-control" />
                                 <span asp-validation-for="ProficiencyBonus" class="text-danger"></span>
                             </div>
                             <div class="col">
-                                <label asp-for="PassivePerception" class="control-label"> Passive Perception </label>
+                                <label asp-for="PassivePerception" class="control-label"> Passive Perception</label>
                                 <input type="number" min="1" max="1000" asp-for="PassivePerception" class="form-control" />
                                 <span asp-validation-for="PassivePerception" class="text-danger"></span>
                             </div>
@@ -185,8 +187,8 @@
                 <div class="tab">
                     <div class="form-group">
                         <div class="row">
-                           @*  <input hidden type="text" asp-for="@Model.SpellInfo.Id" />
-                            <input hidden type="text" asp-for="@Model.SpellInfo.NpcId" /> *@
+                            <input hidden type="text" asp-for="@Model.SpellInfo.Id" />
+                            <input hidden type="text" asp-for="@Model.SpellInfo.NpcId" />
 
                             <div class="col">
                                 <label asp-for="SpellInfo.NpcAbilityId" class="control-label"> Spell Ability </label>
@@ -199,14 +201,14 @@
                                 </select>
                                 <span asp-validation-for="SpellInfo.NpcAbilityId" class="text-danger"></span>
                             </div>
-
+                            
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="row">
                             <div class="col">
-                                <label asp-for="SpellInfo.CasterLvl" class="control-label"> Caster Lvl </label>
+                                <label asp-for="SpellInfo.CasterLvl" class="control-label"> Caster Lvl</label>
                                 <input asp-for="SpellInfo.CasterLvl" class="form-control" />
                                 <span asp-validation-for="SpellInfo.CasterLvl" class="text-danger"></span>
 
@@ -231,5 +233,6 @@
     <link rel="stylesheet" href="~/css/formstyle.css" />
     <script src="~/js/formWithTabs.js"></script>
 </body>
+
 
 
