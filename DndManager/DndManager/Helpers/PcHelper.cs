@@ -18,7 +18,7 @@ namespace Presentation.Helpers
         public static List<SpellLvlInfoVM> GenerateSpellLvls()
         {
             List<SpellLvlInfoVM> spellLvls = new List<SpellLvlInfoVM>();
-            for(int i = 0; i < 10; ++i) spellLvls.Add(new SpellLvlInfoVM() { Lvl = i });
+            for (int i = 0; i < 10; ++i) spellLvls.Add(new SpellLvlInfoVM() { Lvl = i });
             return spellLvls;
         }
 
@@ -37,7 +37,7 @@ namespace Presentation.Helpers
         private static List<SkillVM> GenerateSkills(List<string> skillNames)
         {
             var skills = new List<SkillVM>();
-            foreach (var skillName in skillNames) skills.Add(new SkillVM() { Name = skillName }); 
+            foreach (var skillName in skillNames) skills.Add(new SkillVM() { Name = skillName });
             return skills;
         }
     }

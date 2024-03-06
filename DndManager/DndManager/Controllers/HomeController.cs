@@ -1,6 +1,5 @@
-﻿using MediatR;
+﻿using Application.Common.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Presentation.ViewModels;
 
@@ -27,14 +26,39 @@ namespace Presentation.Controllers
             return View();
         }
 
-        [Route("Error/{statusCode}")]
+        [Route("error")]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error(int statusCode)
+        public IActionResult Error()
         {
-            var feature = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
-          
+            var exception = HttpContext.Features.Get<IExceptionHandlerFeature>().Error;
+            int code = 500;
+            var errorVM = new ErrorVM { StatusCode = 500, Message = "Internal server error." };
 
-            return View(new ErrorVM { StatusCode = statusCode, OriginalPath = feature?.OriginalPath });
+            if (exception is NotFoundException)
+            {
+                code = 404;
+                errorVM.Message = "Link may be broken or page was not found.";
+            }
+            else if (exception is UnauthorizedAccessException)
+            {
+                code = 401;
+                errorVM.Message = "Unathorized. Log in or register to see details.";
+            }
+            else if (exception is ForbiddenAccessException)
+            {
+                code = 403;
+                errorVM.Message = "Forbidden.";
+            }
+            else if (exception is Exception)
+            {
+                code = 400;
+                errorVM.Message = "Bad Request.";
+            }
+
+            errorVM.StatusCode = code;
+            Response.StatusCode = code;
+
+            return View(errorVM);
         }
     }
 }

@@ -1,19 +1,11 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Models;
 using Application.NpcAbility;
 using Application.NpcSpellInfo;
-using AutoMapper;
-using MediatR;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Npc.Commands.Update
 {
-    public record UpdateNpcCommand : IRequest<Result<int>>, ICommand
+    public record UpdateNpcCommand : IRequest, ICommand
     {
         public string Id { get; init; }
         public string Name { get; init; }
@@ -34,7 +26,7 @@ namespace Application.Npc.Commands.Update
         public NpcSpellInfoVM SpellInfo { get; init; }
     }
 
-    public class UpdateNpcCommandHandler : IRequestHandler<UpdateNpcCommand, Result<int>>
+    public class UpdateNpcCommandHandler : IRequestHandler<UpdateNpcCommand>
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -45,11 +37,11 @@ namespace Application.Npc.Commands.Update
             _mapper = mapper;
         }
 
-        public async Task<Result<int>> Handle(UpdateNpcCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateNpcCommand request, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.Npcs.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if (entity == null) Result<int>.Failure(0, new List<string>() { $"Can't find a character with id {request.Id}." });
+            Guard.Against.NotFound(request.Id, entity);
 
             entity.Name = request.Name;
             if (request.Image != null) entity.Image = request.Image;
@@ -73,11 +65,7 @@ namespace Application.Npc.Commands.Update
                 _dbContext.NpcAbilities.Update(ability);
             }
 
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return result > 0 ?
-                   Result<int>.Success(result) :
-                   Result<int>.Failure(0, new List<string>() { "Some errors occured during updating records." });
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

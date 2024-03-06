@@ -1,15 +1,9 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Models;
-using AutoMapper;
-using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 
 namespace Application.Spell.Commands.Update
 {
-    public record UpdateSpellCommand : IRequest<Result<int>>, ICommand
+    public record UpdateSpellCommand : IRequest, ICommand
     {
         public string Id { get; set; }
         public string Name { get; init; }
@@ -20,22 +14,19 @@ namespace Application.Spell.Commands.Update
         public string Duration { get; init; }
     }
 
-    public class UpdateSpellCommandHandler : IRequestHandler<UpdateSpellCommand, Result<int>>
+    public class UpdateSpellCommandHandler : IRequestHandler<UpdateSpellCommand>
     {
         private readonly IDbContext _dbContext;
-        private readonly IMapper _mapper;
-
         public UpdateSpellCommandHandler(IDbContext dbContext, IMapper mapper)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
 
-        public async Task<Result<int>> Handle(UpdateSpellCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateSpellCommand request, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.Spells.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if (entity == null) Result<int>.Failure(0, new List<string>() { $"Can't find a class with id {request.Id}." });
+            Guard.Against.NotFound(request.Id, entity);
 
             entity.Name = request.Name;
             entity.Description = request.Description;
@@ -44,11 +35,7 @@ namespace Application.Spell.Commands.Update
             entity.Components = request.Components;
             entity.Duration = request.Duration;
 
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return result > 0 ?
-                   Result<int>.Success(result) :
-                   Result<int>.Failure(0, new List<string>() { "Some errors occured during updating records." });
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

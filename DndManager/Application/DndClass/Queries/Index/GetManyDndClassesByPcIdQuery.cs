@@ -1,21 +1,16 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
-using Application.Common.Models;
-using AutoMapper;
-using MediatR;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.DndClass.Queries.Index
 {
-    public record GetManyDndClasssByPcIdQuery : IRequest<Result<List<DndClassVM>>>, IQuery
+    public record GetManyDndClasssByPcIdQuery : IRequest<List<DndClassVM>>, IQuery
     {
         public string PcId { get; init; }
     }
 
-    public class GetManyDndClasssByPcIdQueryHandler : IRequestHandler<GetManyDndClasssByPcIdQuery, Result<List<DndClassVM>>>, IQuery
+    public class GetManyDndClasssByPcIdQueryHandler : IRequestHandler<GetManyDndClasssByPcIdQuery, List<DndClassVM>>, IQuery
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -26,13 +21,12 @@ namespace Application.DndClass.Queries.Index
             _mapper = mapper;
         }
 
-        public async Task<Result<List<DndClassVM>>> Handle(GetManyDndClasssByPcIdQuery request, CancellationToken cancellationToken)
+        public async Task<List<DndClassVM>> Handle(GetManyDndClasssByPcIdQuery request, CancellationToken cancellationToken)
         {
-            return Result<List<DndClassVM>>.Success(
-                await _dbContext
+            return await _dbContext
                     .DndClasses
                     .Where(item => item.PcId.Equals(request.PcId))
-                    .ProjectToListAsync<DndClassVM>(_mapper.ConfigurationProvider));
+                    .ProjectToListAsync<DndClassVM>(_mapper.ConfigurationProvider);
         }
 
     }

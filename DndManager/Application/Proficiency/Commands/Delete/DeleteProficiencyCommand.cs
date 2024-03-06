@@ -1,18 +1,13 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Models;
-using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Proficiency.Commands.Delete
 {
-    public record DeleteProficiencyCommand : IRequest<Result>, ICommand
+    public record DeleteProficiencyCommand : IRequest, ICommand
     {
         public string Id { get; init; }
     }
 
-    public class DeleteProficiencyCommandHandler : IRequestHandler<DeleteProficiencyCommand, Result>
+    public class DeleteProficiencyCommandHandler : IRequestHandler<DeleteProficiencyCommand>
     {
         private readonly IDbContext _dbContext;
 
@@ -21,14 +16,14 @@ namespace Application.Proficiency.Commands.Delete
             _dbContext = dbContext;
         }
 
-        public async Task<Result> Handle(DeleteProficiencyCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteProficiencyCommand request, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.Proficiencies.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            _dbContext.Proficiencies.Remove(entity);
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            Guard.Against.NotFound(request.Id, entity);
 
-            return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
+            _dbContext.Proficiencies.Remove(entity);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

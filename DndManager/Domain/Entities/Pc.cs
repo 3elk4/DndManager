@@ -1,8 +1,4 @@
-﻿using Domain.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace Domain.Entities
 {
@@ -26,7 +22,7 @@ namespace Domain.Entities
         public Bio Bio { get; init; } = new Bio();
         public SpellInfo SpellInfo { get; init; } = new SpellInfo();
 
-        public IList<DndClass> DndClasses { get; init; } 
+        public IList<DndClass> DndClasses { get; init; }
         public IList<Item> Items { get; private set; } = new List<Item>();
         public IList<Feat> Feats { get; private set; } = new List<Feat>();
         public IList<Proficiency> Proficiencies { get; private set; } = new List<Proficiency>();

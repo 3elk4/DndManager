@@ -1,6 +1,9 @@
 ﻿@model BioVM
 
-<form asp-action="Edit" method="post">
+<partial name="_SuccessNotification" />
+<partial name="_ErrorNotification" />
+
+<form id="bioForm" asp-action="Edit" asp-controller="Bio" method="post">
     <input type="hidden" asp-for="Id" class="form-control" id="Id", name="Id" />
     <input type="hidden" asp-for="PcId" class="form-control" />
 

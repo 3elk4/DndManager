@@ -1,36 +1,28 @@
 ﻿using Application.Bio;
 using Application.Bio.Commands.Update;
 using Application.Bio.Queries.Get;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     public class BioController : Controller
     {
         private readonly IMediator _mediator;
-        private int error = 0;
 
         public BioController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-
         [Route("bio/{id}")]
         [HttpGet]
         public async Task<ActionResult> Show(string id)
         {
-            if (id == null) return new BadRequestResult();
+            Guard.Against.Null(id);
 
             var request = new GetBioByIdQuery() { Id = id };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("bio/{id}")]
@@ -38,14 +30,34 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(BioVM bio)
         {
-            if (!ModelState.IsValid) return View("Show", bio);
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Some errors occured during updating bio.";
+                return View("Show", bio);
+            }
 
-            var request = new UpdateBioCommand() { Bio = bio };
-            var result = await _mediator.Send(request);
+            var request = new UpdateBioCommand()
+            {
+                Id = bio.Id,
+                Age = bio.Age,
+                Size = bio.Size,
+                Weight = bio.Weight,
+                Height = bio.Height,
+                Skin = bio.Skin,
+                Eyes = bio.Eyes,
+                Hair = bio.Hair,
+                Alignment = bio.Alignment,
+                Traits = bio.Traits,
+                Flaws = bio.Flaws,
+                Bonds = bio.Bonds,
+                Ideals = bio.Ideals,
+                Allies = bio.Allies,
+                Backstory = bio.Backstory
+            };
+            await _mediator.Send(request);
 
-            if(result.IsFailure) error = 1;
-
-            return RedirectToAction("Show", "Bio", new RouteValueDictionary() { { "id", bio.Id } });
+            TempData["Message"] = "Bio updated successfully!";
+            return RedirectToAction("Show", "Bio", new { id = bio.Id });
         }
     }
 }

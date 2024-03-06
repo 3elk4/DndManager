@@ -1,13 +1,8 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Models;
-using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Spell.Commands.Create
 {
-    public record AddNewSpellCommand : IRequest<Result>, ICommand
+    public record AddNewSpellCommand : IRequest<string>, ICommand
     {
         public string Name { get; init; }
         public string Description { get; init; }
@@ -18,7 +13,7 @@ namespace Application.Spell.Commands.Create
         public string SpellLvlInfoId { get; init; }
     }
 
-    public class AddNewSpellCommandHandler : IRequestHandler<AddNewSpellCommand, Result>
+    public class AddNewSpellCommandHandler : IRequestHandler<AddNewSpellCommand, string>
     {
         private readonly IDbContext _dbContext;
 
@@ -27,9 +22,9 @@ namespace Application.Spell.Commands.Create
             _dbContext = dbContext;
         }
 
-        public async Task<Result> Handle(AddNewSpellCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddNewSpellCommand request, CancellationToken cancellationToken)
         {
-            var spell = new Domain.Entities.Spell()
+            var entity = new Domain.Entities.Spell()
             {
                 Name = request.Name,
                 Description = request.Description,
@@ -40,10 +35,10 @@ namespace Application.Spell.Commands.Create
                 SpellLvlInfoId = request.SpellLvlInfoId
             };
 
-            _dbContext.Spells.Add(spell);
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            _dbContext.Spells.Add(entity);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some problems occured during creating record." });
+            return entity.Id;
         }
     }
 }

@@ -3,17 +3,12 @@ using Application.Proficiency.Commands.Create;
 using Application.Proficiency.Commands.Delete;
 using Application.Proficiency.Commands.Update;
 using Application.Proficiency.Queries.Index;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace DndEncounter.Controllers
 {
     public class ProficienciesController : Controller
     {
         private readonly IMediator _mediator;
-        private int error = 0;
         public ProficienciesController(IMediator mediator)
         {
             _mediator = mediator;
@@ -23,15 +18,13 @@ namespace DndEncounter.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new GetManyProficienciesByPcIdQuery() { PcId = pcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["PcId"] = pcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("pcs/{pcid}/proficiencies/create")]
@@ -39,7 +32,7 @@ namespace DndEncounter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ProficiencyVM dndClassVM, [FromRoute] string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new AddNewProficiencyCommand()
             {
@@ -49,9 +42,8 @@ namespace DndEncounter.Controllers
             };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "Proficiencies", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Proficiency created successfully!";
+            return RedirectToAction("Index", "Proficiencies", new { pcid = pcid });
         }
 
 
@@ -60,7 +52,8 @@ namespace DndEncounter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(ProficiencyVM dndClassVM, [FromRoute] string pcid, [FromRoute] string id)
         {
-            if (pcid == null || id == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
 
             var request = new UpdateProficiencyCommand()
             {
@@ -68,11 +61,10 @@ namespace DndEncounter.Controllers
                 Name = dndClassVM.Name,
                 Type = dndClassVM.Type
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "Proficiencies", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Proficiency updated successfully!";
+            return RedirectToAction("Index", "Proficiencies", new { pcid = pcid });
         }
 
         [Route("pcs/{pcid}/proficiencies/{id}/delete")]
@@ -80,11 +72,13 @@ namespace DndEncounter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string pcid, string id)
         {
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteProficiencyCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) error = 1;
-
+            TempData["Message"] = "Proficiency deleted successfully!";
             return RedirectToAction("Index", new { pcid = pcid });
         }
     }

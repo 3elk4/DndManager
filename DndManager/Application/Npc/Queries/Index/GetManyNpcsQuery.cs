@@ -1,24 +1,20 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
-using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using MediatR;
 using System;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Npc.Queries.Index
 {
-    public record GetManyNpcsQuery : IRequest<Result<PaginatedListVM<NpcBriefVM>>>, IQuery
+    public record GetManyNpcsQuery : IRequest<PaginatedListVM<NpcBriefVM>>, IQuery
     {
         public string SearchString { get; init; }
         public int PageNumber { get; set; }
         public int PageSize { get; init; }
     }
 
-    public class GetManyNpcsQueryHandler : IRequestHandler<GetManyNpcsQuery, Result<PaginatedListVM<NpcBriefVM>>>, IQuery
+    public class GetManyNpcsQueryHandler : IRequestHandler<GetManyNpcsQuery, PaginatedListVM<NpcBriefVM>>, IQuery
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -29,7 +25,7 @@ namespace Application.Npc.Queries.Index
             _mapper = mapper;
         }
 
-        public async Task<Result<PaginatedListVM<NpcBriefVM>>> Handle(GetManyNpcsQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedListVM<NpcBriefVM>> Handle(GetManyNpcsQuery request, CancellationToken cancellationToken)
         {
             var pcs = _dbContext.Npcs.ProjectTo<NpcBriefVM>(_mapper.ConfigurationProvider);
 
@@ -46,8 +42,7 @@ namespace Application.Npc.Queries.Index
                                       pc.Type.ToLower().Contains(ss));
             }
 
-            var result = await pcs.PaginatedListAsync<NpcBriefVM>(request.PageNumber, request.PageSize);
-            return Result<PaginatedListVM<NpcBriefVM>>.Success(result);
+            return await pcs.PaginatedListAsync<NpcBriefVM>(request.PageNumber, request.PageSize);
         }
 
     }

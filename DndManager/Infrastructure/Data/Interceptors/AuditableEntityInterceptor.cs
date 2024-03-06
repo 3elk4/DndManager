@@ -1,12 +1,6 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Common;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Threading.Tasks;
-using System;
-using System.Linq;
-using System.Threading;
 
 namespace Infrastructure.Data.Interceptors
 {

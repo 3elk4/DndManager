@@ -1,5 +1,8 @@
 ﻿@model PcDetailsVM
 
+<partial name="_SuccessNotification" />
+<partial name="_ErrorNotification" />
+
 @{
     ViewData["Title"] = Model.Name;
 }
@@ -45,7 +48,7 @@
                                     foreach (var dndClass in Model.DndClasses)
                                     {
                                         if (dndClass.Name == null || dndClass.Name.Length == 0) continue;
-                                        var title = dndClass.SubclassName.Length != 0 ? $"{dndClass.Name} ({dndClass.SubclassName})" : dndClass.Name;
+                                        var title = dndClass.SubclassName != null ? $"{dndClass.Name} ({dndClass.SubclassName})" : dndClass.Name;
 
                                         <li class="list-group-item d-flex justify-content-between align-items-center">
                                             @title

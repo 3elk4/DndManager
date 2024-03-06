@@ -1,5 +1,5 @@
-﻿using Application.Common.Extentions;
-using AutoMapper;
+﻿using Application.Ability;
+using Application.Common.Extentions;
 using System.Collections.Generic;
 
 namespace Application.CombatAction
@@ -7,7 +7,7 @@ namespace Application.CombatAction
     public class CombatActionsWithAbilitiesVM
     {
         public List<CombatActionVM> CombatActions { get; set; }
-        public List<AbilityVM> Abilities { get; set; }
+        public List<AbilityBriefVM> Abilities { get; set; }
 
         public int Proficiency { get; set; }
 

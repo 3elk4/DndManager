@@ -3,9 +3,6 @@ using Application.NpcFeat.Commands.Create;
 using Application.NpcFeat.Commands.Delete;
 using Application.NpcFeat.Commands.Update;
 using Application.NpcFeat.Queries.Index;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -22,15 +19,13 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string npcid)
         {
-            if (npcid == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
 
             var request = new GetManyFeatsByNpcIdQuery() { NpcId = npcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["NpcId"] = npcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("npcs/{npcid}/feats/create")]
@@ -38,7 +33,7 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NpcFeatVM dndClassVM, [FromRoute] string npcid)
         {
-            if (npcid == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
 
             var request = new AddNewFeatCommand()
             {
@@ -47,10 +42,9 @@ namespace Presentation.Controllers
                 Description = dndClassVM.Description,
                 TimeRegeneration = dndClassVM.TimeRegeneration
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
+            TempData["Message"] = "Feat created successfully!";
             return RedirectToAction("Index", "NpcFeats", new { npcid = npcid });
         }
 
@@ -60,7 +54,8 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(NpcFeatVM dndClassVM, [FromRoute] string npcid, [FromRoute] string id)
         {
-            if (npcid == null || id == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
+            Guard.Against.Null(id);
 
             var request = new UpdateFeatCommand()
             {
@@ -69,10 +64,9 @@ namespace Presentation.Controllers
                 Description = dndClassVM.Description,
                 TimeRegeneration = dndClassVM.TimeRegeneration
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
+            TempData["Message"] = "Feat updated successfully!";
             return RedirectToAction("Index", "NpcFeats", new { npcid = npcid });
         }
 
@@ -81,11 +75,13 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string npcid, string id)
         {
+            Guard.Against.Null(npcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteFeatCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return BadRequest();
-
+            TempData["Message"] = "Feat deleted successfully!";
             return RedirectToAction("Index", new { npcid = npcid });
         }
     }

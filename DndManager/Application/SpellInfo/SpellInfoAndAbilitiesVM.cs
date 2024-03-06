@@ -1,6 +1,5 @@
 ﻿using Application.Ability;
 using Application.Common.Extentions;
-using AutoMapper;
 using System.Collections.Generic;
 
 namespace Application.SpellInfo
@@ -8,7 +7,7 @@ namespace Application.SpellInfo
     public class SpellInfoAndAbilitiesVM
     {
         public SpellInfoVM SpellInfo { get; init; }
-        public IReadOnlyCollection<AbilityVM> Abilities { get; init; }
+        public IReadOnlyCollection<AbilityBriefVM> Abilities { get; init; }
         public int Proficiency { get; set; }
 
         private class Mapping : Profile

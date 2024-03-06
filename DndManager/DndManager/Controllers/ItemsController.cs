@@ -3,37 +3,28 @@ using Application.Item.Commands.Create;
 using Application.Item.Commands.Delete;
 using Application.Item.Commands.Update;
 using Application.Item.Queries.Index;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     public class ItemsController : Controller
     {
         private readonly IMediator _mediator;
-        private int error = 0;
         public ItemsController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-
-
         [Route("pcs/{pcid}/items")]
         [HttpGet]
         public async Task<ActionResult> Index(string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new GetManyItemsByPcIdQuery() { PcId = pcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["PcId"] = pcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("pcs/{pcid}/items/create")]
@@ -41,7 +32,7 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ItemVM dndClassVM, [FromRoute] string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new AddNewItemCommand()
             {
@@ -53,9 +44,8 @@ namespace Presentation.Controllers
             };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "Items", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Item created successfully!";
+            return RedirectToAction("Index", "Items", new { pcid = pcid });
         }
 
 
@@ -64,7 +54,8 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(ItemVM dndClassVM, [FromRoute] string pcid, [FromRoute] string id)
         {
-            if (pcid == null || id == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
 
             var request = new UpdateItemCommand()
             {
@@ -74,11 +65,10 @@ namespace Presentation.Controllers
                 Weight = dndClassVM.Weight,
                 Notes = dndClassVM.Notes,
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "Items", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Item updated successfully!";
+            return RedirectToAction("Index", "Items", new { pcid = pcid });
         }
 
         [Route("pcs/{pcid}/items/{id}/delete")]
@@ -86,11 +76,13 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string pcid, string id)
         {
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteItemCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) error = 1;
-
+            TempData["Message"] = "Item deleted successfully!";
             return RedirectToAction("Index", new { pcid = pcid });
         }
     }

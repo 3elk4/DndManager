@@ -1,14 +1,8 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Models;
-using AutoMapper;
-using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.CombatAction.Command.Create
 {
-    public record AddNewCombatActionCommand : IRequest<Result<CombatActionVM>>, ICommand
+    public record AddNewCombatActionCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }
         public string Type { get; set; }
@@ -18,18 +12,16 @@ namespace Application.CombatAction.Command.Create
         public string PcId { get; set; }
     }
 
-    public class AddNewCombatActionCommandHandler : IRequestHandler<AddNewCombatActionCommand, Result<CombatActionVM>>
+    public class AddNewCombatActionCommandHandler : IRequestHandler<AddNewCombatActionCommand,string>
     {
         private readonly IDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public AddNewCombatActionCommandHandler(IDbContext dbContext, IMapper mapper)
+        public AddNewCombatActionCommandHandler(IDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
 
-        public async Task<Result<CombatActionVM>> Handle(AddNewCombatActionCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddNewCombatActionCommand request, CancellationToken cancellationToken)
         {
             var combatAction = new Domain.Entities.CombatAction()
             {
@@ -57,11 +49,9 @@ namespace Application.CombatAction.Command.Create
             };
 
             _dbContext.CombatActions.Add(combatAction);
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return result > 0 ?
-                Result<CombatActionVM>.Success(_mapper.Map<CombatActionVM>(combatAction)) :
-                Result<CombatActionVM>.Failure(null, new List<string>() { "Some problems occured during creating record." });
+            return combatAction.Id;
         }
     }
 }
