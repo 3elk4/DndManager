@@ -1,6 +1,4 @@
 ﻿using Application.Common.Models;
-using AutoMapper;
-using System.ComponentModel.DataAnnotations;
 
 namespace Application.NpcSpellInfo
 {
