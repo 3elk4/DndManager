@@ -1,10 +1,5 @@
-﻿using Domain.Common;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Data.Interceptors
 {

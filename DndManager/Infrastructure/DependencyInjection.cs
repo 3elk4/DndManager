@@ -1,13 +1,9 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Entities;
 using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
-using System;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

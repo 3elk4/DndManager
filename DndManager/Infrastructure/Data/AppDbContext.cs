@@ -1,7 +1,4 @@
 ﻿using Application.Common.Interfaces;
-using Domain.Common;
-using Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Infrastructure.Data
@@ -10,7 +7,6 @@ namespace Infrastructure.Data
     {
         public DbSet<Pc> Pcs { get; set; }
         public DbSet<Npc> Npcs { get; set; }
-        public DbSet<Test> Tests { get; set; }
 
         public DbSet<Ability> Abilities { get; set; }
         public DbSet<NpcAbility> NpcAbilities { get; set; }
@@ -38,7 +34,7 @@ namespace Infrastructure.Data
         public DbSet<CombatSavingThrow> CombatSavingThrows { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-            { }
+        { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

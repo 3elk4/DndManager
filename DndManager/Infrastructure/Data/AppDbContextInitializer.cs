@@ -1,10 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Threading.Tasks;
+﻿using Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Infrastructure.Identity;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data
 {
