@@ -3,35 +3,28 @@ using Application.Feat.Command.Create;
 using Application.Feat.Command.Delete;
 using Application.Feat.Command.Update;
 using Application.Feat.Queries.Index;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     public class FeatsController : Controller
     {
         private readonly IMediator _mediator;
-        private int error = 0;
         public FeatsController(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-
         [Route("pcs/{pcid}/feats")]
         [HttpGet]
         public async Task<ActionResult> Index(string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new GetManyFeatsByPcIdQuery() { PcId = pcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["PcId"] = pcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("pcs/{pcid}/feats/create")]
@@ -39,7 +32,7 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FeatVM dndClassVM, [FromRoute] string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new AddNewFeatCommand()
             {
@@ -51,9 +44,8 @@ namespace Presentation.Controllers
             };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "Feats", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Feat created successfully!";
+            return RedirectToAction("Index", "Feats", new { pcid = pcid });
         }
 
 
@@ -62,7 +54,8 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(FeatVM dndClassVM, [FromRoute] string pcid, [FromRoute] string id)
         {
-            if (pcid == null || id == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
 
             var request = new UpdateFeatCommand()
             {
@@ -72,11 +65,10 @@ namespace Presentation.Controllers
                 SourceType = dndClassVM.SourceType,
                 Definition = dndClassVM.Definition
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "Feats", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Feat updated successfully!";
+            return RedirectToAction("Index", "Feats", new { pcid = pcid });
         }
 
         [Route("pcs/{pcid}/feats/{id}/delete")]
@@ -84,11 +76,13 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string pcid, string id)
         {
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteFeatCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) error = 1;
-
+            TempData["Message"] = "Feat deleted successfully!";
             return RedirectToAction("Index", new { pcid = pcid });
         }
     }

@@ -3,9 +3,6 @@ using Application.NpcAction.Commands.Create;
 using Application.NpcAction.Commands.Delete;
 using Application.NpcAction.Commands.Update;
 using Application.NpcAction.Queries.Index;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -22,15 +19,13 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Index(string npcid)
         {
-            if (npcid == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
 
             var request = new GetManyActionsByNpcIdQuery() { NpcId = npcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["NpcId"] = npcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("npcs/{npcid}/actions/{id}/edit")]
@@ -38,6 +33,9 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(NpcActionVM combatAction, [FromRoute] string npcid, [FromRoute] string id)
         {
+            Guard.Against.Null(npcid);
+            Guard.Against.Null(id);
+
             var request = new UpdateActionCommand()
             {
                 Id = id,
@@ -47,10 +45,9 @@ namespace Presentation.Controllers
                 Attack = combatAction.Attack,
                 Damage = combatAction.Damage,
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return new BadRequestResult();
-
+            TempData["Message"] = "Action updated successfully!";
             return RedirectToAction("Index", "NpcActions", new { npcid = npcid });
         }
 
@@ -59,11 +56,13 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete([FromRoute] string npcid, [FromRoute] string id)
         {
+            Guard.Against.Null(npcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteActionCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return new BadRequestResult();
-
+            TempData["Message"] = "Action deleted successfully!";
             return RedirectToAction("Index", "NpcActions", new { npcid = npcid });
         }
 
@@ -73,7 +72,7 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NpcActionVM combatAction, [FromRoute] string npcid)
         {
-            if (npcid == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
 
             var request = new AddNewActionCommand()
             {
@@ -84,10 +83,9 @@ namespace Presentation.Controllers
                 Attack = combatAction.Attack,
                 Damage = combatAction.Damage
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return new BadRequestResult();
-
+            TempData["Message"] = "Action created successfully!";
             return RedirectToAction("Index", "NpcActions", new { npcid = npcid });
         }
     }

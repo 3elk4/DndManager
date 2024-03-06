@@ -1,14 +1,11 @@
 using Application.Common.Interfaces;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Presentation.Services;
-using System;
-using FormHelper;
 
 namespace DndManager
 {
@@ -24,26 +21,26 @@ namespace DndManager
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationServices();
+            services.AddInfrastructureServices(Configuration);
+
             services.AddResponseCaching();
             services.AddScoped<IUser, CurrentUser>();
 
-            services.AddControllersWithViews().AddFormHelper();
-            services.AddInfrastructureServices(Configuration);
-            services.AddApplicationServices();
+            services.AddControllersWithViews(options =>
+                {
+                    options.CacheProfiles.Add("Cache5minutes",
+                        new CacheProfile()
+                        {
+                            Duration = 300,
+                            Location = ResponseCacheLocation.Client,
+                            VaryByHeader = "User-Agent"
+                        });
+                });
+
+            services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 
             services.AddRouting(options => options.LowercaseUrls = true);
-
-
-            services.AddControllers(options =>
-            {
-                options.CacheProfiles.Add("Cache5minutes",
-                    new CacheProfile()
-                    {
-                        Duration = 300,
-                        Location = ResponseCacheLocation.Client,
-                        VaryByHeader = "User-Agent"
-                    });
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,35 +49,32 @@ namespace DndManager
             app.UseResponseCaching();
 
 
-            app.Use(async (context, next) =>
-            {
-                context.Response.GetTypedHeaders().CacheControl =
-                    new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
-                    {
-                        Public = true,
-                        MaxAge = TimeSpan.FromSeconds(10)
-                    };
-                context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
-                    new string[] { "Accept-Encoding" };
+            //app.Use(async (context, next) =>
+            //{
+            //    context.Response.GetTypedHeaders().CacheControl =
+            //        new Microsoft.Net.Http.Headers.CacheControlHeaderValue()
+            //        {
+            //            Public = true,
+            //            MaxAge = TimeSpan.FromSeconds(10)
+            //        };
+            //    context.Response.Headers[Microsoft.Net.Http.Headers.HeaderNames.Vary] =
+            //        new string[] { "Accept-Encoding" };
 
-                await next();
-            });
+            //    await next();
+            //});
 
 
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
+                app.UseExceptionHandler("/error");
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            app.UseExceptionHandler(options => { });
-
-            app.UseFormHelper();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

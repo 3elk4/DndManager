@@ -3,17 +3,12 @@ using Application.DndClass.Commands.Create;
 using Application.DndClass.Commands.Delete;
 using Application.DndClass.Commands.Update;
 using Application.DndClass.Queries.Index;
-using FormHelper;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
     public class DndClassesController : Controller
     {
         private readonly IMediator _mediator;
-        private int error = 0;
 
         public DndClassesController(IMediator mediator)
         {
@@ -24,24 +19,21 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new GetManyDndClasssByPcIdQuery() { PcId = pcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["PcId"] = pcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("pcs/{pcid}/classes/create")]
         [HttpPost]
-        [FormValidator]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(DndClassVM dndClassVM, [FromRoute] string pcid)
         {
-            if (pcid == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
 
             var request = new AddNewDndClassCommand()
             {
@@ -50,11 +42,10 @@ namespace Presentation.Controllers
                 Lvl = dndClassVM.Lvl,
                 SubclassName = dndClassVM.SubclassName
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "DndClasses", new { errorCode = error, pcid= pcid });
+            TempData["Message"] = "Class created successfully!";
+            return RedirectToAction("Index", "DndClasses", new { pcid = pcid });
         }
 
 
@@ -63,7 +54,8 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(DndClassVM dndClassVM, [FromRoute] string pcid, [FromRoute] string id)
         {
-            if (pcid == null || id == null) return new BadRequestResult();
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
 
             var request = new UpdateDndClassCommand()
             {
@@ -72,11 +64,10 @@ namespace Presentation.Controllers
                 Lvl = dndClassVM.Lvl,
                 SubclassName = dndClassVM.SubclassName
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
-            return RedirectToAction("Index", "DndClasses", new { errorCode = error, pcid = pcid });
+            TempData["Message"] = "Class edited successfully!";
+            return RedirectToAction("Index", "DndClasses", new { pcid = pcid });
         }
 
         [Route("pcs/{pcid}/dndclasses/{id}/delete")]
@@ -84,11 +75,13 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string pcid, string id)
         {
+            Guard.Against.Null(pcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteDndClassCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) error = 1;
-
+            TempData["Message"] = "Class deleted successfully!";
             return RedirectToAction("Index", new { pcid = pcid });
         }
     }

@@ -1,5 +1,7 @@
 ﻿@model SpellInfoAndAbilitiesVM
 
+<partial name="_SuccessNotification" />
+
 @{
     var ability = Model.Abilities.FirstOrDefault(a => a.Id.Equals(Model.SpellInfo.AbilityId));
     var spelllvls = Model.SpellInfo.SpellLvls.OrderBy(x => x.Lvl);

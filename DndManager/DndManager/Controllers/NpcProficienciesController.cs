@@ -3,12 +3,6 @@ using Application.NpcProficiency.Commands.Create;
 using Application.NpcProficiency.Commands.Delete;
 using Application.NpcProficiency.Commands.Update;
 using Application.NpcProficiency.Queries.Index;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -24,15 +18,13 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(string npcid)
         {
-            if (npcid == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
 
             var request = new GetManyProficienciesByNpcIdQuery() { NpcId = npcid };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["NpcId"] = npcid;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("npcs/{npcid}/proficiencies/create")]
@@ -40,7 +32,7 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(NpcProficiencyVM dndClassVM, [FromRoute] string npcid)
         {
-            if (npcid == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
 
             var request = new AddNewProficiencyCommand()
             {
@@ -49,10 +41,9 @@ namespace Presentation.Controllers
                 Type = dndClassVM.Type,
                 Range = dndClassVM.Range,
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
+            TempData["Message"] = "Proficiency created successfully!";
             return RedirectToAction("Index", "NpcProficiencies", new { npcid = npcid });
         }
 
@@ -62,7 +53,8 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(NpcProficiencyVM dndClassVM, [FromRoute] string npcid, [FromRoute] string id)
         {
-            if (npcid == null || id == null) return new BadRequestResult();
+            Guard.Against.Null(npcid);
+            Guard.Against.Null(id);
 
             var request = new UpdateProficiencyCommand()
             {
@@ -71,10 +63,9 @@ namespace Presentation.Controllers
                 Type = dndClassVM.Type,
                 Range = dndClassVM.Range,
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
-
+            TempData["Message"] = "Proficiency updated successfully!";
             return RedirectToAction("Index", "NpcProficiencies", new { npcid = npcid });
         }
 
@@ -83,11 +74,14 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string npcid, string id)
         {
+            Guard.Against.Null(npcid);
+            Guard.Against.Null(id);
+
             var request = new DeleteProficiencyCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return new BadRequestResult();
 
+            TempData["Message"] = "Proficiency deleted successfully!";
             return RedirectToAction("Index", new { npcid = npcid });
         }
     }

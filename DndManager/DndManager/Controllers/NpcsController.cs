@@ -5,13 +5,8 @@ using Application.Npc.Commands.Delete;
 using Application.Npc.Commands.Update;
 using Application.Npc.Queries.Index;
 using Application.Npc.Queries.Show;
-using MediatR;
-using Microsoft.AspNetCore.Mvc;
 using Presentation.Helpers;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -32,10 +27,8 @@ namespace Presentation.Controllers
             var request = new GetManyNpcsQuery() { SearchString = searchString, PageNumber = pageNumber, PageSize = 2 };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
             ViewData["CurrentFilter"] = searchString;
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("npcs/{id}")]
@@ -43,14 +36,12 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult> Details(string id)
         {
-            if (id == null) return new BadRequestResult();
+            Guard.Against.Null(id);
 
             var request = new GetNpcByIdQuery() { Id = id };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
-
-            return View(result.Value);
+            return View(result);
         }
 
         [Route("npcs/create")]
@@ -67,35 +58,36 @@ namespace Presentation.Controllers
         [Route("npcs/create")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(NpcEditableVM pcVM)
+        public async Task<ActionResult> Create(NpcEditableVM npcVM)
         {
-            if (!ModelState.IsValid) return View(pcVM);
-            else
+            if (!ModelState.IsValid)
             {
-                var request = new AddNewNpcCommand()
-                {
-                    Name = pcVM.Name,
-                    Image = pcVM.Photo.PhotoIntoByteImage(),
-                    Type = pcVM.Type,
-                    Size = pcVM.Size,
-                    Alignment =pcVM.Alignment,
-                    AC = pcVM.AC,
-                    AcType = pcVM.AcType,
-                    HP = pcVM.HP,
-                    HpFormula = pcVM.HpFormula,
-                    Speed = pcVM.Speed,
-                    ProficiencyBonus = pcVM.ProficiencyBonus,
-                    PassivePerception = pcVM.PassivePerception,
-                    Challange = pcVM.Challange,
-                    ChallangeXp = pcVM.ChallangeXp,
-                    Abilities = pcVM.Abilities,
-                    SpellInfo = pcVM.SpellInfo
-                };
-                var result = await _mediator.Send(request);
-
-                if (result.IsFailure) return StatusCode(500, $"{string.Join(',', result.Errors)}");
+                TempData["Error"] = "Some errors occured during creating npc.";
+                return View(npcVM);
             }
 
+            var request = new AddNewNpcCommand()
+            {
+                Name = npcVM.Name,
+                Image = npcVM.Photo.PhotoIntoByteImage(),
+                Type = npcVM.Type,
+                Size = npcVM.Size,
+                Alignment = npcVM.Alignment,
+                AC = npcVM.AC,
+                AcType = npcVM.AcType,
+                HP = npcVM.HP,
+                HpFormula = npcVM.HpFormula,
+                Speed = npcVM.Speed,
+                ProficiencyBonus = npcVM.ProficiencyBonus,
+                PassivePerception = npcVM.PassivePerception,
+                Challange = npcVM.Challange,
+                ChallangeXp = npcVM.ChallangeXp,
+                Abilities = npcVM.Abilities,
+                SpellInfo = npcVM.SpellInfo
+            };
+            await _mediator.Send(request);
+
+            TempData["Message"] = "Npc created successfully!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -103,30 +95,29 @@ namespace Presentation.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null) return new BadRequestResult();
+            Guard.Against.Null(id);
 
             var request = new GetNpcByIdQuery() { Id = id };
             var result = await _mediator.Send(request);
 
-            if (result.IsFailure) return NotFound($"{string.Join(',', result.Errors)}");
             var npc = new NpcEditableVM()
             {
-                Id = result.Value.Id,
-                Name = result.Value.Name,
-                Type = result.Value.Type,
-                Size = result.Value.Size,
-                Alignment = result.Value.Alignment,
-                AC = result.Value.AC,
-                AcType = result.Value.AcType,
-                HP = result.Value.HP,
-                HpFormula = result.Value.HpFormula,
-                Speed = result.Value.Speed,
-                ProficiencyBonus = result.Value.ProficiencyBonus,
-                PassivePerception = result.Value.PassivePerception,
-                Challange = result.Value.Challange,
-                ChallangeXp = result.Value.ChallangeXp,
-                Abilities = (IList<Application.NpcAbility.NpcAbilityVM>)result.Value.Abilities,
-                SpellInfo = result.Value.SpellInfo
+                Id = result.Id,
+                Name = result.Name,
+                Type = result.Type,
+                Size = result.Size,
+                Alignment = result.Alignment,
+                AC = result.AC,
+                AcType = result.AcType,
+                HP = result.HP,
+                HpFormula = result.HpFormula,
+                Speed = result.Speed,
+                ProficiencyBonus = result.ProficiencyBonus,
+                PassivePerception = result.PassivePerception,
+                Challange = result.Challange,
+                ChallangeXp = result.ChallangeXp,
+                Abilities = (IList<Application.NpcAbility.NpcAbilityVM>)result.Abilities,
+                SpellInfo = result.SpellInfo
             };
 
             return View("Edit", npc);
@@ -135,33 +126,38 @@ namespace Presentation.Controllers
         [Route("npcs/{id}/edit")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(NpcEditableVM pcVM)
+        public async Task<ActionResult> Edit(NpcEditableVM npcVM)
         {
+            if (!ModelState.IsValid)
+            {
+                TempData["Error"] = "Some errors occured during updating npc.";
+                return View(npcVM);
+            }
+
             var request = new UpdateNpcCommand()
             {
-                Id = pcVM.Id,
-                Name = pcVM.Name,
-                Image = pcVM.Photo.PhotoIntoByteImage(),
-                Type = pcVM.Type,
-                Size = pcVM.Size,
-                Alignment = pcVM.Alignment,
-                AC = pcVM.AC,
-                AcType = pcVM.AcType,
-                HP = pcVM.HP,
-                HpFormula = pcVM.HpFormula,
-                Speed = pcVM.Speed,
-                ProficiencyBonus = pcVM.ProficiencyBonus,
-                PassivePerception = pcVM.PassivePerception,
-                Challange = pcVM.Challange,
-                ChallangeXp = pcVM.ChallangeXp,
-                Abilities = pcVM.Abilities,
-                SpellInfo = pcVM.SpellInfo
+                Id = npcVM.Id,
+                Name = npcVM.Name,
+                Image = npcVM.Photo.PhotoIntoByteImage(),
+                Type = npcVM.Type,
+                Size = npcVM.Size,
+                Alignment = npcVM.Alignment,
+                AC = npcVM.AC,
+                AcType = npcVM.AcType,
+                HP = npcVM.HP,
+                HpFormula = npcVM.HpFormula,
+                Speed = npcVM.Speed,
+                ProficiencyBonus = npcVM.ProficiencyBonus,
+                PassivePerception = npcVM.PassivePerception,
+                Challange = npcVM.Challange,
+                ChallangeXp = npcVM.ChallangeXp,
+                Abilities = npcVM.Abilities,
+                SpellInfo = npcVM.SpellInfo
             };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return BadRequest();
-
-            return RedirectToAction("Details", new { id = pcVM.Id });
+            TempData["Message"] = "Npc updated successfully!";
+            return RedirectToAction("Details", new { id = npcVM.Id });
         }
 
         [Route("npcs/{id}/delete")]
@@ -169,11 +165,12 @@ namespace Presentation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Delete(string id)
         {
+            Guard.Against.Null(id);
+
             var request = new DeleteNpcCommand() { Id = id };
-            var result = await _mediator.Send(request);
+            await _mediator.Send(request);
 
-            if (result.IsFailure) return BadRequest();
-
+            TempData["Message"] = "Npc deleted successfully!";
             return RedirectToAction("Index", "Npcs");
         }
     }

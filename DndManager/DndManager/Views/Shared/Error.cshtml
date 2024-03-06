@@ -1,17 +1,14 @@
 ﻿@model ErrorVM
 @{
-    ViewData["Title"] = "Ops...";
+    ViewData["Title"] = "Oops!";
 }
 
 <div class="container">
     <div class="row d-flex justify-content-center align-content-center" style="width: inherit;">
         <div class="alert alert-danger mt-2 mb-1 text-center box-shadow" style="width: inherit;">
-            <h1>Error</h1>
-            <p>We're sorry, but an error has occurred.</p>
-            <hr />
-            <p>Status code: @Model.StatusCode</p>
-            <p>Original path: @Model.OriginalPath</p>
-            <p>Error message: @Model.ErrorMessage</p>
+            <h1>Oops!</h1>
+            <h3>@Model.StatusCode</h3>
+            <p> @Model.Message </p>
         </div>
     </div>
     <div class="row justify-content-center align-content-center">
