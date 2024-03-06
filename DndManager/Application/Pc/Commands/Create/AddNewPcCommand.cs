@@ -1,19 +1,13 @@
 ﻿using Application.Ability;
 using Application.Bio;
-using Application.Common.Extentions;
 using Application.Common.Interfaces;
-using Application.Common.Models;
 using Application.DndClass;
 using Application.SpellInfo;
-using AutoMapper;
-using MediatR;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Pc.Commands.Create
 {
-    public record AddNewPcCommand : IRequest<Result>, ICommand
+    public record AddNewPcCommand : IRequest<string>, ICommand
     {
         public string Name { get; init; }
         public byte[] Image { get; init; }
@@ -30,7 +24,7 @@ namespace Application.Pc.Commands.Create
         public SpellInfoVM SpellInfo { get; init; }
     }
 
-    public class AddNewPcCommandHandler : IRequestHandler<AddNewPcCommand, Result>
+    public class AddNewPcCommandHandler : IRequestHandler<AddNewPcCommand, string>
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -41,9 +35,9 @@ namespace Application.Pc.Commands.Create
             _mapper = mapper;
         }
 
-        public async Task<Result> Handle(AddNewPcCommand request, CancellationToken cancellationToken)
+        public async Task<string> Handle(AddNewPcCommand request, CancellationToken cancellationToken)
         {
-            var item = new Domain.Entities.Pc()
+            var entity = new Domain.Entities.Pc()
             {
                 Name = request.Name,
                 Image = request.Image,
@@ -59,10 +53,10 @@ namespace Application.Pc.Commands.Create
                 DndClasses = _mapper.Map<List<Domain.Entities.DndClass>>(request.DndClasses),
             };
 
-            _dbContext.Pcs.Add(item);
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            _dbContext.Pcs.Add(entity);
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-            return result > 0 ? Result.Success() : Result.Failure(new List<string>() { "Some problems occured during creating record." });
+            return entity.Id;
         }
     }
 }

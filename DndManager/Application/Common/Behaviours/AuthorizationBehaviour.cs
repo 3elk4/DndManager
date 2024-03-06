@@ -1,15 +1,4 @@
-﻿using Application.Common.Exceptions;
-using Application.Common.Interfaces;
-using Application.Common.Security;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace Application.Common.Behaviours
+﻿namespace Application.Common.Behaviours
 {
     public class AuthorizationBehaviour<TRequest, TResponse> //: IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {

@@ -1,40 +1,57 @@
 ﻿using Application.Common.Interfaces;
-using Application.Common.Models;
-using AutoMapper;
-using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Bio.Commands.Update
 {
-    public record UpdateBioCommand() : IRequest<Result<int>>, ICommand
+    public record UpdateBioCommand() : IRequest, ICommand
     {
-        public BioVM Bio { get; init; }
+        public string Id { get; init; }
+        public int Age { get; init; }
+        public string Size { get; init; }
+        public string Weight { get; init; }
+        public string Height { get; init; }
+        public string Skin { get; init; }
+        public string Eyes { get; init; }
+        public string Hair { get; init; }
+        public string Alignment { get; init; }
+        public string Traits { get; init; }
+        public string Flaws { get; init; }
+        public string Bonds { get; init; }
+        public string Ideals { get; init; }
+        public string Allies { get; init; }
+        public string Backstory { get; init; }
     }
 
-    public class UpdateBioCommandHandler : IRequestHandler<UpdateBioCommand, Result<int>>
+    public class UpdateBioCommandHandler : IRequestHandler<UpdateBioCommand>
     {
         private readonly IDbContext _dbContext;
-        private readonly IMapper _mapper;
 
-        public UpdateBioCommandHandler(IDbContext dbContext, IMapper mapper)
+        public UpdateBioCommandHandler(IDbContext dbContext)
         {
             _dbContext = dbContext;
-            _mapper = mapper;
         }
 
-        public async Task<Result<int>> Handle(UpdateBioCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateBioCommand request, CancellationToken cancellationToken)
         {
-            var bio = _mapper.Map<Domain.Entities.Bio>(request.Bio);
+            var entity = await _dbContext.Bio.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            _dbContext.Bio.Update(bio);
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            Guard.Against.NotFound(request.Id, entity);
 
-            return result == 1 ?
-                    Result<int>.Success(result) :
-                    Result<int>.Failure(0, new List<string>() { "Some errors occured during updating records." });
+            entity.Age = request.Age;
+            entity.Size = request.Size;
+            entity.Weight = request.Weight;
+            entity.Height = request.Height;
+            entity.Skin = request.Skin;
+            entity.Eyes = request.Eyes;
+            entity.Hair = request.Hair;
+            entity.Alignment = request.Alignment;
+            entity.Traits = request.Traits;
+            entity.Flaws = request.Flaws;
+            entity.Bonds = request.Bonds;
+            entity.Ideals = request.Ideals;
+            entity.Allies = request.Allies;
+            entity.Backstory = request.Backstory;
+
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

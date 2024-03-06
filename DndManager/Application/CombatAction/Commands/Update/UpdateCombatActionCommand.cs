@@ -1,15 +1,8 @@
-﻿
-using Application.Common.Interfaces;
-using Application.Common.Models;
-using AutoMapper;
-using MediatR;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Application.Common.Interfaces;
 
 namespace Application.CombatAction.Commands.Update
 {
-    public record UpdateCombatActionCommand : IRequest<Result<int>>, ICommand
+    public record UpdateCombatActionCommand : IRequest, ICommand
     {
         public string Id { get; init; }
         public string Name { get; set; }
@@ -19,7 +12,7 @@ namespace Application.CombatAction.Commands.Update
         public CombatSavingThrowVM CombatSavingThrow { get; set; }
     }
 
-    public class UpdateCombatActionCommandHandler : IRequestHandler<UpdateCombatActionCommand, Result<int>>
+    public class UpdateCombatActionCommandHandler : IRequestHandler<UpdateCombatActionCommand>
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -30,11 +23,11 @@ namespace Application.CombatAction.Commands.Update
             _mapper = mapper;
         }
 
-        public async Task<Result<int>> Handle(UpdateCombatActionCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateCombatActionCommand request, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.CombatActions.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            if (entity == null) Result<int>.Failure(0, new List<string>() { $"Can't find a class with id {request.Id}." });
+            Guard.Against.NotFound(request.Id, entity);
 
             entity.Name = request.Name;
             entity.Type = request.Type;
@@ -43,11 +36,7 @@ namespace Application.CombatAction.Commands.Update
             _dbContext.CombatDamages.Update(_mapper.Map<Domain.Entities.CombatDamage>(request.CombatDamage));
             _dbContext.CombatSavingThrows.Update(_mapper.Map<Domain.Entities.CombatSavingThrow>(request.CombatSavingThrow));
 
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
-
-            return result > 0 ?
-                   Result<int>.Success(result) :
-                   Result<int>.Failure(0, new List<string>() { "Some errors occured during updating record." });
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }

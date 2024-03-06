@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Application.Common.Interfaces
 {
@@ -8,7 +6,6 @@ namespace Application.Common.Interfaces
     {
         DbSet<Domain.Entities.Pc> Pcs { get; }
         DbSet<Domain.Entities.Npc> Npcs { get; }
-        DbSet<Domain.Entities.Test> Tests { get; }
 
         DbSet<Domain.Entities.Ability> Abilities { get; }
         DbSet<Domain.Entities.NpcAbility> NpcAbilities { get; }

@@ -1,18 +1,13 @@
 ﻿using Application.Common.Interfaces;
-using MediatR;
-using System.Threading;
-using System.Threading.Tasks;
-using Application.Common.Models;
-using System.Collections.Generic;
 
 namespace Application.Item.Commands.Delete
 {
-    public record DeleteItemCommand : IRequest<Result>, ICommand
+    public record DeleteItemCommand : IRequest, ICommand
     {
         public string Id { get; init; }
     }
 
-    public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand, Result>
+    public class DeleteItemCommandHandler : IRequestHandler<DeleteItemCommand>
     {
         private readonly IDbContext _dbContext;
 
@@ -21,14 +16,14 @@ namespace Application.Item.Commands.Delete
             _dbContext = dbContext;
         }
 
-        public async Task<Result> Handle(DeleteItemCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteItemCommand request, CancellationToken cancellationToken)
         {
             var entity = await _dbContext.Items.FindAsync(new object[] { request.Id }, cancellationToken);
 
-            _dbContext.Items.Remove(entity);
-            var result = await _dbContext.SaveChangesAsync(cancellationToken);
+            Guard.Against.NotFound(request.Id, entity);
 
-            return result == 1 ? Result.Success() : Result.Failure(new List<string>() { "Some errors occured during deleting record" });
+            _dbContext.Items.Remove(entity);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
     }
 }
