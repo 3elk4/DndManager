@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Presentation.Services;
+using QuestPDF.Infrastructure;
 
 namespace DndManager
 {
@@ -91,6 +92,8 @@ namespace DndManager
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            QuestPDF.Settings.License = LicenseType.Community;
         }
     }
 }
