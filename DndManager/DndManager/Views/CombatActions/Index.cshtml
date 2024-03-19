@@ -90,11 +90,9 @@
                                     if (action.CombatSavingThrow.AbilityId != null)
                                     {
                                         var ability = Model.Abilities.Find(a => a.Id.Equals(action.CombatSavingThrow.AbilityId));
-                                        savingThrow += 8 + (int)ability.Value.Mod() + Model.Proficiency;
+                                        savingThrow = 8 + (int)ability.Value.Mod() + Model.Proficiency;
                                     }
-
-                                    if (action.CombatSavingThrow.AbilityId != null) savingThrow += (int)@Model.Abilities.Find(a => a.Id.Equals(action.CombatSavingThrow.AbilityId)).Value.Mod();
-                                    }
+                                 }
                                     DC @savingThrow
                             </div>
                         </div>
