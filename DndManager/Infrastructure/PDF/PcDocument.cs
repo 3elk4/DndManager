@@ -43,20 +43,10 @@ namespace Infrastructure.PDF
         void ComposeHeader(IContainer container)
         {
             var titleStyle = TextStyle.Default.FontSize(16).ExtraLight().Italic().FontColor(Colors.Orange.Accent4);
-            var subtitleStyle = TextStyle.Default.FontSize(14).ExtraLight().Italic().FontColor(Colors.Red.Lighten4);
 
             container.Row(row =>
             {
-                row.RelativeItem().Column(column =>
-                {
-                    column.Item().SkipOnce().ShowOnce().AlignLeft().Text("Bio").Style(subtitleStyle);
-                    column.Item().SkipOnce().SkipOnce().ShowOnce().AlignLeft().Text("Feats").Style(subtitleStyle);
-                    column.Item().SkipOnce().SkipOnce().SkipOnce().ShowOnce().AlignLeft().Text("Proficiencies and Items").Style(subtitleStyle);
-                    column.Item().SkipOnce().SkipOnce().SkipOnce().SkipOnce().ShowOnce().AlignLeft().Text("Spells").Style(subtitleStyle);
-                    column.Item().SkipOnce().SkipOnce().SkipOnce().SkipOnce().SkipOnce().ShowOnce().AlignLeft().Text("Actions").Style(subtitleStyle); //todo: co ejsli wiecej featów? jak to inaczej?
-                });
-
-                row.ConstantItem(250).AlignRight().Text(Model.Name).Style(titleStyle);
+                row.RelativeItem().AlignRight().Text(Model.Name).Style(titleStyle);
             });
         }
 
@@ -65,7 +55,7 @@ namespace Infrastructure.PDF
         {
             var proficiency = Model.DndClasses.Proficiency();
 
-            container.PaddingVertical(15).Stack(stack =>
+            container.PaddingVertical(10).Stack(stack =>
             {
                 stack.Item().Row(row => row.RelativeItem().Component(new MainInfoComponent(Model, proficiency)));
                 stack.Item().PageBreak();

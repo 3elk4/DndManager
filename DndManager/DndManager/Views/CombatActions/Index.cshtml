@@ -73,7 +73,7 @@
                                     var damage = 0;
                                     var dmgStr = "";
 
-                                    if (action.CombatDamage.AbilityId != null) damage += (int)@Model.Abilities.Find(a => a.Id.Equals(action.CombatAttack.AbilityId)).Value.Mod();
+                                    if (action.CombatDamage.AbilityId != null) damage += (int)@Model.Abilities.Find(a => a.Id.Equals(action.CombatDamage.AbilityId)).Value.Mod();
                                     if (action.CombatDamage.DamageDice != null && action.CombatDamage.DamageDice.Length != 0) dmgStr += action.CombatDamage.DamageDice + " + ";
 
                                     damage += action.CombatDamage.AdditionalBonus;

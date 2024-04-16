@@ -28,16 +28,27 @@ namespace Infrastructure.PDF.Components.Pc
                     grid.AlignCenter();
                     grid.Columns(8);
 
-                    foreach (var smallObject in new List<object>() { Bio.Age, Bio.Size, Bio.Weight, Bio.Height, Bio.Skin, Bio.Eyes, Bio.Hair, Bio.Alignment })
+                    var fieldsDict = new Dictionary<string, object>() {
+                            { "Age", Bio.Age },
+                            { "Size", Bio.Size },
+                            { "Weight", Bio.Weight },
+                            { "Height", Bio.Height},
+                            { "Skin", Bio.Skin },
+                            { "Eyes", Bio.Eyes },
+                            { "Hair", Bio.Hair },
+                            { "Alignment", Bio.Alignment }
+                        };
+                    foreach (var field in fieldsDict)
                     {
 
-                        grid
-                            .Item(1)
+                        grid.Item(1)
                             .Background(Colors.Orange.Lighten5)
+                            .PaddingVertical(3).PaddingHorizontal(3)
                             .Column(col =>
                             {
                                 col.Spacing(5);
-                                col.Item().AlignCenter().Text(smallObject).FontSize(11);
+                                col.Item().AlignLeft().Text(field.Key).Bold();
+                                col.Item().AlignRight().Text(field.Value);
                             });
                     }
                     grid.Item(8).LineHorizontal((float)0.5);
@@ -45,6 +56,7 @@ namespace Infrastructure.PDF.Components.Pc
                     grid
                         .Item(2)
                         .Background(Colors.Orange.Lighten5)
+                        .PaddingVertical(3).PaddingHorizontal(3)
                         .Column(col =>
                         {
                             col.Spacing(5);
@@ -54,6 +66,7 @@ namespace Infrastructure.PDF.Components.Pc
                     grid
                         .Item(2)
                         .Background(Colors.Orange.Lighten5)
+                        .PaddingVertical(3).PaddingHorizontal(3)
                         .Column(col =>
                         {
                             col.Spacing(5);
@@ -64,6 +77,7 @@ namespace Infrastructure.PDF.Components.Pc
                     grid
                         .Item(2)
                         .Background(Colors.Orange.Lighten5)
+                        .PaddingVertical(3).PaddingHorizontal(3)
                         .Column(col =>
                         {
                             col.Spacing(5);
@@ -74,6 +88,7 @@ namespace Infrastructure.PDF.Components.Pc
                     grid
                         .Item(2)
                         .Background(Colors.Orange.Lighten5)
+                        .PaddingVertical(3).PaddingHorizontal(3)
                         .Column(col =>
                         {
                             col.Spacing(5);
@@ -84,23 +99,25 @@ namespace Infrastructure.PDF.Components.Pc
                     grid.Item(8).LineHorizontal((float)0.5);
 
                     grid
-                        .Item(4)
+                        .Item(8)
                         .Background(Colors.Orange.Lighten5)
+                        .PaddingVertical(3).PaddingHorizontal(3)
                         .Column(col =>
                         {
                             col.Spacing(5);
                             col.Item().AlignCenter().Text("Allies").Bold();
-                            col.Item().AlignCenter().Text(Bio.Allies).FontSize(11);
+                            col.Item().AlignCenter().Text(Bio.Allies ?? "").FontSize(11);
                         });
 
                     grid
-                        .Item(4)
+                        .Item(8)
                         .Background(Colors.Orange.Lighten5)
+                        .PaddingVertical(3).PaddingHorizontal(3)
                         .Column(col =>
                         {
                             col.Spacing(5);
                             col.Item().AlignCenter().Text("Backstory").Bold();
-                            col.Item().AlignCenter().Text(Bio.Backstory).FontSize(11);
+                            col.Item().AlignCenter().Text(Bio.Backstory ?? "").FontSize(11);
                         });
                 });
             });

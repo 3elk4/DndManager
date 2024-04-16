@@ -2,14 +2,13 @@
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace Infrastructure.PDF
+namespace Infrastructure.PDF.Extentions
 {
     static class TableExtentions
     {
         private static IContainer Cell(this IContainer container, bool dark)
         {
             return container
-                .Border((float)0.75)
                 .Background(dark ? Colors.Orange.Lighten4 : Colors.Orange.Lighten5)
                 .Padding(5);
         }

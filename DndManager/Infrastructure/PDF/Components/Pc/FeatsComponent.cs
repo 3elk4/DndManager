@@ -21,23 +21,29 @@ namespace Infrastructure.PDF.Components.Pc
             {
                 column.Spacing(10);
 
+                column.Item().AlignCenter().Text("Feats").FontSize(13).Bold();
+
                 column.Item().Grid(grid =>
                 {
                     grid.VerticalSpacing(5);
                     grid.HorizontalSpacing(5);
-                    grid.Columns(3);
+                    grid.Columns(1);
 
                     foreach (var feat in Feats)
                     {
                         grid
                             .Item(1)
                             .Background(Colors.Orange.Lighten5)
+                            .PaddingVertical(3).PaddingHorizontal(5)
                             .Column(column =>
                             {
-                                column.Spacing(10);
-                                column.Item().Row(row => row.RelativeItem().AlignLeft().Text(feat.Title).Bold());
-                                column.Item().Row(row => row.RelativeItem().AlignLeft().Text($"{feat.Source}({feat.SourceType})"));
-                                column.Item().Row(row => row.RelativeItem().Text(feat.Definition));
+                                column.Spacing(5);
+                                column.Item().Background(Colors.Orange.Lighten4).PaddingVertical(3).PaddingHorizontal(5).Row(row =>
+                                {
+                                    row.RelativeItem().AlignLeft().Text(feat.Title).Bold();
+                                    row.RelativeItem().AlignRight().Text($"{feat.Source}({feat.SourceType})");
+                                });
+                                column.Item().PaddingHorizontal(5).Row(row => row.RelativeItem().Text(feat.Definition));
                             });
                     }
                 });

@@ -1,6 +1,6 @@
 ﻿using Application.Common.Extentions;
+using Infrastructure.PDF.Extentions;
 using QuestPDF.Fluent;
-using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.Collections.Generic;
 
@@ -24,33 +24,50 @@ namespace Infrastructure.PDF.Components.Pc
             {
                 column.Spacing(10);
 
-                column.Item().Grid(grid =>
+                column.Item().AlignCenter().Text("Actions").FontSize(13).Bold();
+
+                if (CombatActions.Count() == 0) return;
+
+                column.Item().Table(table =>
                 {
-                    grid.VerticalSpacing(5);
-                    grid.HorizontalSpacing(5);
-                    grid.Columns(4);
+                    table.ColumnsDefinition(columns =>
+                    {
+                        columns.RelativeColumn(4);
+                        columns.RelativeColumn(2);
+                        columns.RelativeColumn(3);
+                        columns.RelativeColumn(3);
+                    });
+
+                    table.Header(header =>
+                    {
+                        table.Cell().LabelCell("Name");
+                        table.Cell().LabelCell("Type");
+                        table.Cell().LabelCell("Attack/Spell DC");
+                        table.Cell().LabelCell("Damage");
+                    });
 
                     foreach (var action in CombatActions)
                     {
-                        grid.Item(1).Background(Colors.Orange.Lighten3).Column(column => column.Item().AlignLeft().Text(action.Name));
-                        grid.Item(1).Background(Colors.Orange.Lighten3).Column(column => column.Item().AlignLeft().Text(action.Type));
+
+                        table.Cell().ValueCell(action.Name);
+                        table.Cell().ValueCell(action.Type);
                         if (action.CombatAttack.Ability != null)
                         {
                             var attackBonus = action.CombatAttack.Ability.Value.Mod() + action.CombatAttack.AdditionalBonus;
                             if (action.CombatAttack.IsProficient) attackBonus += Proficiency;
 
-                            grid.Item(1).Background(Colors.Orange.Lighten4).Column(column => column.Item().AlignCenter().Text($"+{attackBonus}"));
+                            table.Cell().ValueCell($"+{attackBonus}");
                         }
                         else if (action.CombatSavingThrow.Ability != null)
                         {
                             var saveDc = 8 + action.CombatSavingThrow.Ability.Value.Mod() + Proficiency;
 
-                            grid.Item(1).Background(Colors.Orange.Lighten4).Column(column => column.Item().AlignCenter().Text(saveDc));
+                            table.Cell().ValueCell($"{saveDc} DC");
                         }
-                        else grid.Item(1).Background(Colors.Orange.Lighten4).Column(column => column.Item().AlignCenter().Text(""));
+                        else table.Cell().ValueCell("");
 
                         var damageBonus = action.CombatDamage.Ability == null ? 0 : action.CombatDamage.Ability.Value.Mod() + action.CombatDamage.AdditionalBonus;
-                        grid.Item(1).Background(Colors.Orange.Lighten5).Column(column => column.Item().AlignCenter().Text($"{action.CombatDamage.DamageDice}+{damageBonus} {action.CombatDamage.DamageType}"));
+                        table.Cell().ValueCell($"{action.CombatDamage.DamageDice}+{damageBonus} {action.CombatDamage.DamageType}");
                     }
                 });
             });
