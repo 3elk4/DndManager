@@ -28,7 +28,7 @@ namespace Infrastructure.PDF.Components.Pc
                     grid.AlignCenter();
                     grid.Columns(8);
 
-                    var fieldsDict = new Dictionary<string, object>() {
+                    var attributesDict = new Dictionary<string, object>() {
                             { "Age", Bio.Age },
                             { "Size", Bio.Size },
                             { "Weight", Bio.Weight },
@@ -38,89 +38,56 @@ namespace Infrastructure.PDF.Components.Pc
                             { "Hair", Bio.Hair },
                             { "Alignment", Bio.Alignment }
                         };
-                    foreach (var field in fieldsDict)
+                    foreach (var attribute in attributesDict)
                     {
-
-                        grid.Item(1)
-                            .Background(Colors.Orange.Lighten5)
-                            .PaddingVertical(3).PaddingHorizontal(3)
-                            .Column(col =>
-                            {
-                                col.Spacing(5);
-                                col.Item().AlignLeft().Text(field.Key).Bold();
-                                col.Item().AlignRight().Text(field.Value);
-                            });
+                        ComposeAttribute(grid, attribute);
                     }
-                    grid.Item(8).LineHorizontal((float)0.5);
-
-                    grid
-                        .Item(2)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignCenter().Text("Traits").Bold();
-                            col.Item().AlignCenter().Text(Bio.Traits).FontSize(11);
-                        });
-                    grid
-                        .Item(2)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignCenter().Text("Flaws").Bold();
-                            col.Item().AlignCenter().Text(Bio.Flaws).FontSize(11);
-                        });
-
-                    grid
-                        .Item(2)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignCenter().Text("Bonds").Bold();
-                            col.Item().AlignCenter().Text(Bio.Bonds).FontSize(11);
-                        });
-
-                    grid
-                        .Item(2)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignCenter().Text("Ideals").Bold();
-                            col.Item().AlignCenter().Text(Bio.Ideals).FontSize(11);
-                        });
 
                     grid.Item(8).LineHorizontal((float)0.5);
 
-                    grid
-                        .Item(8)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignCenter().Text("Allies").Bold();
-                            col.Item().AlignCenter().Text(Bio.Allies ?? "").FontSize(11);
-                        });
+                    ComposeCharacteristic(grid, 2, "Traits", Bio.Traits);
+                    ComposeCharacteristic(grid, 2, "Flaws", Bio.Flaws);
+                    ComposeCharacteristic(grid, 2, "Bonds", Bio.Bonds);
+                    ComposeCharacteristic(grid, 2, "Ideals", Bio.Ideals);
 
-                    grid
-                        .Item(8)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignCenter().Text("Backstory").Bold();
-                            col.Item().AlignCenter().Text(Bio.Backstory ?? "").FontSize(11);
-                        });
+                    grid.Item(8).LineHorizontal((float)0.5);
+
+                    ComposeCharacteristic(grid, 8, "Allies", Bio.Allies);
+                    ComposeCharacteristic(grid, 8, "Backstory", Bio.Backstory);
                 });
             });
+        }
+
+        [Obsolete]
+        private void ComposeAttribute(GridDescriptor grid, KeyValuePair<string, object> attribute)
+        {
+            var title = attribute.Key;
+            var value = attribute.Value;
+
+            grid.Item(1)
+                .Background(Colors.Orange.Lighten5)
+                .PaddingVertical(3).PaddingHorizontal(3)
+                .Column(col =>
+                {
+                    col.Spacing(5);
+                    col.Item().AlignLeft().Text(title).Bold();
+                    col.Item().AlignRight().Text(value);
+                });
+        }
+
+        private void ComposeCharacteristic(GridDescriptor grid, int columnSize, string title, string value)
+        {
+
+            grid
+                .Item(columnSize)
+                .Background(Colors.Orange.Lighten5)
+                .PaddingVertical(3).PaddingHorizontal(3)
+                .Column(col =>
+                {
+                    col.Spacing(5);
+                    col.Item().AlignCenter().Text(title).Bold();
+                    col.Item().AlignCenter().Text(value ?? "").FontSize(11);
+                });
         }
     }
 }

@@ -30,81 +30,76 @@ namespace Infrastructure.PDF.Components.Npc
 
             if (Npc.Image != null)
             {
-                column.Item().Image(Npc.Image).FitWidth();
+                ComposeImage(column);
             }
 
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text(Npc.Name).Bold();
-                row.RelativeItem().AlignRight().Text($"{Npc.Size}, {Npc.Type}, {Npc.Alignment}");
-            });
+            ComposeName(column);
 
             column.Item().LineHorizontal((float)0.5);
 
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text("AC").Bold();
-                var armorType = Npc.AcType == null ? "" : $"({Npc.AcType})";
-                row.RelativeItem().AlignRight().Text($"{Npc.AC}{armorType}");
-            });
-
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text("HP").Bold();
-                row.RelativeItem().AlignRight().Text($"{Npc.HP}({Npc.HpFormula})");
-            });
-
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text("Speed").Bold();
-                row.RelativeItem().AlignRight().Text(Npc.Speed);
-            });
+            ComposeNpcAttribute(column, "AC", Npc.AcType == null ? Npc.AC.ToString() : $"{Npc.AC}({Npc.AcType})");
+            ComposeNpcAttribute(column, "HP", $"{Npc.HP}({Npc.HpFormula})");
+            ComposeNpcAttribute(column, "Speed", Npc.Speed.ToString());
 
             column.Item().LineHorizontal((float)0.5);
 
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text("Proficiency Bonus").Bold();
-                row.RelativeItem().AlignRight().Text(Npc.ProficiencyBonus);
-            });
-
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text("Passive Perception").Bold();
-                row.RelativeItem().AlignRight().Text(Npc.PassivePerception);
-            });
-
-            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-            {
-                row.RelativeItem().AlignLeft().Text("Challange XP").Bold();
-                row.RelativeItem().AlignRight().Text($"{Npc.Challange}({Npc.ChallangeXp})");
-            });
+            ComposeNpcAttribute(column, "Proficiency Bonus", Npc.ProficiencyBonus.ToString());
+            ComposeNpcAttribute(column, "Passive Perception", Npc.PassivePerception.ToString());
+            ComposeNpcAttribute(column, "Challange XP", $"{Npc.Challange}({Npc.ChallangeXp})");
 
             column.Item().LineHorizontal((float)0.5);
 
             if (Npc.SpellInfo.Ability != null)
             {
-                column.Item().Background(Colors.Red.Lighten5).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Spell Ability").Bold();
-                    row.RelativeItem().AlignRight().Text(Npc.SpellInfo.Ability.Name);
-                });
-                column.Item().Background(Colors.Red.Lighten5).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Caster Lvl").Bold();
-                    row.RelativeItem().AlignRight().Text(Npc.SpellInfo.CasterLvl);
-                });
-                column.Item().Background(Colors.Red.Lighten5).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Spell Save DC").Bold();
-                    row.RelativeItem().AlignRight().Text(Npc.SpellInfo.SpellSaveDcMod);
-                });
-                column.Item().Background(Colors.Red.Lighten5).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Global Attack Mod").Bold();
-                    row.RelativeItem().AlignRight().Text(Npc.SpellInfo.GlobalAttackMod);
-                });
+                ComposeSpellInfo(column);
             }
+        }
+
+        private void ComposeNpcAttribute(ColumnDescriptor column, string title, string value)
+        {
+            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text(title).Bold();
+                row.RelativeItem().AlignRight().Text(value);
+            });
+        }
+
+        private void ComposeName(ColumnDescriptor column)
+        {
+            column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text(Npc.Name).Bold();
+                row.RelativeItem().AlignRight().Text($"{Npc.Size}, {Npc.Type}, {Npc.Alignment}");
+            });
+        }
+
+        private void ComposeImage(ColumnDescriptor column)
+        {
+            column.Item().Image(Npc.Image).FitWidth();
+        }
+
+        private void ComposeSpellInfo(ColumnDescriptor column)
+        {
+            column.Item().Background(Colors.Red.Lighten5).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text("Spell Ability").Bold();
+                row.RelativeItem().AlignRight().Text(Npc.SpellInfo.Ability.Name);
+            });
+            column.Item().Background(Colors.Red.Lighten5).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text("Caster Lvl").Bold();
+                row.RelativeItem().AlignRight().Text(Npc.SpellInfo.CasterLvl);
+            });
+            column.Item().Background(Colors.Red.Lighten5).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text("Spell Save DC").Bold();
+                row.RelativeItem().AlignRight().Text(Npc.SpellInfo.SpellSaveDcMod);
+            });
+            column.Item().Background(Colors.Red.Lighten5).Row(row =>
+            {
+                row.RelativeItem().AlignLeft().Text("Global Attack Mod").Bold();
+                row.RelativeItem().AlignRight().Text(Npc.SpellInfo.GlobalAttackMod);
+            });
         }
 
         [Obsolete]
@@ -112,6 +107,146 @@ namespace Infrastructure.PDF.Components.Npc
         {
             column.Spacing(10);
 
+            ComposeAbilities(column);
+            ComposeSavingThrows(column);
+            ComposeSkills(column);
+
+            column.Item().LineHorizontal((float)0.5);
+
+            ComposeDamageVulnerabilities(column);
+            ComposeDamageResistances(column);
+            ComposeDamageImmunities(column);
+            ComposeConditionImmunities(column);
+
+            ComposeSenses(column);
+            ComposeLanguages(column);
+
+            column.Item().LineHorizontal((float)0.5);
+        }
+
+        private void ComposeLanguages(ColumnDescriptor column)
+        {
+            var languages = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("language"));
+
+            if (languages.Any())
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.RelativeItem().AlignLeft().Text("Languages").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', languages.Select(proficiency => proficiency.Name).ToList()));
+                });
+            }
+        }
+
+        private void ComposeSenses(ColumnDescriptor column)
+        {
+            var senses = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("sense"));
+
+            if (senses.Any())
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.RelativeItem().AlignLeft().Text("Senses").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', senses.Select(proficiency => $"{proficiency.Name}({proficiency.Range})").ToList()));
+                });
+            }
+        }
+
+        private void ComposeConditionImmunities(ColumnDescriptor column)
+        {
+            var conditionImmunities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("condimmun"));
+
+            if (conditionImmunities.Any())
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.RelativeItem().AlignLeft().Text("Condition Immunities").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', conditionImmunities.Select(proficiency => proficiency.Name).ToList()));
+                });
+            }
+        }
+
+        private void ComposeDamageImmunities(ColumnDescriptor column)
+        {
+            var damageImmunities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgimmun"));
+
+            if (damageImmunities.Any())
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.RelativeItem().AlignLeft().Text("Damage Imunities").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', damageImmunities.Select(proficiency => proficiency.Name).ToList()));
+                });
+            }
+        }
+
+        private void ComposeDamageResistances(ColumnDescriptor column)
+        {
+            var damageResistances = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgres"));
+
+            if (damageResistances.Any())
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.RelativeItem().AlignLeft().Text("Damage Resistances").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', damageResistances.Select(proficiency => proficiency.Name).ToList()));
+                });
+            }
+        }
+
+        private void ComposeDamageVulnerabilities(ColumnDescriptor column)
+        {
+            var damageVulnerabilities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgvul"));
+
+            if (damageVulnerabilities.Any())
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.RelativeItem().AlignLeft().Text("Damage Vulnerabilities").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', damageVulnerabilities.Select(proficiency => proficiency.Name).ToList()));
+                });
+            }
+        }
+
+        private void ComposeSkills(ColumnDescriptor column)
+        {
+            var skills = Npc.Abilities
+                    .SelectMany(ability => ability.Skills).OrderBy(skill => skill.Name)
+                    .ToList()
+                    .Where(skill => skill.Bonus != null)
+                    .Select(skill => $"{skill.Name} {skill.Bonus}")
+                    .ToList();
+
+            if (skills.Count > 0)
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.ConstantItem(50).AlignLeft().Text("Skills").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', skills));
+                });
+            }
+        }
+
+        private void ComposeSavingThrows(ColumnDescriptor column)
+        {
+            var savingthrows = Npc.Abilities
+                                   .Where(ability => ability.SavingThrowBonus != null)
+                                   .Select(ability => $"{ability.Name.Substring(0, 3)} {ability.SavingThrowBonus}")
+                                   .ToList();
+
+            if (savingthrows.Count > 0)
+            {
+                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
+                {
+                    row.ConstantItem(50).AlignLeft().Text("Saving Throws").Bold();
+                    row.RelativeItem().AlignLeft().Text(string.Join(',', savingthrows));
+                });
+            }
+        }
+
+        [Obsolete]
+        private void ComposeAbilities(ColumnDescriptor column)
+        {
             column.Item().Grid(grid =>
             {
                 grid.VerticalSpacing(5);
@@ -132,106 +267,6 @@ namespace Infrastructure.PDF.Components.Npc
                         });
                 }
             });
-
-            var savingthrows = Npc.Abilities
-                                    .Where(ability => ability.SavingThrowBonus != null)
-                                    .Select(ability => $"{ability.Name.Substring(0, 3)} {ability.SavingThrowBonus}")
-                                    .ToList();
-
-            if (savingthrows.Count > 0)
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.ConstantItem(50).AlignLeft().Text("Saving Throws").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', savingthrows));
-                });
-            }
-
-            var skills = Npc.Abilities
-                                .SelectMany(ability => ability.Skills).OrderBy(skill => skill.Name)
-                                .ToList()
-                                .Where(skill => skill.Bonus != null)
-                                .Select(skill => $"{skill.Name} {skill.Bonus}")
-                                .ToList();
-
-            if (skills.Count > 0)
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.ConstantItem(50).AlignLeft().Text("Skills").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', skills));
-                });
-            }
-
-            column.Item().LineHorizontal((float)0.5);
-
-            var dmgvulns = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgvul"));
-
-            if (dmgvulns.Any())
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Damage Vulnerabilities").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', dmgvulns.Select(proficiency => proficiency.Name).ToList()));
-                });
-            }
-
-            var dmgres = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgres"));
-
-            if (dmgres.Any())
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Damage Resistances").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', dmgres.Select(proficiency => proficiency.Name).ToList()));
-                });
-            }
-
-            var dmgimmun = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgimmun"));
-
-            if (dmgimmun.Any())
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Damage Imunities").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', dmgimmun.Select(proficiency => proficiency.Name).ToList()));
-                });
-            }
-
-            var condimmun = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("condimmun"));
-
-            if (condimmun.Any())
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Condition Immunities").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', condimmun.Select(proficiency => proficiency.Name).ToList()));
-                });
-            }
-
-            var sense = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("sense"));
-
-            if (sense.Any())
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Senses").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', sense.Select(proficiency => $"{proficiency.Name}({proficiency.Range})").ToList()));
-                });
-            }
-
-            var language = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("language"));
-
-            if (language.Any())
-            {
-                column.Item().Background(Colors.Grey.Lighten4).Row(row =>
-                {
-                    row.RelativeItem().AlignLeft().Text("Languages").Bold();
-                    row.RelativeItem().AlignLeft().Text(string.Join(',', language.Select(proficiency => proficiency.Name).ToList()));
-                });
-            }
-
-            column.Item().LineHorizontal((float)0.5);
         }
     }
 }

@@ -14,8 +14,8 @@ namespace Application.Pc
         public string Image { get; init; }
         public IReadOnlyCollection<DndClassVM> DndClasses { get; init; }
         public IReadOnlyCollection<AbilityVM> Abilities { get; init; }
-        public BioVM Bio { get; init; }
-        public SpellInfoVM SpellInfo { get; init; }
+        public BioVM Bio { get; init; } //todo: id only?
+        public SpellInfoVM SpellInfo { get; init; }// todo: id only?
         public string RaceName { get; init; }
         public string BackgroundName { get; init; }
 

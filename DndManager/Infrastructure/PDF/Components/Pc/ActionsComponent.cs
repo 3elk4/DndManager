@@ -51,26 +51,42 @@ namespace Infrastructure.PDF.Components.Pc
 
                         table.Cell().ValueCell(action.Name);
                         table.Cell().ValueCell(action.Type);
+
                         if (action.CombatAttack.Ability != null)
                         {
-                            var attackBonus = action.CombatAttack.Ability.Value.Mod() + action.CombatAttack.AdditionalBonus;
-                            if (action.CombatAttack.IsProficient) attackBonus += Proficiency;
-
-                            table.Cell().ValueCell($"+{attackBonus}");
+                            ComposeAttack(table, action.CombatAttack);
                         }
                         else if (action.CombatSavingThrow.Ability != null)
                         {
-                            var saveDc = 8 + action.CombatSavingThrow.Ability.Value.Mod() + Proficiency;
-
-                            table.Cell().ValueCell($"{saveDc} DC");
+                            ComposeSavingThrow(table, action.CombatSavingThrow);
                         }
                         else table.Cell().ValueCell("");
 
-                        var damageBonus = action.CombatDamage.Ability == null ? 0 : action.CombatDamage.Ability.Value.Mod() + action.CombatDamage.AdditionalBonus;
-                        table.Cell().ValueCell($"{action.CombatDamage.DamageDice}+{damageBonus} {action.CombatDamage.DamageType}");
+                        ComposeDamage(table, action.CombatDamage);
                     }
                 });
             });
+        }
+
+        private void ComposeAttack(TableDescriptor table, CombatAttack attack)
+        {
+            var attackBonus = attack.Ability.Value.Mod() + attack.AdditionalBonus;
+            if (attack.IsProficient) attackBonus += Proficiency;
+
+            table.Cell().ValueCell($"+{attackBonus}");
+        }
+
+        private void ComposeDamage(TableDescriptor table, CombatDamage damage)
+        {
+            var damageBonus = damage.Ability == null ? 0 : damage.Ability.Value.Mod() + damage.AdditionalBonus;
+            table.Cell().ValueCell($"{damage.DamageDice}+{damageBonus} {damage.DamageType}");
+        }
+
+        private void ComposeSavingThrow(TableDescriptor table, CombatSavingThrow savingThrow)
+        {
+            var saveDc = 8 + savingThrow.Ability.Value.Mod() + Proficiency;
+
+            table.Cell().ValueCell($"{saveDc} DC");
         }
     }
 }

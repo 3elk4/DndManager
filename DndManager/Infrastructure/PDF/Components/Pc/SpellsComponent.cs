@@ -34,62 +34,70 @@ namespace Infrastructure.PDF.Components.Pc
                     grid.HorizontalSpacing(5);
                     grid.Columns(3);
 
-                    var attackBonus = SpellInfo.Ability.Value.Mod() + Proficiency;
-                    var saveDc = 8 + attackBonus;
-
-                    grid.Item(1)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignLeft().Text("Spell ability").Bold();
-                            col.Item().AlignRight().Text(SpellInfo.Ability.Name);
-                        });
-
-                    grid.Item(1)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignLeft().Text("Save DC").Bold();
-                            col.Item().AlignRight().Text(saveDc);
-                        });
-
-                    grid.Item(1)
-                        .Background(Colors.Orange.Lighten5)
-                        .PaddingVertical(3).PaddingHorizontal(3)
-                        .Column(col =>
-                        {
-                            col.Spacing(5);
-                            col.Item().AlignLeft().Text("Attack bonus").Bold();
-                            col.Item().AlignRight().Text(attackBonus);
-                        });
+                    ComposeSpellcasterAttributes(grid);
 
                     grid.Item(3).LineHorizontal((float)0.5);
 
-                    foreach (var spellLvl in SpellInfo.SpellLvls.Where(spellLvl => spellLvl.Max > 0 || spellLvl.Lvl == 0).OrderBy(spellLvl => spellLvl.Lvl))
-                    {
-                        grid.Item(1)
-                            .Background(Colors.Orange.Lighten5)
-                            .PaddingVertical(3).PaddingHorizontal(3)
-                            .Column(column =>
-                            {
-                                column.Spacing(3);
-                                column.Item().Background(Colors.Orange.Lighten4).PaddingVertical(3).PaddingHorizontal(5).Row(row =>
-                                {
-                                    row.ConstantItem(10).Column(col => col.Item().AlignLeft().Text(spellLvl.Lvl));
-                                    row.RelativeItem().Column(col => col.Item().AlignRight().Text(spellLvl.Lvl == 0 ? "Cantrips" : $"{spellLvl.Remaining}/{spellLvl.Max}"));
-                                });
-                                foreach (var spell in spellLvl.Spells)
-                                {
-                                    column.Item().Row(row => row.RelativeItem().AlignLeft().Text($"- {spell.Name}"));
-                                }
-                            });
-                    }
+                    ComposeSpellLvls(grid);
                 });
             });
+        }
+
+        private void ComposeSpellLvls(GridDescriptor grid)
+        {
+            var spellLvls = SpellInfo.SpellLvls.Where(spellLvl => spellLvl.Max > 0 || spellLvl.Lvl == 0).OrderBy(spellLvl => spellLvl.Lvl);
+
+            foreach (var spellLvl in spellLvls)
+            {
+                ComposeSpells(grid, spellLvl);
+            }
+        }
+
+        private void ComposeSpells(GridDescriptor grid, SpellLvlInfo spellLvl)
+        {
+            grid.Item(1)
+                   .Background(Colors.Orange.Lighten5)
+                   .PaddingVertical(3).PaddingHorizontal(3)
+                   .Column(column =>
+                   {
+                       column.Spacing(3);
+
+                       column.Item().Background(Colors.Orange.Lighten4).PaddingVertical(3).PaddingHorizontal(5).Row(row =>
+                       {
+                           row.ConstantItem(10).Column(col => col.Item().AlignLeft().Text(spellLvl.Lvl));
+
+                           var spellColumnHeader = spellLvl.Lvl == 0 ? "Cantrips" : $"{spellLvl.Remaining}/{spellLvl.Max}";
+                           row.RelativeItem().Column(col => col.Item().AlignRight().Text(spellColumnHeader));
+                       });
+
+                       foreach (var spell in spellLvl.Spells)
+                       {
+                           column.Item().Row(row => row.RelativeItem().AlignLeft().Text($"- {spell.Name}"));
+                       }
+                   });
+        }
+
+        private void ComposeSpellcasterAttributes(GridDescriptor grid)
+        {
+            var attackBonus = SpellInfo.Ability.Value.Mod() + Proficiency;
+            var saveDc = 8 + attackBonus;
+
+            ComposeSpellcasterAttribute(grid, "Spell ability", SpellInfo.Ability.Name);
+            ComposeSpellcasterAttribute(grid, "Save DC", saveDc.ToString());
+            ComposeSpellcasterAttribute(grid, "Attack bonus", attackBonus.ToString());
+        }
+
+        private void ComposeSpellcasterAttribute(GridDescriptor grid, string title, string value)
+        {
+            grid.Item(1)
+                       .Background(Colors.Orange.Lighten5)
+                       .PaddingVertical(3).PaddingHorizontal(3)
+                       .Column(col =>
+                       {
+                           col.Spacing(5);
+                           col.Item().AlignLeft().Text(title).Bold();
+                           col.Item().AlignRight().Text(value);
+                       });
         }
     }
 }
