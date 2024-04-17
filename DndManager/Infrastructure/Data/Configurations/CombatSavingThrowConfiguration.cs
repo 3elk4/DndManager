@@ -9,7 +9,7 @@ namespace Infrastructure.Data.Configurations
             base.Configure(builder);
 
             builder.HasOne(a => a.CombatAction).WithOne(x => x.CombatSavingThrow).HasForeignKey<CombatSavingThrow>(x => x.CombatActionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(a => a.Ability).WithOne(x => x.CombatSavingThrow).HasForeignKey<CombatSavingThrow>(x => x.AbilityId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Ability).WithMany(x => x.CombatSavingThrows).HasForeignKey(x => x.AbilityId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

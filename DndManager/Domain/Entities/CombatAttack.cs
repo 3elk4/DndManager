@@ -3,7 +3,7 @@
     public class CombatAttack : BaseAuditableEntity
     {
         public bool IsProficient { get; set; }
-        public int AdditionalBonus { get; set; } = 0;
+        public int AdditionalBonus { get; set; }
         public string Range { get; set; }
 
         public string CombatActionId { get; set; }

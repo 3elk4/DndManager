@@ -12,7 +12,7 @@ namespace Infrastructure.Data.Configurations
             builder.Property(a => a.DamageType).HasMaxLength(50).IsRequired();
 
             builder.HasOne(a => a.CombatAction).WithOne(x => x.CombatDamage).HasForeignKey<CombatDamage>(x => x.CombatActionId).IsRequired().OnDelete(DeleteBehavior.Cascade);
-            builder.HasOne(a => a.Ability).WithOne(x => x.CombatDamage).HasForeignKey<CombatDamage>(x => x.AbilityId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
+            builder.HasOne(a => a.Ability).WithMany(x => x.CombatDamages).HasForeignKey(x => x.AbilityId).IsRequired(false).OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

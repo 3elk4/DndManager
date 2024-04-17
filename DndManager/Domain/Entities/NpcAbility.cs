@@ -6,7 +6,7 @@ namespace Domain.Entities
     {
         public string Name { get; set; }
         public int Value { get; set; }
-        public int SavingThrowBonus { get; set; }
+        public int? SavingThrowBonus { get; set; } = null;
 
         public string NpcId { get; set; }
         public Npc Npc { get; set; } = null!;

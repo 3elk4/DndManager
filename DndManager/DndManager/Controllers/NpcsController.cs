@@ -3,6 +3,7 @@ using Application.Npc;
 using Application.Npc.Commands.Create;
 using Application.Npc.Commands.Delete;
 using Application.Npc.Commands.Update;
+using Application.Npc.Queries.GeneratePdf;
 using Application.Npc.Queries.Index;
 using Application.Npc.Queries.Show;
 using Presentation.Helpers;
@@ -43,6 +44,19 @@ namespace Presentation.Controllers
 
             return View(result);
         }
+
+        [Route("npcs/{id}/pdf")]
+        [HttpGet]
+        public async Task<ActionResult> SaveAsPdfAsync(string id)
+        {
+            Guard.Against.Null(id);
+
+            var request = new GenerateNpcPdfQuery() { Id = id };
+            var result = await _mediator.Send(request);
+
+            return new FileStreamResult(result.MemoryStream, "application/pdf") { FileDownloadName = result.Filename };
+        }
+
 
         [Route("npcs/create")]
         [HttpGet]

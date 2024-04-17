@@ -37,7 +37,12 @@
                     <a class="btn btn-primary" role="button" asp-controller="Npcs" asp-action="Edit" asp-route-id="@Model.Id">
                         <i class="fas fa-edit"></i>
                     </a>
-                    <form asp-controller="Npcs" asp-action="Delete" asp-route-id="@Model.Id" asp-antiforgery="false">
+
+                    <a class="btn btn-primary" role="button" asp-controller="Npcs" asp-action="SaveAsPdf" asp-route-id="@Model.Id">
+                        <i class="fas fa-file-pdf"></i>
+                    </a>
+
+                    <form asp-controller="Npcs" asp-action="Delete" asp-route-id="@Model.Id" asp-antiforgery="true">
                         <button type="submit" class="btn btn-primary" onclick="return confirm('Are you sure you want to delete npc: @Model.Name?')"> <i class="fas fa-times"></i> </button>
                     </form>
                 </div>

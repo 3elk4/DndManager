@@ -5,6 +5,7 @@ using Application.Pc;
 using Application.Pc.Commands.Create;
 using Application.Pc.Commands.Delete;
 using Application.Pc.Commands.Update;
+using Application.Pc.Queries.GeneratePdf;
 using Application.Pc.Queries.Index;
 using Application.Pc.Queries.Show;
 using Application.SpellInfo;
@@ -48,6 +49,19 @@ namespace Presentation.Controllers
 
             return View(result);
         }
+
+        [Route("pcs/{id}/pdf")]
+        [HttpGet]
+        public async Task<ActionResult> SaveAsPdfAsync(string id)
+        {
+            Guard.Against.Null(id);
+
+            var request = new GeneratePcPdfQuery() { Id = id };
+            var result = await _mediator.Send(request);
+
+            return new FileStreamResult(result.MemoryStream, "application/pdf") { FileDownloadName = result.Filename };
+        }
+
 
         [Route("pcs/create")]
         [HttpGet]

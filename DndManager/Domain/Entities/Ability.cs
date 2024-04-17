@@ -14,8 +14,8 @@ namespace Domain.Entities
         public IList<Skill> Skills { get; private set; } = new List<Skill>();
 
         public SpellInfo? SpellInfo { get; set; }
-        public CombatAttack? CombatAttack { get; set; }
-        public CombatDamage? CombatDamage { get; set; }
-        public CombatSavingThrow? CombatSavingThrow { get; set; }
+        public List<CombatAttack> CombatAttacks { get; set; } = new List<CombatAttack>();
+        public List<CombatDamage> CombatDamages { get; set; } = new List<CombatDamage>();
+        public List<CombatSavingThrow> CombatSavingThrows { get; set; } = new List<CombatSavingThrow>();
     }
 }

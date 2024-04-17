@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Ardalis.GuardClauses;
 using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Identity;
+using Infrastructure.PDF;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 
@@ -13,8 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            //Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
-
+            Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
 
             services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
             //services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
@@ -38,6 +39,8 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddEntityFrameworkStores<AppDbContext>();
 
             //services.AddTransient<IIdentityService, IdentityService>();
+
+            services.AddTransient<IPdfService, PdfService>();
 
             //services.AddAuthorization(options =>
             //    options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
