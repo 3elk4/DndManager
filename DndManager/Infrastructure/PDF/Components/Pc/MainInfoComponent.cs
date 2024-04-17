@@ -38,7 +38,7 @@ namespace Infrastructure.PDF.Components.Pc
         {
             column.Spacing(10);
 
-            column.Item().Background(Colors.Grey.Lighten4).Border((float)0.2).Column(col =>
+            column.Item().Background(Colors.Grey.Lighten4).Column(col =>
             {
                 col.Spacing(5);
                 col.Item().PaddingLeft(5).AlignLeft().Text("Legend").Bold();
@@ -50,7 +50,10 @@ namespace Infrastructure.PDF.Components.Pc
 
             });
 
-            column.Item().Image(Pc.Image).FitWidth();
+            if (Pc.Image != null)
+            {
+                column.Item().Image(Pc.Image).FitWidth();
+            }
 
             column.Item().Row(row =>
             {
