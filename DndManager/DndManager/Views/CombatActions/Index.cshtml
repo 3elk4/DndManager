@@ -57,15 +57,29 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col">
-                                <h5>Attack</h5>
+                                <h5>Attack / Saving throw / Nothing</h5>
                                 @{
                                     var attack = 0;
-                                    if (action.CombatAttack.AbilityId != null) attack += (int)@Model.Abilities.Find(a => a.Id.Equals(action.CombatAttack.AbilityId)).Value.Mod();
-                                    if (action.CombatAttack.IsProficient) attack += Model.Proficiency;
-                                    attack += action.CombatAttack.AdditionalBonus;
+                                    var savingThrow = 0;
+                                    var result = "";
+
+                                    if (action.CombatAttack.AbilityId != null)
+                                    {
+                                        attack += (int)@Model.Abilities.Find(a => a.Id.Equals(action.CombatAttack.AbilityId)).Value.Mod();
+                                        if (action.CombatAttack.IsProficient) attack += Model.Proficiency;
+                                        attack += action.CombatAttack.AdditionalBonus;
+
+                                        result = $"+{attack} {action.CombatAttack.Range}";
+                                    }
+                                    else if (action.CombatSavingThrow.AbilityId != null)
+                                    {
+                                        var ability = Model.Abilities.Find(a => a.Id.Equals(action.CombatSavingThrow.AbilityId));
+                                        savingThrow = 8 + (int)ability.Value.Mod() + Model.Proficiency;
+
+                                        result = $"DC {savingThrow}";
+                                    }
                                 }
-                                +@attack
-                                @action.CombatAttack.Range
+                                @result
                             </div>
                             <div class="col">
                                 <h5>Damage</h5>
@@ -82,18 +96,6 @@
 
                                 }
                                 @dmgStr
-                            </div>
-                            <div class="col">
-                                <h5>Saving Throw</h5>
-                                @{
-                                    var savingThrow = 0;
-                                    if (action.CombatSavingThrow.AbilityId != null)
-                                    {
-                                        var ability = Model.Abilities.Find(a => a.Id.Equals(action.CombatSavingThrow.AbilityId));
-                                        savingThrow = 8 + (int)ability.Value.Mod() + Model.Proficiency;
-                                    }
-                                 }
-                                    DC @savingThrow
                             </div>
                         </div>
                     </div>

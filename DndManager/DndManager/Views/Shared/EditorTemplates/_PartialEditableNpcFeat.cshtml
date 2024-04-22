@@ -15,9 +15,12 @@
         <input asp-for="@Model.TimeRegeneration" class="form-control" />
         <span asp-validation-for="@Model.TimeRegeneration" class="text-danger"></span>
     </div>
+</div>
+
+<div class="row">
     <div class="col">
         <label asp-for="@Model.Description" class="control-label"></label>
-        <input asp-for="@Model.Description" class="form-control" />
+        <textarea rows="8" asp-for="@Model.Description" class="form-control"></textarea>
         <span asp-validation-for="@Model.Description" class="text-danger"></span>
     </div>
 </div>

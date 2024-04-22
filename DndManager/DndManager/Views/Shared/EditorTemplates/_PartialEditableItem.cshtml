@@ -19,9 +19,12 @@
         <input type="number" asp-for="@Model.Weight" class="form-control" min="1" max="20" />
         <span asp-validation-for="@Model.Weight" class="text-danger"></span>
     </div>
+</div>
+
+<div class="row">
     <div class="col">
         <label asp-for="@Model.Notes" class="control-label"></label>
-        <input type="text" asp-for="@Model.Notes" class="form-control" />
+        <textarea asp-for="@Model.Notes" class="form-control"></textarea>
         <span asp-validation-for="@Model.Notes" class="text-danger"></span>
     </div>
 </div>

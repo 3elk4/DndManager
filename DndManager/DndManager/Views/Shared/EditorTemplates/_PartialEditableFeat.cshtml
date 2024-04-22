@@ -25,9 +25,12 @@
         <input asp-for="@Model.SourceType" class="form-control" />
         <span asp-validation-for="@Model.SourceType" class="text-danger"></span>
     </div>
+</div>
+
+<div class="row">
     <div class="col">
         <label asp-for="@Model.Definition" class="control-label"></label>
-        <input type="text" asp-for="@Model.Definition" class="form-control" />
+        <textarea rows="8" asp-for="@Model.Definition" class="form-control"></textarea>
         <span asp-validation-for="@Model.Definition" class="text-danger"></span>
     </div>
 </div>
