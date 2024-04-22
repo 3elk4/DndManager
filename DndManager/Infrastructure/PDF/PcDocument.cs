@@ -63,7 +63,7 @@ namespace Infrastructure.PDF
                 stack.Item().PageBreak();
                 stack.Item().Row(row => row.RelativeItem().Component(new FeatsComponent(Model.Feats)));
                 stack.Item().PageBreak();
-                stack.Item().Row(row => row.RelativeItem().Component(new ProficienciesAndItemsComponent(Model.Proficiencies, Model.Items)));
+                stack.Item().Row(row => row.RelativeItem().Component(new ProficienciesAndItemsComponent(Model.Proficiencies, Model.Items, Model.Money)));
                 stack.Item().PageBreak();
                 stack.Item().Row(row => row.RelativeItem().Component(new SpellsComponent(Model.SpellInfo, proficiency)));
                 stack.Item().PageBreak();

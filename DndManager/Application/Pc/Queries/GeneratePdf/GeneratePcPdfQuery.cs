@@ -26,6 +26,7 @@ namespace Application.Pc.Queries.GeneratePdf
         {
             var entity = await _dbContext.Pcs.Where(i => i.Id.Equals(request.Id))
             .Include(pc => pc.Bio)
+            .Include(pc => pc.Money)
             .Include(pc => pc.SpellInfo)
                 .ThenInclude(spellInfo => spellInfo.SpellLvls)
                 .ThenInclude(spellLvlInfo => spellLvlInfo.Spells)

@@ -32,6 +32,8 @@ namespace Application.Common.Interfaces
         DbSet<Domain.Entities.NpcDamage> NpcDamages { get; }
         DbSet<Domain.Entities.CombatSavingThrow> CombatSavingThrows { get; }
 
+        DbSet<Domain.Entities.Money> Money { get; }
+
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }

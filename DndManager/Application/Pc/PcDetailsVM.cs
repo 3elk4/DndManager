@@ -3,6 +3,7 @@ using Application.Bio;
 using Application.Common.Extentions;
 using Application.Common.Models;
 using Application.DndClass;
+using Application.Money;
 using Application.SpellInfo;
 using System.Collections.Generic;
 
@@ -16,6 +17,7 @@ namespace Application.Pc
         public IReadOnlyCollection<AbilityVM> Abilities { get; init; }
         public BioVM Bio { get; init; } //todo: id only?
         public SpellInfoVM SpellInfo { get; init; }// todo: id only?
+        public MoneyVM Money { get; init; }// todo: id only?
         public string RaceName { get; init; }
         public string BackgroundName { get; init; }
 
