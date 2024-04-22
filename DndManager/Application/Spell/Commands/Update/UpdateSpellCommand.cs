@@ -12,6 +12,11 @@ namespace Application.Spell.Commands.Update
         public string CastingRange { get; init; }
         public string Components { get; init; }
         public string Duration { get; init; }
+        public string Target { get; set; }
+        public bool Concentration { get; set; }
+        public bool Ritual { get; set; }
+        public string School { get; set; }
+        public string HigherLvl { get; set; }
     }
 
     public class UpdateSpellCommandHandler : IRequestHandler<UpdateSpellCommand>
@@ -34,6 +39,11 @@ namespace Application.Spell.Commands.Update
             entity.CastingTime = request.CastingTime;
             entity.Components = request.Components;
             entity.Duration = request.Duration;
+            entity.Target = request.Target;
+            entity.School = request.School;
+            entity.Concentration = request.Concentration;
+            entity.Ritual = request.Ritual;
+            entity.HigherLvl = request.HigherLvl;
 
             await _dbContext.SaveChangesAsync(cancellationToken);
         }

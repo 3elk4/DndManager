@@ -10,6 +10,11 @@ namespace Application.Spell.Commands.Create
         public string CastingRange { get; init; }
         public string Components { get; init; }
         public string Duration { get; init; }
+        public string Target { get; set; }
+        public bool Concentration { get; set; }
+        public bool Ritual { get; set; }
+        public string School { get; set; }
+        public string HigherLvl { get; set; }
         public string SpellLvlInfoId { get; init; }
     }
 
@@ -32,6 +37,11 @@ namespace Application.Spell.Commands.Create
                 CastingTime = request.CastingTime,
                 Components = request.Components,
                 Duration = request.Duration,
+                Target = request.Target,
+                School = request.School,
+                Concentration = request.Concentration,
+                Ritual = request.Ritual,
+                HigherLvl = request.HigherLvl,
                 SpellLvlInfoId = request.SpellLvlInfoId
             };
 
