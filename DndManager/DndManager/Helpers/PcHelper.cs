@@ -31,7 +31,7 @@ namespace Presentation.Helpers
 
         private static AbilityVM GenerateAbility(KeyValuePair<string, List<string>> keyValuePair)
         {
-            return new AbilityVM() { Name = keyValuePair.Key, Skills = GenerateSkills(keyValuePair.Value) };
+            return new AbilityVM() { Id = Guid.NewGuid().ToString(), Name = keyValuePair.Key, Skills = GenerateSkills(keyValuePair.Value) };
         }
 
         private static List<SkillVM> GenerateSkills(List<string> skillNames)

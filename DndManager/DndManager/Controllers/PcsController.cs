@@ -71,7 +71,8 @@ namespace Presentation.Controllers
             {
                 Abilities = PcHelper.GenerateAbilitiesWithSkills(),
                 DndClasses = new List<DndClassVM>() { new DndClassVM() },
-                Bio = new BioVM()
+                Bio = new BioVM(),
+                SpellInfo = new SpellInfoVM()
             });
         }
 
@@ -99,7 +100,11 @@ namespace Presentation.Controllers
                 Abilities = pcVM.Abilities,
                 DndClasses = pcVM.DndClasses,
                 Bio = pcVM.Bio,
-                SpellInfo = new SpellInfoVM() { SpellLvls = PcHelper.GenerateSpellLvls() }
+                SpellInfo = new SpellInfoVM()
+                {
+                    AbilityId = pcVM.SpellInfo.AbilityId,
+                    SpellLvls = PcHelper.GenerateSpellLvls()
+                }
             };
             var result = await _mediator.Send(request);
 

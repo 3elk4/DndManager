@@ -10,8 +10,8 @@
                 <form asp-action="EditAbility" asp-controller="Spells" asp-route-id="@Model.SpellInfo.Id" method="post">
                     <input asp-for="@Model.SpellInfo.Id" type="hidden" />
 
-                    <option value=""> Non-magical character </option>
                     <select asp-for="@Model.SpellInfo.AbilityId" maxlength="100" class="form-control">
+                        <option value=""> Non-magical character </option>
                         @foreach (var ab in Model.Abilities)
                         {
                             <option value="@ab.Id">@ab.Name</option>
