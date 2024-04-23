@@ -4,6 +4,8 @@
     ViewData["Title"] = "Edit Player";
 }
 
+<partial name="_ErrorNotification" />
+
 <form asp-controller="Pcs" asp-action="Edit" asp-route-id="@Model.Id" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
