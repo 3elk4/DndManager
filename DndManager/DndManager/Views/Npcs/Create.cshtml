@@ -167,12 +167,26 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col">
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3">ST Bonus</div>
+                                    <div class="col-3"></div>
+                                </div>
+
                                 @for (int i = 0; i < 3; ++i)
                                 {
                                     @Html.EditorFor(m => m.Abilities[i], "_PartialEditableNpcAbility")
                                 }
                             </div>
                             <div class="col">
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3">ST Bonus</div>
+                                    <div class="col-3"></div>
+                                </div>
+
                                 @for (int i = 3; i < 6; ++i)
                                 {
                                     @Html.EditorFor(m => m.Abilities[i], "_PartialEditableNpcAbility")
@@ -185,9 +199,6 @@
                 <div class="tab">
                     <div class="form-group">
                         <div class="row">
-                           @*  <input hidden type="text" asp-for="@Model.SpellInfo.Id" />
-                            <input hidden type="text" asp-for="@Model.SpellInfo.NpcId" /> *@
-
                             <div class="col">
                                 <label asp-for="SpellInfo.NpcAbilityId" class="control-label"> Spell Ability </label>
                                 <select asp-for="@Model.SpellInfo.NpcAbilityId" maxlength="100" class="form-control">
