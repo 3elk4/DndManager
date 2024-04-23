@@ -51,6 +51,7 @@ namespace Application.Pc.Commands.Create
                 SpellInfo = _mapper.Map<Domain.Entities.SpellInfo>(request.SpellInfo),
                 Abilities = _mapper.Map<List<Domain.Entities.Ability>>(request.Abilities),
                 DndClasses = _mapper.Map<List<Domain.Entities.DndClass>>(request.DndClasses),
+                Money = new Domain.Entities.Money()
             };
 
             _dbContext.Pcs.Add(entity);

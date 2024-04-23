@@ -20,7 +20,7 @@ namespace Infrastructure.Data.Configurations
             builder.Property(a => a.Bonds).HasMaxLength(500).IsRequired(false);
             builder.Property(a => a.Ideals).HasMaxLength(500).IsRequired(false);
             builder.Property(a => a.Allies).HasMaxLength(500).IsRequired(false);
-            builder.Property(a => a.Backstory).HasMaxLength(1000).IsRequired(false);
+            builder.Property(a => a.Backstory).HasMaxLength(2500).IsRequired(false);
 
             builder.HasOne(a => a.Pc).WithOne(x => x.Bio).HasForeignKey<Bio>(x => x.PcId).IsRequired().OnDelete(DeleteBehavior.Cascade);
         }

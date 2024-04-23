@@ -44,8 +44,8 @@
                     <input asp-for="@Model.CastingRange" readonly class="form-control-plaintext text-center" />
                 </div>
                 <div class="col justify-content-center">
-                     <h5>Duration</h5>
-                    <input asp-for="@Model.Duration" readonly class="form-control-plaintext text-center" />
+                     <h5>Target</h5>
+                    <input asp-for="@Model.Target" readonly class="form-control-plaintext text-center" />
                 </div>
                 <div class="col justify-content-center">
                     <h5>Components</h5>
@@ -55,9 +55,35 @@
             </div>
             <br />
             <div class="row">
+                <div class="col justify-content-center">
+                    <h5>School</h5>
+                    <input asp-for="@Model.School" readonly class="form-control-plaintext text-center" />
+                </div>
+                <div class="col justify-content-center">
+                    <h5>Duration</h5>
+                    <input asp-for="@Model.Duration" readonly class="form-control-plaintext text-center" />
+                </div>
+                <div class="col justify-content-center">
+                    <h5>Concentration</h5>
+                    <input asp-for="@Model.Concentration" readonly class="form-control-plaintext text-center" disabled />
+                </div>
+                <div class="col justify-content-center">
+                    <h5>Ritual</h5>
+                    <input asp-for="@Model.Ritual" readonly class="form-control-plaintext text-center" disabled />
+                </div>
+
+            </div>
+            <br />
+            <div class="row">
                 <div class="col">
                     <label><h5>Description</h5></label>
-                    <textarea rows="6" style="width:inherit;" readonly asp-for="@Model.Description"> </textarea>
+                    <textarea rows="6" style="width:inherit;" readonly class="form-control-plaintext" asp-for="@Model.Description"> </textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <label><h5>At higher lvls</h5></label>
+                    <textarea rows="6" style="width:inherit;" readonly class="form-control-plaintext" asp-for="@Model.HigherLvl"> </textarea>
                 </div>
             </div>
         </div>

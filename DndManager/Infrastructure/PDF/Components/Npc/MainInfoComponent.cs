@@ -154,7 +154,7 @@ namespace Infrastructure.PDF.Components.Npc
 
         private void ComposeConditionImmunities(ColumnDescriptor column)
         {
-            var conditionImmunities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("condimmun"));
+            var conditionImmunities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("condition immunity"));
 
             if (conditionImmunities.Any())
             {
@@ -168,7 +168,7 @@ namespace Infrastructure.PDF.Components.Npc
 
         private void ComposeDamageImmunities(ColumnDescriptor column)
         {
-            var damageImmunities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgimmun"));
+            var damageImmunities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("damage immunity"));
 
             if (damageImmunities.Any())
             {
@@ -182,7 +182,7 @@ namespace Infrastructure.PDF.Components.Npc
 
         private void ComposeDamageResistances(ColumnDescriptor column)
         {
-            var damageResistances = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgres"));
+            var damageResistances = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("damage resistance"));
 
             if (damageResistances.Any())
             {
@@ -196,7 +196,7 @@ namespace Infrastructure.PDF.Components.Npc
 
         private void ComposeDamageVulnerabilities(ColumnDescriptor column)
         {
-            var damageVulnerabilities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("dmgvul"));
+            var damageVulnerabilities = Npc.Proficiencies.Where(proficiency => proficiency.Type.Equals("damage vulnerability"));
 
             if (damageVulnerabilities.Any())
             {

@@ -21,6 +21,7 @@ namespace Domain.Entities
 
         public Bio Bio { get; init; } = new Bio();
         public SpellInfo SpellInfo { get; init; } = new SpellInfo();
+        public Money Money { get; set; } = new Money();
 
         public IList<DndClass> DndClasses { get; init; }
         public IList<Item> Items { get; private set; } = new List<Item>();

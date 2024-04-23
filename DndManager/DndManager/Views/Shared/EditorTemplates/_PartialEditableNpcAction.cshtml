@@ -1,5 +1,9 @@
 ﻿@model NpcActionVM
 
+@{
+    var damageTypes = new List<string>() { "acid", "radiant", "cold", "force", "lightning", "necrotic", "poison", "psychic", "bludgeoning", "fire", "piercing", "slashing", "thunder", "healing", "other" };
+}
+
 <div class="row">
     <input hidden type="text" asp-for="@Model.Id" />
     <input hidden type="text" asp-for="@Model.NpcId" />
@@ -19,6 +23,8 @@
             <option value="action">Action</option>
             <option value="bonus action">Bonus Action</option>
             <option value="reaction">Reaction</option>
+            <option value="legendary action">Legendary action</option>
+            <option value="mythic action">Mythic action</option>
         </select>
         <span asp-validation-for="Type" class="text-danger"></span>
     </div>
@@ -67,7 +73,12 @@
     </div>
     <div class="col">
         <label asp-for="Damage.DamageType" class="control-label"> Damage Type </label>
-        <input type="text" asp-for="Damage.DamageType" class="form-control" />
+        <select asp-for="Damage.DamageType" class="form-control">
+            @foreach (var dt in damageTypes)
+            {
+                <option value="@dt">@dt</option>
+            }
+        </select>
         <span asp-validation-for="Damage.DamageType" class="text-danger"></span>
     </div>
 </div>

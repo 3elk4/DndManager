@@ -1,7 +1,7 @@
 ﻿@model SpellInfoAndAbilitiesVM
 
 <div class="modal fade" id="editSpellAbilityModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title"> Change spells ability </h5>
@@ -11,6 +11,7 @@
                     <input asp-for="@Model.SpellInfo.Id" type="hidden" />
 
                     <select asp-for="@Model.SpellInfo.AbilityId" maxlength="100" class="form-control">
+                        <option value=""> Non-magical character </option>
                         @foreach (var ab in Model.Abilities)
                         {
                             <option value="@ab.Id">@ab.Name</option>

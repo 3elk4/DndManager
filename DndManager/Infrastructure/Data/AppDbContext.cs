@@ -32,6 +32,7 @@ namespace Infrastructure.Data
         public DbSet<CombatDamage> CombatDamages { get; set; }
         public DbSet<NpcDamage> NpcDamages { get; set; }
         public DbSet<CombatSavingThrow> CombatSavingThrows { get; set; }
+        public DbSet<Money> Money { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         { }

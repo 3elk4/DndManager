@@ -73,6 +73,9 @@
                             <p> @Model.HpFormula </p>
                         </div>
                     </div>
+
+                </div>
+                <div class="row">
                     <div class="col  mt-2 mb-2">
                         <div class="border">
                             <label asp-for="Speed"></label>
@@ -80,10 +83,6 @@
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-            <div class="container text-center box-shadow mt-3 mb-3">
                 <div class="row">
                     <div class="col  mt-2 mb-2">
                         <div class="border">
@@ -97,23 +96,24 @@
                             <h2> @Model.ProficiencyBonus </h2>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="container text-center box-shadow mt-3 mb-3">
+                <div class="row">
                     <div class="col  mt-2 mb-2">
                         <div class="border">
                             <label>Spell Ability</label>
                             @{
-                                var ability = Model.Abilities.FirstOrDefault(ab => ab.Id.Equals(Model.SpellInfo.NpcAbilityId));
-                                var abilityName = ability == null ? "None" : ability.Name;
+                                var spellAbility = Model.Abilities.FirstOrDefault(ab => ab.Id.Equals(Model.SpellInfo.NpcAbilityId));
+                                var abilityName = spellAbility == null ? "Non-magical NPC" : spellAbility.Name;
                             }
                             <h2> @abilityName</h2>
                         </div>
                     </div>
                 </div>
-
-            </div>
-
-            @if (ability != null)
-            {
-                <div class="container text-center box-shadow mt-3 mb-3">
+                @if (spellAbility != null)
+                {
                     <div class="row">
                         <div class="col  mt-2 mb-2">
                             <div class="border">
@@ -134,8 +134,8 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            }
+                }
+            </div>
         </div>
     </div>
 </div>

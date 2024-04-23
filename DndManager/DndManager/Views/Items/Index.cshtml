@@ -1,5 +1,9 @@
 ﻿@model List<ItemVM>
 
+@{
+    double totalWeight = 0;
+}
+
 <partial name="_SuccessNotification" />
 
 <input type="hidden" value="@ViewData["PcId"]" name="PcId" id="PcId" />
@@ -44,6 +48,8 @@
 
 @foreach (var item in Model)
 {
+    totalWeight += item.Quantity * item.Weight;
+
     <div class="container box-shadow m-3">
         <div class="row d-flex justify-content-between align-items-center pb-3 pt-3">
 
@@ -75,6 +81,12 @@
     </div>
 
 }
+
+<div class="container-fluid">
+    <div class="row align-items-center justify-content-center mb-3">
+        <h4>Total weight: @totalWeight</h4>
+    </div>
+</div>
 
 
 @section scripts{

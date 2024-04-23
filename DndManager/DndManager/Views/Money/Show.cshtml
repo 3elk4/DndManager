@@ -1,0 +1,57 @@
+﻿@model MoneyVM
+
+<partial name="_SuccessNotification" />
+<partial name="_ErrorNotification" />
+
+<form id="moneyForm" asp-action="Edit" asp-controller="Money" method="post">
+    <input type="hidden" asp-for="Id" class="form-control" id="Id" , name="Id" />
+    <input type="hidden" asp-for="PcId" class="form-control" />
+
+    <div class="container-fluid">
+        <div class="row align-items-center mb-3">
+            <div class="col-4 d-flex justify-content-start">
+                <a class="btn btn-primary btn-md" role="button" asp-area="" asp-controller="Pcs" asp-action="Details" asp-route-id="@Model.PcId">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+            </div>
+            <div class="col-4  d-flex justify-content-center">
+                <h5> Money </h5>
+            </div>
+            <div class="col-4 d-flex justify-content-end">
+                <button class="btn btn-primary" type="submit" id="submit"><i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container text-center box-shadow mt-3 mb-3">
+        <div class="form-group pt-3 pb-3">
+            <div class="row">
+                <div class="col">
+                    <label asp-for="Copper" class="control-label"></label>
+                    <input type="number" asp-for="Copper" class="form-control" />
+                    <span asp-validation-for="Copper" class="text-danger"></span>
+                </div>
+                <div class="col">
+                    <label asp-for="Silver" class="control-label"></label>
+                    <input type="number" asp-for="Silver" class="form-control" />
+                    <span asp-validation-for="Silver" class="text-danger"></span>
+                </div>                
+                <div class="col">
+                    <label asp-for="Electrum" class="control-label"></label>
+                    <input type="number" asp-for="Electrum" class="form-control" />
+                    <span asp-validation-for="Electrum" class="text-danger"></span>
+                </div>                
+                <div class="col">
+                    <label asp-for="Gold" class="control-label"></label>
+                    <input type="number" asp-for="Gold" class="form-control" />
+                    <span asp-validation-for="Gold" class="text-danger"></span>
+                </div>                
+                <div class="col">
+                    <label asp-for="Platinum" class="control-label"></label>
+                    <input type="number" asp-for="Platinum" class="form-control" />
+                    <span asp-validation-for="Platinum" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

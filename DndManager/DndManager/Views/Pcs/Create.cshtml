@@ -4,6 +4,8 @@
     ViewData["Title"] = "New Player";
 }
 
+<partial name="_ErrorNotification" />
+
 <body>
     <div class="container">
         <div class="row justify-content-between align-items-center">
@@ -68,6 +70,18 @@
                         <label asp-for="BackgroundName" class="control-label">Background</label>
                         <input asp-for="BackgroundName" class="form-control" />
                         <span asp-validation-for="BackgroundName" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="SpellInfo.AbilityId" class="control-label">Spell Ability</label>
+
+                        <select asp-for="SpellInfo.AbilityId" class="form-control">
+                            <option value=""> Non-magical character </option>
+                            @foreach (var ab in Model.Abilities)
+                            {
+                                <option value="@ab.Id">@ab.Name</option>
+                            }
+                        </select>
                     </div>
                 </div>
 

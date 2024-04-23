@@ -3,15 +3,15 @@
 @foreach (var ability in Model.OrderByDescending(ab => ab.Skills.Count))
 {
     var abilityMod = ability.Value.Mod();
-    var abilityName = @ability.Name.ToUpper().Substring(0, 3);
+    var abilityName = @ability.Name;
 
 <div class="row mt-3 mb-2">
     <div class="col-3">
         <div class="border">
             <b> @abilityName </b>
             <h4> @ability.Value </h4>
-            <b> ST </b>
-            <h6> @ability.SavingThrowBonus </h6>
+            <h6>@abilityMod</h6>
+            <span class="badge badge-secondary rounded-pill">ST @ability.SavingThrowBonus</span>
         </div>
     </div>
     <div class="col">

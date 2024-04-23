@@ -56,15 +56,17 @@
                 <div id="@{@collps}" class="collapse pr-4 pl-4 pt-2 pb-2" aria-labelledby="@{@heading}" data-parent="#@{@acc}">
                     <div class="card-body">
                         <div class="row">
-                            <b>
-                                @(action.Attack.Type.First().ToString().ToUpper() + String.Join("", action.Attack.Type .Skip(1))): 
-                            </b> +@action.Attack.ToHit, @action.Attack.Range, @action.Attack.Target
+                            <p>
+                                <b>
+                                    @(action.Attack.Type.First().ToString().ToUpper() + String.Join("", action.Attack.Type.Skip(1))):
+                                </b> +@action.Attack.ToHit, @action.Attack.Range, @action.Attack.Target
+                            </p>
                         </div>
                         <div class="row">
-                            <b> Hit: </b> @action.Damage.DamageDice @action.Damage.DamageType damage
+                            <p><b> Hit: </b> @action.Damage.DamageDice @action.Damage.DamageType damage</p>
                         </div>
                         <div class="row">
-                            @action.Description
+                            <textarea  class="form-control-plaintext" readonly>@action.Description</textarea>
                         </div>
                     </div>
                 </div>

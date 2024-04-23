@@ -1,7 +1,8 @@
 ﻿@model CombatActionVM
 
 @{
-    var abilities = (List<Application.Ability.AbilityBriefVM>)@ViewData["Abilities"];
+    var abilities = (List<Application.Ability.AbilityBriefVM>)ViewData["Abilities"];
+    var damageTypes = new List<string>(){ "acid", "radiant", "cold", "force", "lightning", "necrotic", "poison", "psychic", "bludgeoning", "fire", "piercing", "slashing", "thunder", "healing", "other" };
 }
 
 <div class="row">
@@ -90,7 +91,12 @@
     <div class="col">
 
             <label asp-for="CombatDamage.DamageType" class="control-label"></label>
-            <input type="text" asp-for="CombatDamage.DamageType" class="form-control" />
+            <select asp-for="CombatDamage.DamageType" class="form-control">
+                @foreach (var dt in damageTypes)
+                {
+                    <option value="@dt">@dt</option>
+                }
+            </select>
             <span asp-validation-for="CombatDamage.DamageType" class="text-danger"></span>
 
     </div>

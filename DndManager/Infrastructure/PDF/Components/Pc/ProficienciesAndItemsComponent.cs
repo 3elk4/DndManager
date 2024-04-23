@@ -10,11 +10,13 @@ namespace Infrastructure.PDF.Components.Pc
     {
         private IList<Proficiency> Proficiencies { get; }
         private IList<Item> Items { get; }
+        private Money Money { get; }
 
-        public ProficienciesAndItemsComponent(IList<Proficiency> proficiencies, IList<Item> items)
+        public ProficienciesAndItemsComponent(IList<Proficiency> proficiencies, IList<Item> items, Money money)
         {
             Proficiencies = proficiencies;
             Items = items;
+            Money = money;
         }
 
         [Obsolete]
@@ -24,7 +26,7 @@ namespace Infrastructure.PDF.Components.Pc
             {
                 row.ConstantColumn(150).Column(ComposeProficiencies);
                 row.ConstantColumn(20);
-                row.RelativeItem().Column(ComposeItems);
+                row.RelativeItem().Column(ComposeItemsWithMoney);
             });
         }
 
@@ -46,10 +48,17 @@ namespace Infrastructure.PDF.Components.Pc
         }
 
         [Obsolete]
-        private void ComposeItems(ColumnDescriptor column)
+        private void ComposeItemsWithMoney(ColumnDescriptor column)
         {
             column.Spacing(10);
 
+            ComposeMoney(column);
+            ComposeItems(column);
+        }
+
+        [Obsolete]
+        private void ComposeItems(ColumnDescriptor column)
+        {
             column.Item().Text("Items").FontSize(13).Bold();
 
             column.Item().Table(table =>
@@ -86,6 +95,71 @@ namespace Infrastructure.PDF.Components.Pc
                 {
                     footer.Cell().ColumnSpan(4).AlignRight().Text($"Total weight: {total}", TextStyle.Default.Size(12).SemiBold());
                 });
+            });
+        }
+
+        [Obsolete]
+        private void ComposeMoney(ColumnDescriptor column)
+        {
+            column.Item().Text("Money").FontSize(13).Bold();
+
+            column.Item().Grid(grid =>
+            {
+                grid.VerticalSpacing(5);
+                grid.HorizontalSpacing(5);
+                grid.AlignCenter();
+                grid.Columns(5);
+
+                grid
+                     .Item(1)
+                     .Background(Colors.Orange.Lighten5)
+                     .Padding(5)
+                     .Column(col =>
+                     {
+                         col.Spacing(5);
+                         col.Item().Text("Copper").Bold();
+                         col.Item().Text(Money.Copper);
+                     });
+                grid
+                     .Item(1)
+                     .Background(Colors.Orange.Lighten5)
+                     .Padding(5)
+                     .Column(col =>
+                     {
+                         col.Spacing(5);
+                         col.Item().Text("Silver").Bold();
+                         col.Item().Text(Money.Silver);
+                     });
+                grid
+                     .Item(1)
+                     .Background(Colors.Orange.Lighten5)
+                     .Padding(5)
+                     .Column(col =>
+                     {
+                         col.Spacing(5);
+                         col.Item().Text("Electrum").Bold();
+                         col.Item().Text(Money.Electrum);
+                     });
+                grid
+                     .Item(1)
+                     .Background(Colors.Orange.Lighten5)
+                     .Padding(5)
+                     .Column(col =>
+                     {
+                         col.Spacing(5);
+                         col.Item().Text("Gold").Bold();
+                         col.Item().Text(Money.Gold);
+                     });
+                grid
+                     .Item(1)
+                     .Background(Colors.Orange.Lighten5)
+                     .Padding(5)
+                     .Column(col =>
+                     {
+                         col.Spacing(5);
+                         col.Item().Text("Platinum").Bold();
+                         col.Item().Text(Money.Platinum);
+                     });
             });
         }
     }

@@ -3,16 +3,14 @@
 <div class="row">
     <input hidden type="text" asp-for="@Model.Id" />
     <input hidden type="text" asp-for="@Model.NpcId" />
-    <div class="col-4">
+    <div class="col-3">
         <input type="text" asp-for="@Model.Name" readonly class="form-control-plaintext" />
         <span asp-validation-for="@Model.Value" class="text-danger"></span>
     </div>
-    <div class="col-2">
-        <label>Ability Bonus</label>
+    <div class="col-3">
         <input type="number" min=1 max=20 asp-for="@Model.Value" class="form-control" />
     </div>
-    <div class="col-2">
-        <label>ST Bonus</label>
+    <div class="col-3">
         <input type="number" asp-for="@Model.SavingThrowBonus" class="form-control" />
     </div>
 
@@ -20,7 +18,7 @@
     {
         if (Model.Skills.Count > 0)
         {
-            <div class="col">
+            <div class="col-3">
                 <a id="expandSkills" class="btn btn-primary" data-toggle="collapse" href="#collapse@(Model.Name)" role="button" aria-expanded="false" aria-controls="collapse@(Model.Name)">
                     Skills
                 </a>

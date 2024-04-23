@@ -18,18 +18,18 @@ namespace Application.Common.Extentions
 
         public static int Initiative(this PcDetailsVM pc)
         {
-            return pc.Abilities.First(a => a.Name.Equals("Dexterity")).Value.Mod();
+            return pc.Abilities.First(a => a.Name.Equals("DEX")).Value.Mod();
         }
 
         public static int Initiative(this Domain.Entities.Pc pc)
         {
-            return pc.Abilities.First(a => a.Name.Equals("Dexterity")).Value.Mod();
+            return pc.Abilities.First(a => a.Name.Equals("DEX")).Value.Mod();
         }
 
         public static int PassiveWisdom(this PcDetailsVM pc)
         {
             var proficiency = pc.DndClasses.Proficiency();
-            AbilityVM wis = pc.Abilities.First(a => a.Name.Equals("Wisdom"));
+            AbilityVM wis = pc.Abilities.First(a => a.Name.Equals("WIS"));
             SkillVM perc = wis.Skills.First(s => s.Name.Equals("Perception"));
             return 10 + wis.Value.Mod() + (perc.Proficient ? proficiency : 0);
         }
@@ -37,7 +37,7 @@ namespace Application.Common.Extentions
         public static int PassiveWisdom(this Domain.Entities.Pc pc)
         {
             var proficiency = pc.DndClasses.Proficiency();
-            Domain.Entities.Ability wis = pc.Abilities.First(a => a.Name.Equals("Wisdom"));
+            Domain.Entities.Ability wis = pc.Abilities.First(a => a.Name.Equals("WIS"));
             Domain.Entities.Skill perc = wis.Skills.First(s => s.Name.Equals("Perception"));
             return 10 + wis.Value.Mod() + (perc.Proficient ? proficiency : 0);
         }

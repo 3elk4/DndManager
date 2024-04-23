@@ -4,6 +4,8 @@
     ViewData["Title"] = "Update Player";
 }
 
+<partial name="_ErrorNotification" />
+
 <body>
     <div class="container">
         <div class="row justify-content-between align-items-center">
@@ -169,12 +171,26 @@
                     <div class="form-group">
                         <div class="row">
                             <div class="col">
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3">ST Bonus</div>
+                                    <div class="col-3"></div>
+                                </div>
+
                                 @for (int i = 0; i < 3; ++i)
                                 {
                                     @Html.EditorFor(m => m.Abilities[i], "_PartialEditableNpcAbility")
                                 }
                             </div>
                             <div class="col">
+                                <div class="row">
+                                    <div class="col-3"></div>
+                                    <div class="col-3"></div>
+                                    <div class="col-3">ST Bonus</div>
+                                    <div class="col-3"></div>
+                                </div>
+
                                 @for (int i = 3; i < 6; ++i)
                                 {
                                     @Html.EditorFor(m => m.Abilities[i], "_PartialEditableNpcAbility")

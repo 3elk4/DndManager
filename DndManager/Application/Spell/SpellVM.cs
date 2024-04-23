@@ -12,6 +12,12 @@ namespace Application.Spell
         public string Duration { get; set; }
         public string SpellLvlInfoId { get; set; }
 
+        public string Target { get; set; }
+        public bool Concentration { get; set; }
+        public bool Ritual { get; set; }
+        public string School { get; set; }
+        public string HigherLvl { get; set; }
+
         private class Mapping : Profile
         {
             public Mapping()

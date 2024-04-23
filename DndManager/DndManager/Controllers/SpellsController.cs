@@ -86,7 +86,21 @@ namespace Presentantion.Controllers
             Guard.Against.Null(spellinfoid);
             Guard.Against.Null(lvlid);
 
-            var request = new AddNewSpellCommand() { SpellLvlInfoId = lvlid, Name = spell.Name, CastingRange = spell.CastingRange, CastingTime = spell.CastingTime, Components = spell.Components, Duration = spell.Duration, Description = spell.Description };
+            var request = new AddNewSpellCommand()
+            {
+                SpellLvlInfoId = lvlid,
+                Name = spell.Name,
+                CastingRange = spell.CastingRange,
+                CastingTime = spell.CastingTime,
+                Components = spell.Components,
+                Duration = spell.Duration,
+                Description = spell.Description,
+                Target = spell.Target,
+                School = spell.School,
+                Concentration = spell.Concentration,
+                Ritual = spell.Ritual,
+                HigherLvl = spell.HigherLvl
+            };
             var result = await _mediator.Send(request);
 
             TempData["Message"] = "Spell created successfully!";
@@ -102,7 +116,21 @@ namespace Presentantion.Controllers
             Guard.Against.Null(lvlid);
             Guard.Against.Null(spellinfoid);
 
-            var request = new UpdateSpellCommand() { Id = id, Name = spell.Name, CastingRange = spell.CastingRange, CastingTime = spell.CastingTime, Components = spell.Components, Duration = spell.Duration, Description = spell.Description };
+            var request = new UpdateSpellCommand()
+            {
+                Id = id,
+                Name = spell.Name,
+                CastingRange = spell.CastingRange,
+                CastingTime = spell.CastingTime,
+                Components = spell.Components,
+                Duration = spell.Duration,
+                Description = spell.Description,
+                Target = spell.Target,
+                School = spell.School,
+                Concentration = spell.Concentration,
+                Ritual = spell.Ritual,
+                HigherLvl = spell.HigherLvl
+            };
             await _mediator.Send(request);
 
             TempData["Message"] = "Spell updated successfully!";
