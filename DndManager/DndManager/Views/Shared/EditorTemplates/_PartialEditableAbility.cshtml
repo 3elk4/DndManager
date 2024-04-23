@@ -1,15 +1,10 @@
 ﻿@model Application.Ability.AbilityVM
 
-@{
-    var abilityShortName = @Model.Name.Substring(0, 3).ToUpper();
-}
-
 <div class="row">
     <input hidden type="text" asp-for="@Model.Id" />
     <input hidden type="text" asp-for="@Model.PcId" />
     <div class="col-3">
-        <input type="text" asp-for="@Model.Name" hidden />
-        <input type="text" asp-for="@abilityShortName" readonly class="form-control-plaintext" />
+        <input type="text" asp-for="@Model.Name" readonly class="form-control-plaintext" />
         <span asp-validation-for="@Model.Value" class="text-danger"></span>
     </div>
     <div class="col-3">

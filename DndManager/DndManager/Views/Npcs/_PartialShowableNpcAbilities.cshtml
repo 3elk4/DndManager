@@ -3,7 +3,7 @@
 @foreach (var ability in Model.OrderByDescending(ab => ab.Skills.Count))
 {
     var abilityMod = ability.Value.Mod();
-    var abilityName = @ability.Name.ToUpper().Substring(0, 3);
+    var abilityName = @ability.Name;
 
 <div class="row mt-3 mb-2">
     <div class="col-3">

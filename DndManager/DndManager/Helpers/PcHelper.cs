@@ -7,12 +7,12 @@ namespace Presentation.Helpers
     public class PcHelper
     {
         private static Dictionary<string, List<string>> AbilityAndSkillNames = new Dictionary<string, List<string>>() {
-            { "Strength", new List<string> () { "Athletics" } },
-            { "Dexterity", new List<string> () { "Acrobatics", "Stealth", "Sleight of Hand" } },
-            {"Constitution", new List<string>() },
-            {"Intelligence", new List<string> () { "Arcana", "History", "Investigation", "Nature", "Religion" } },
-            {"Wisdom", new List<string> () { "Animal Handling", "Perception", "Medicine", "Survival", "Insight" } },
-            {"Charisma", new List<string> () { "Deception", "Intimidation", "Performance", "Persuation" } }
+            { "STR", new List<string> () { "Athletics" } },
+            { "DEX", new List<string> () { "Acrobatics", "Stealth", "Sleight of Hand" } },
+            {"CON", new List<string>() },
+            {"INT", new List<string> () { "Arcana", "History", "Investigation", "Nature", "Religion" } },
+            {"WIS", new List<string> () { "Animal Handling", "Perception", "Medicine", "Survival", "Insight" } },
+            {"CHA", new List<string> () { "Deception", "Intimidation", "Performance", "Persuation" } }
         };
 
         public static List<SpellLvlInfoVM> GenerateSpellLvls()
