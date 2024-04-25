@@ -30,20 +30,13 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
-            //services.AddScoped<AppDbContextInitializer>();
-
-
             services
                 .AddDefaultIdentity<User>()
-                //.AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            //services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IIdentityService, IdentityService>();
 
             services.AddTransient<IPdfService, PdfService>();
-
-            //services.AddAuthorization(options =>
-            //    options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
 
             return services;
         }
