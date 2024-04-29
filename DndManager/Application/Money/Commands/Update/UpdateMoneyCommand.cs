@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Money.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedMoney, ProperiesNames = ["Id"])]
     public record UpdateMoneyCommand : IRequest, ICommand
     {
         public string Id { get; set; }

@@ -1,8 +1,11 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Money.Queries.Show
 {
+    [Authorize(Policy = Policies.OnlyOwnedMoney, ProperiesNames = ["Id"])]
     public record GetMoneyByIdQuery : IRequest<MoneyVM>
     {
         public string Id { get; init; }

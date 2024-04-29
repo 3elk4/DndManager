@@ -1,13 +1,16 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Application.Proficiency.Queries.Index
 {
+    [Authorize(Policy = Policies.OnlyOwnedPc, ProperiesNames = ["Id"])]
     public record GetManyProficienciesByPcIdQuery : IRequest<List<ProficiencyVM>>, IQuery
     {
-        public string PcId { get; init; }
+        public string Id { get; init; }
     }
 
     public class GetManyFeatsByPcIdQueryHandler : IRequestHandler<GetManyProficienciesByPcIdQuery, List<ProficiencyVM>>, IQuery
@@ -25,7 +28,7 @@ namespace Application.Proficiency.Queries.Index
         {
             return await _dbContext
                     .Proficiencies
-                    .Where(item => item.PcId.Equals(request.PcId))
+                    .Where(item => item.PcId.Equals(request.Id))
                     .ProjectToListAsync<ProficiencyVM>(_mapper.ConfigurationProvider);
         }
 

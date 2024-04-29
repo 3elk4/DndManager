@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Feat.Command.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedFeat, ProperiesNames = ["Id"])]
     public record UpdateFeatCommand : IRequest, ICommand
     {
         public string Title { get; set; }

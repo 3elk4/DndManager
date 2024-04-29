@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.CombatAction.Command.Create
 {
+    [Authorize]
     public record AddNewCombatActionCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }
@@ -12,7 +14,7 @@ namespace Application.CombatAction.Command.Create
         public string PcId { get; set; }
     }
 
-    public class AddNewCombatActionCommandHandler : IRequestHandler<AddNewCombatActionCommand,string>
+    public class AddNewCombatActionCommandHandler : IRequestHandler<AddNewCombatActionCommand, string>
     {
         private readonly IDbContext _dbContext;
 

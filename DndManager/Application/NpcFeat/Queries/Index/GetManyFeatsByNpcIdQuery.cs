@@ -1,13 +1,16 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Application.NpcFeat.Queries.Index
 {
+    [Authorize(Policy = Policies.OnlyOwnedNpc, ProperiesNames = ["Id"])]
     public record GetManyFeatsByNpcIdQuery : IRequest<List<NpcFeatVM>>, IQuery
     {
-        public string NpcId { get; init; }
+        public string Id { get; init; }
     }
 
     public class GetManyFeatsByNpcIdQueryHandler : IRequestHandler<GetManyFeatsByNpcIdQuery, List<NpcFeatVM>>, IQuery
@@ -24,7 +27,7 @@ namespace Application.NpcFeat.Queries.Index
         public async Task<List<NpcFeatVM>> Handle(GetManyFeatsByNpcIdQuery request, CancellationToken cancellationToken)
         {
             return await _dbContext.NpcFeats
-                    .Where(feat => feat.NpcId.Equals(request.NpcId))
+                    .Where(feat => feat.NpcId.Equals(request.Id))
                     .ProjectToListAsync<NpcFeatVM>(_mapper.ConfigurationProvider);
         }
     }

@@ -45,5 +45,10 @@ namespace Infrastructure.Data
 
             base.OnModelCreating(modelBuilder);
         }
+
+        public DbSet<TEntity> GetSet<TEntity>() where TEntity : BaseAuditableEntity
+        {
+            return this.Set<TEntity>();
+        }
     }
 }

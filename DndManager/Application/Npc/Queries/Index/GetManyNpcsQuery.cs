@@ -1,12 +1,14 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common.Security;
 using AutoMapper.QueryableExtensions;
 using System;
 using System.Linq;
 
 namespace Application.Npc.Queries.Index
 {
+    [Authorize]
     public record GetManyNpcsQuery : IRequest<PaginatedListVM<NpcBriefVM>>, IQuery
     {
         public string SearchString { get; init; }
@@ -18,16 +20,19 @@ namespace Application.Npc.Queries.Index
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public GetManyNpcsQueryHandler(IDbContext dbContext, IMapper mapper)
+        public GetManyNpcsQueryHandler(IDbContext dbContext, IMapper mapper, IUser user)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<PaginatedListVM<NpcBriefVM>> Handle(GetManyNpcsQuery request, CancellationToken cancellationToken)
         {
-            var pcs = _dbContext.Npcs.ProjectTo<NpcBriefVM>(_mapper.ConfigurationProvider);
+            var userNpcs = _dbContext.Npcs.ByUser(_user);
+            var npcsVMs = userNpcs.ProjectTo<NpcBriefVM>(_mapper.ConfigurationProvider);
 
             if (request.SearchString != null)
             {
@@ -37,12 +42,12 @@ namespace Application.Npc.Queries.Index
             if (!String.IsNullOrEmpty(request.SearchString))
             {
                 var ss = request.SearchString.ToLower();
-                pcs = pcs.Where(pc => pc.Name.ToLower().Contains(ss) ||
+                npcsVMs = npcsVMs.Where(pc => pc.Name.ToLower().Contains(ss) ||
                                       pc.Alignment.ToLower().Contains(ss) ||
                                       pc.Type.ToLower().Contains(ss));
             }
 
-            return await pcs.PaginatedListAsync<NpcBriefVM>(request.PageNumber, request.PageSize);
+            return await npcsVMs.PaginatedListAsync<NpcBriefVM>(request.PageNumber, request.PageSize);
         }
 
     }

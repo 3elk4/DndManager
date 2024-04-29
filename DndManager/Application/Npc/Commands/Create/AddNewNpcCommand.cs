@@ -1,10 +1,12 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 using Application.NpcAbility;
 using Application.NpcSpellInfo;
 using System.Collections.Generic;
 
 namespace Application.Npc.Commands.Create
 {
+    [Authorize]
     public record AddNewNpcCommand : IRequest<string>, ICommand
     {
         public string Name { get; init; }

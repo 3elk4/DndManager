@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.DndClass.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedDndClass, ProperiesNames = ["Id"])]
     public record UpdateDndClassCommand : IRequest, ICommand
     {
         public string Id { get; set; }

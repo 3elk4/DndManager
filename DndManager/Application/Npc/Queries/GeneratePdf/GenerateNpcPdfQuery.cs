@@ -1,11 +1,14 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common.Security;
+using Domain.Constants;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 
 namespace Application.Npc.Queries.GeneratePdf
 {
+    [Authorize(Policy = Policies.OnlyOwnedNpc, ProperiesNames = ["Id"])]
     public record GenerateNpcPdfQuery : IRequest<PdfResult>, ICommand
     {
         public string Id { get; init; }

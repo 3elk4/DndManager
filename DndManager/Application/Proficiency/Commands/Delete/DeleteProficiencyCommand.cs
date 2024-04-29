@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Proficiency.Commands.Delete
 {
+    [Authorize(Policy = Policies.OnlyOwnedProficiency, ProperiesNames = ["Id"])]
     public record DeleteProficiencyCommand : IRequest, ICommand
     {
         public string Id { get; init; }

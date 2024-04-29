@@ -1,8 +1,11 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.SpellLvlInfo.Queries.Get
 {
+    [Authorize(Policy = Policies.OnlyOwnedSpellLvlInfo, ProperiesNames = ["Id"])]
     public record GetSpellLvlInfoQuery : IRequest<SpellLvlInfoVM>, IQuery
     {
         public string Id { get; init; }

@@ -1,12 +1,14 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common.Security;
 using AutoMapper.QueryableExtensions;
 using System;
 using System.Linq;
 
 namespace Application.Pc.Queries.Index
 {
+    [Authorize]
     public record GetManyPcsQuery : IRequest<PaginatedListVM<PcBriefVM>>, IQuery
     {
         public string SearchString { get; init; }
@@ -18,16 +20,19 @@ namespace Application.Pc.Queries.Index
     {
         private readonly IDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IUser _user;
 
-        public GetManyPcsQueryHandler(IDbContext dbContext, IMapper mapper)
+        public GetManyPcsQueryHandler(IDbContext dbContext, IMapper mapper, IUser user)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _user = user;
         }
 
         public async Task<PaginatedListVM<PcBriefVM>> Handle(GetManyPcsQuery request, CancellationToken cancellationToken)
         {
-            var pcs = _dbContext.Pcs.ProjectTo<PcBriefVM>(_mapper.ConfigurationProvider);
+            var userPcs = _dbContext.Pcs.ByUser(_user);
+            var pcsVMs = userPcs.ProjectTo<PcBriefVM>(_mapper.ConfigurationProvider);
 
             if (request.SearchString != null)
             {
@@ -37,13 +42,13 @@ namespace Application.Pc.Queries.Index
             if (!String.IsNullOrEmpty(request.SearchString))
             {
                 var ss = request.SearchString.ToLower();
-                pcs = pcs.Where(pc => pc.Name.ToLower().Contains(ss) ||
+                pcsVMs = pcsVMs.Where(pc => pc.Name.ToLower().Contains(ss) ||
                                       pc.RaceName.ToLower().Contains(ss) ||
                                       pc.BackgroundName.ToLower().Contains(ss) ||
                                       pc.DndClasses.Any(dclass => dclass.Name.ToLower().Contains(ss) || dclass.SubclassName.ToLower().Contains(ss)));
             }
 
-            return await pcs.PaginatedListAsync<PcBriefVM>(request.PageNumber, request.PageSize);
+            return await pcsVMs.PaginatedListAsync(request.PageNumber, request.PageSize);
         }
 
     }

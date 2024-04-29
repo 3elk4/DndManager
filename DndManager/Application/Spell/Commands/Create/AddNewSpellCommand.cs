@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.Spell.Commands.Create
 {
+    [Authorize]
     public record AddNewSpellCommand : IRequest<string>, ICommand
     {
         public string Name { get; init; }

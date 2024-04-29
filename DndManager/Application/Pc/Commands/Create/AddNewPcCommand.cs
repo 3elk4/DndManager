@@ -1,12 +1,14 @@
 ﻿using Application.Ability;
 using Application.Bio;
 using Application.Common.Interfaces;
+using Application.Common.Security;
 using Application.DndClass;
 using Application.SpellInfo;
 using System.Collections.Generic;
 
 namespace Application.Pc.Commands.Create
 {
+    [Authorize]
     public record AddNewPcCommand : IRequest<string>, ICommand
     {
         public string Name { get; init; }

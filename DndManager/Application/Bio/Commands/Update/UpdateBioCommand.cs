@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Bio.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedBio, ProperiesNames = ["Id"])]
     public record UpdateBioCommand() : IRequest, ICommand
     {
         public string Id { get; init; }

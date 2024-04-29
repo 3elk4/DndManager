@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.DndClass.Commands.Delete
 {
+    [Authorize(Policy = Policies.OnlyOwnedDndClass, ProperiesNames = ["Id"])]
     public record DeleteDndClassCommand : IRequest, ICommand
     {
         public string Id { get; init; }

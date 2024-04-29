@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Proficiency.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedProficiency, ProperiesNames = ["Id"])]
     public record UpdateProficiencyCommand : IRequest, ICommand
     {
         public string Name { get; set; }

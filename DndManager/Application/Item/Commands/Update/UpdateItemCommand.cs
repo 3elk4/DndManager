@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Item.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedItem, ProperiesNames = ["Id"])]
     public record UpdateItemCommand : IRequest, ICommand
     {
         public string Id { get; set; }
