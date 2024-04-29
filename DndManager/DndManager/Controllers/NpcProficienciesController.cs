@@ -20,7 +20,7 @@ namespace Presentation.Controllers
         {
             Guard.Against.Null(npcid);
 
-            var request = new GetManyProficienciesByNpcIdQuery() { NpcId = npcid };
+            var request = new GetManyProficienciesByNpcIdQuery() { Id = npcid };
             var result = await _mediator.Send(request);
 
             ViewData["NpcId"] = npcid;

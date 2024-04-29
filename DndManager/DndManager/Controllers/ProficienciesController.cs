@@ -20,7 +20,7 @@ namespace DndEncounter.Controllers
         {
             Guard.Against.Null(pcid);
 
-            var request = new GetManyProficienciesByPcIdQuery() { PcId = pcid };
+            var request = new GetManyProficienciesByPcIdQuery() { Id = pcid };
             var result = await _mediator.Send(request);
 
             ViewData["PcId"] = pcid;

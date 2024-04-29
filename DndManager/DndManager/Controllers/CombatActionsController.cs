@@ -21,7 +21,7 @@ namespace Presentation.Controllers
         {
             Guard.Against.Null(pcid);
 
-            var request = new GetManyCombatActionsByPcIdQuery() { PcId = pcid };
+            var request = new GetManyCombatActionsByPcIdQuery() { Id = pcid };
             var result = await _mediator.Send(request);
 
             ViewData["PcId"] = pcid;
