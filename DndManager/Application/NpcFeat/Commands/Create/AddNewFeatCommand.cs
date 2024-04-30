@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.NpcFeat.Commands.Create
 {
+    [Authorize]
     public record AddNewFeatCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }

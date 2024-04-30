@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.Proficiency.Commands.Create
 {
+    [Authorize]
     public record AddNewProficiencyCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Domain.Common;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Common.Interfaces
 {
@@ -33,6 +34,8 @@ namespace Application.Common.Interfaces
         DbSet<Domain.Entities.CombatSavingThrow> CombatSavingThrows { get; }
 
         DbSet<Domain.Entities.Money> Money { get; }
+
+        DbSet<TEntity> GetSet<TEntity>() where TEntity : BaseAuditableEntity;
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

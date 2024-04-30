@@ -1,8 +1,11 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 
 namespace Application.Spell.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedSpell, ProperiesNames = ["Id"])]
     public record UpdateSpellCommand : IRequest, ICommand
     {
         public string Id { get; set; }

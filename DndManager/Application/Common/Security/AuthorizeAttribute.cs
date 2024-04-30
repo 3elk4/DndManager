@@ -19,5 +19,10 @@ namespace Application.Common.Security
         /// Gets or sets the policy name that determines access to the resource.
         /// </summary>
         public string Policy { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Gets or sets the properties names used by policy that determines access to the resource.
+        /// </summary>
+        public string[] ProperiesNames { get; set; } = null;
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Authorization;
 using Ardalis.GuardClauses;
+using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Identity;
@@ -30,20 +32,20 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
-            //services.AddScoped<AppDbContextInitializer>();
-
-
             services
                 .AddDefaultIdentity<User>()
-                //.AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>();
 
-            //services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IIdentityService, IdentityService>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddOnlyOwnPolicies();
+            });
+
+            services.AddOnlyOwnPolicyHandlers();
 
             services.AddTransient<IPdfService, PdfService>();
-
-            //services.AddAuthorization(options =>
-            //    options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
 
             return services;
         }

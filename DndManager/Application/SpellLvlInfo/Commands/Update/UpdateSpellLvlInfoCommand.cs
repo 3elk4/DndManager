@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.SpellLvlInfo.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedSpellLvlInfo, ProperiesNames = ["Id"])]
     public record UpdateSpellLvlInfoCommand : IRequest, ICommand
     {
         public string Id { get; init; }

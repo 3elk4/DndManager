@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Spell.Commands.Delete
 {
+    [Authorize(Policy = Policies.OnlyOwnedSpell, ProperiesNames = ["Id"])]
     public record DeleteSpellCommand : IRequest, ICommand
     {
         public string Id { get; init; }

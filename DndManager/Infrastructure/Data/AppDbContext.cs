@@ -1,9 +1,11 @@
 ﻿using Application.Common.Interfaces;
+using Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Infrastructure.Data
 {
-    public class AppDbContext : DbContext, IDbContext //IdentityDbContext<User>
+    public class AppDbContext : IdentityDbContext<User>, IDbContext
     {
         public DbSet<Pc> Pcs { get; set; }
         public DbSet<Npc> Npcs { get; set; }
@@ -42,6 +44,11 @@ namespace Infrastructure.Data
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public DbSet<TEntity> GetSet<TEntity>() where TEntity : BaseAuditableEntity
+        {
+            return this.Set<TEntity>();
         }
     }
 }

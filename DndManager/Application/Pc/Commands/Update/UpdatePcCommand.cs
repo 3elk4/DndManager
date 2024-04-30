@@ -1,9 +1,12 @@
 ﻿using Application.Ability;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 using System.Collections.Generic;
 
 namespace Application.Pc.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedPc, ProperiesNames = ["Id"])]
     public record UpdatePcCommand : IRequest, ICommand
     {
         public string Id { get; init; }

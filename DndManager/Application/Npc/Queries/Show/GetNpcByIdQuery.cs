@@ -1,8 +1,11 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Npc.Queries.Show
 {
+    [Authorize(Policy = Policies.OnlyOwnedNpc, ProperiesNames = ["Id"])]
     public record GetNpcByIdQuery : IRequest<NpcDetailsVM>, IQuery
     {
         public string Id { get; set; }

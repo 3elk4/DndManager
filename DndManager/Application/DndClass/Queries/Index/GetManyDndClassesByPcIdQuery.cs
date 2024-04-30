@@ -1,13 +1,16 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Application.DndClass.Queries.Index
 {
+    [Authorize(Policy = Policies.OnlyOwnedPc, ProperiesNames = ["Id"])]
     public record GetManyDndClasssByPcIdQuery : IRequest<List<DndClassVM>>, IQuery
     {
-        public string PcId { get; init; }
+        public string Id { get; init; }
     }
 
     public class GetManyDndClasssByPcIdQueryHandler : IRequestHandler<GetManyDndClasssByPcIdQuery, List<DndClassVM>>, IQuery
@@ -25,7 +28,7 @@ namespace Application.DndClass.Queries.Index
         {
             return await _dbContext
                     .DndClasses
-                    .Where(item => item.PcId.Equals(request.PcId))
+                    .Where(item => item.PcId.Equals(request.Id))
                     .ProjectToListAsync<DndClassVM>(_mapper.ConfigurationProvider);
         }
 

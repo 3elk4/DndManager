@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Pc.Commands.Delete
 {
+    [Authorize(Policy = Policies.OnlyOwnedPc, ProperiesNames = ["Id"])]
     public record DeletePcCommand : IRequest, ICommand
     {
         public string Id { get; init; }

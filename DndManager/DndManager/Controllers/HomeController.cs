@@ -41,8 +41,7 @@ namespace Presentation.Controllers
             }
             else if (exception is UnauthorizedAccessException)
             {
-                code = 401;
-                errorVM.Message = "Unathorized. Log in or register to see details.";
+                return RedirectToPage("/Account/Login", new { Area = "Identity" });
             }
             else if (exception is ForbiddenAccessException)
             {

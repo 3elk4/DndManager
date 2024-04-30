@@ -21,7 +21,7 @@ namespace Presentation.Controllers
         {
             Guard.Against.Null(pcid);
 
-            var request = new GetManyDndClasssByPcIdQuery() { PcId = pcid };
+            var request = new GetManyDndClasssByPcIdQuery() { Id = pcid };
             var result = await _mediator.Send(request);
 
             ViewData["PcId"] = pcid;

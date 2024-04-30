@@ -1,11 +1,14 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Models;
+using Application.Common.Security;
+using Domain.Constants;
 using Microsoft.EntityFrameworkCore;
 using System.IO;
 using System.Linq;
 
 namespace Application.Pc.Queries.GeneratePdf
 {
+    [Authorize(Policy = Policies.OnlyOwnedPc, ProperiesNames = ["Id"])]
     public record GeneratePcPdfQuery : IRequest<PdfResult>, ICommand
     {
         public string Id { get; init; }
@@ -15,11 +18,13 @@ namespace Application.Pc.Queries.GeneratePdf
     {
         private readonly IDbContext _dbContext;
         private readonly IPdfService _pdfService;
+        private readonly IUser _user;
 
-        public UpdatePcCommandHandler(IDbContext dbContext, IPdfService pdfService)
+        public UpdatePcCommandHandler(IDbContext dbContext, IPdfService pdfService, IUser user)
         {
             _dbContext = dbContext;
             _pdfService = pdfService;
+            _user = user;
         }
 
         public async Task<PdfResult> Handle(GeneratePcPdfQuery request, CancellationToken cancellationToken)

@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Feat.Command.Delete
 {
+    [Authorize(Policy = Policies.OnlyOwnedFeat, ProperiesNames = ["Id"])]
     public record DeleteFeatCommand : IRequest, ICommand
     {
         public string Id { get; init; }

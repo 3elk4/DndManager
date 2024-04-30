@@ -1,8 +1,11 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.SpellInfo.Queries.Get
 {
+    [Authorize(Policy = Policies.OnlyOwnedSpellInfo, ProperiesNames = ["Id"])]
     public record GetSpellInfoWithAbilitiesByPcIdQuery : IRequest<SpellInfoAndAbilitiesVM>, IQuery
     {
         public string Id { get; init; }

@@ -20,7 +20,7 @@ namespace Presentation.Controllers
         {
             Guard.Against.Null(pcid);
 
-            var request = new GetManyItemsByPcIdQuery() { PcId = pcid };
+            var request = new GetManyItemsByPcIdQuery() { Id = pcid };
             var result = await _mediator.Send(request);
 
             ViewData["PcId"] = pcid;

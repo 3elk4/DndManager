@@ -1,7 +1,10 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.CombatAction.Commands.Delete
 {
+    [Authorize(Policy = Policies.OnlyOwnedCombatAction, ProperiesNames = ["Id"])]
     public record DeleteCombatActionCommand : IRequest, ICommand
     {
         public string Id { get; init; }

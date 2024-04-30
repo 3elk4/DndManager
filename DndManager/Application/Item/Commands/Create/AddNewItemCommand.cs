@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.Item.Commands.Create
 {
+    [Authorize]
     public record AddNewItemCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }

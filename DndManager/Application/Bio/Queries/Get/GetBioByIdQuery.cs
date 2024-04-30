@@ -1,8 +1,11 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 
 namespace Application.Bio.Queries.Get
 {
+    [Authorize(Policy = Policies.OnlyOwnedBio, ProperiesNames = ["Id"])]
     public record GetBioByIdQuery : IRequest<BioVM>
     {
         public string Id { get; init; }

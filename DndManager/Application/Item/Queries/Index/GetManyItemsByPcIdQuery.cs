@@ -1,13 +1,16 @@
 ﻿using Application.Common.Extentions;
 using Application.Common.Interfaces;
+using Application.Common.Security;
+using Domain.Constants;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Application.Item.Queries.Index
 {
+    [Authorize(Policy = Policies.OnlyOwnedPc, ProperiesNames = ["Id"])]
     public record GetManyItemsByPcIdQuery : IRequest<List<ItemVM>>, IQuery
     {
-        public string PcId { get; init; }
+        public string Id { get; init; }
     }
 
     public class GetManyItemsByPcIdQueryHandler : IRequestHandler<GetManyItemsByPcIdQuery, List<ItemVM>>, IQuery
@@ -26,7 +29,7 @@ namespace Application.Item.Queries.Index
             {
                 return await _dbContext
                     .Items
-                    .Where(item => item.PcId.Equals(request.PcId))
+                    .Where(item => item.PcId.Equals(request.Id))
                     .ProjectToListAsync<ItemVM>(_mapper.ConfigurationProvider);
             }
 

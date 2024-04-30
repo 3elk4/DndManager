@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.NpcAction.Commands.Create
 {
+    [Authorize]
     public record AddNewActionCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }

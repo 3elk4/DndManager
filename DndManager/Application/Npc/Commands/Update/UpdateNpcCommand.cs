@@ -1,10 +1,13 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 using Application.NpcAbility;
 using Application.NpcSpellInfo;
+using Domain.Constants;
 using System.Collections.Generic;
 
 namespace Application.Npc.Commands.Update
 {
+    [Authorize(Policy = Policies.OnlyOwnedNpc, ProperiesNames = ["Id"])]
     public record UpdateNpcCommand : IRequest, ICommand
     {
         public string Id { get; init; }

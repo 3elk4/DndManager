@@ -1,7 +1,9 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Security;
 
 namespace Application.DndClass.Commands.Create
 {
+    [Authorize]
     public record AddNewDndClassCommand : IRequest<string>, ICommand
     {
         public string Name { get; set; }
