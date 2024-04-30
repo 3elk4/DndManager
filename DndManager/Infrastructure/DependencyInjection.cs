@@ -1,5 +1,7 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Authorization;
 using Ardalis.GuardClauses;
+using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Data.Interceptors;
 using Infrastructure.Identity;
@@ -35,6 +37,13 @@ namespace Microsoft.Extensions.DependencyInjection
                 .AddEntityFrameworkStores<AppDbContext>();
 
             services.AddTransient<IIdentityService, IdentityService>();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddOnlyOwnPolicies();
+            });
+
+            services.AddOnlyOwnPolicyHandlers();
 
             services.AddTransient<IPdfService, PdfService>();
 
